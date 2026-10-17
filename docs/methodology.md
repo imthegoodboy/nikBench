@@ -1,99 +1,92 @@
-# NikBench Methodology (v1.0)
+# NikBench — Methodology & Protocol (v2.0)
 
-NikBench is a **peer-judged benchmark**: one candidate model performs a fixed task packet, the raw reply is stored as a submission file, and ≥ 3 *independent judge models* — from different model families, in fresh chats — score it against a fixed rubric. A small script aggregates the judges' scorecards into one 0–100 **NikBench Score (NBS)**.
+## What NikBench is
 
----
+A **peer-judged benchmark for LLMs**, built around one promise: *no answer key exists anywhere in this repo*. A model under test receives `test.md`, produces a submission, later reads the other submissions and rates them (and itself, last), and the board in `README.md` updates itself. Two optional deep-grading paths (rubric judges, examples) exist for calibrating scores beyond pure peer votes.
 
-## 1. Run procedure (end to end)
+Version history:
 
-### Step 1 — Candidate run
-1. Open a **fresh chat** with the candidate model, default settings (no system-prompt tuning, no tools enabled, temperature provider-default).
-2. Paste the complete contents of [`test.md`](../test.md).
-3. Save the model's **entire, unedited reply** to `submissions/<model-name>.md`.
-   > e.g. `submissions/gpt-5.2.md`, `submissions/claude-opus-4-6.md`, `submissions/gemini-3-pro.md`
-   > Keep the file name = the model name you will publish on the leaderboard.
+| Version | Shape |
+|---|---|
+| v1.0 | 3 pillars (reasoning / frontend / backend), 12 tasks |
+| v1.1 | + peer/self round, Final = 0.6·NBS + 0.2·Peer + 0.2·Self |
+| v1.2 | all-in-one idempotent `test.md` (one file drives build → review → board) |
+| **v2.0** | **6 pillars: RAT · THO · VIS · ALG · FE · BE — 25 tasks (10 exact-answer classics, 6 open thought problems, 4 visual, 3 algorithm designs, 1 frontend, 1 backend)** |
 
-### Step 2 — Judging (per judge model)
-For each judge (pick ≥ 3 judges; different families than the candidate; ideally ≥ 2 of 3 at frontier quality):
-1. Open a **fresh chat**.
-2. Paste the complete contents of [`judging/judge.md`](../judging/judge.md).
-3. Paste the full contents of `submissions/<model-name>.md`.
-4. The judge replies with a single JSON scorecard. Save it to `scorecards/<judge-id>__<model-name>.json`.
+## The six pillars & their weights
 
-### Step 3 — Aggregation
-```bash
-python scripts/aggregate.py scorecards -o leaderboard.md
+NBS (0–100) = Σ pillar_weight × median(judge pillar score). Pillar scores themselves are 0–100 (weighted criteria, see `scripts/aggregate.py` → `WEIGHTS`).
+
+| Pillar | weight | tasks | graded on |
+|---|---:|---|---|
+| RAT 🧩 ratiocination | 0.20 | R1–R10 | correct answers (derived, not recalled) + rigor + clarity |
+| THO 🧠 thought | 0.20 | T1–T6 | **no answers exist —** comprehension · synthesis (accuracy, no fake citations) · originality · argument rigor · intellectual candor |
+| VIS 🎨 visual craft | 0.15 | V1–V4 | art fidelity & craft · infographic fact/design · motion design & timing · dataviz choice & honesty |
+| ALG 🧮 algorithms | 0.15 | A1–A3 | correctness · complexity analysis · edge cases · communication · innovation |
+| FE 🪟 frontend | 0.15 | F1 | the 10-spec contract, executed mentally |
+| BE ⚙️ backend | 0.15 | B1 | endpoint matrix, error envelope, invariants a→f, design answers |
+
+Final = `0.6·NBS + 0.2·Peer + 0.2·Self` (missing components redistribute evenly; momentum-free by design). Grades: S ≥ 90 · A ≥ 80 · B ≥ 70 · C ≥ 60 · D ≥ 45 · F < 45.
+
+## The flow (Phase Router; idempotent)
+
 ```
-The script computes pillar scores, medians across judges, the overall NBS, grades, agreement spread, and flags. Committing updated scorecards + `leaderboard.md` via pull request completes a run.
+send test.md to a fresh chat with any model…
+├─ no submissions/<you>.md?      → PHASE 1 blind build → write submission → "PHASE 1 COMPLETE — waiting for peers"
+├─ your file exists, <3 others   → "PHASE 2 LOCKED — waiting for peers"
+├─ ≥2 others → PHASE 2 peer round: read every submission, rate 6 pillars + overall (others first),
+│                own row LAST (self) → peer/<you>.md → "PEER REVIEW WRITTEN"
+└─ peer file exists → PHASE 3: python scripts/aggregate.py scorecards --peer-dir peer -o leaderboard.md
+                     → paste between the NIKBENCH:LEADERBOARD markers in README.md → git push → "PHASE 3 COMPLETE"
+```
 
-### Judge independence rules
-- Judges must **not** be the candidate model and must not share the candidate's own family in the same run if avoidable.
-- Judges must judge without communication; each runs in a fresh chat.
-- Judges solve the reasoning tasks themselves *before* reading the candidate's answers (there is no answer key in this repo by design).
+Optional deep-grade: fresh chats with `judging/judge.md` + one submission each → `scorecards/<judge>__<candidate>.json`.
 
----
+## The no-key promise
 
-## 2. Scoring model
+- Reasoning tasks (R1–R10) are famous classics so that **any competent judge can re-derive every answer independently**. The repo ships no canonical answers; judges are required to solve R1–R10 themselves *before* opening a submission.
+- THO tasks (P vs NP, Navier–Stokes, Riemann, measurement problem, Sleeping Beauty, "what is life") are famous **open or contested** questions: there is nothing to leak. They are graded on the quality and *honesty* of thought.
+- VIS/ALG/FE/BE have spec-based contracts; no "answer" exists beyond the spec.
 
-Every criterion is 0–10; weights convert criteria to 0–100 pillar scores (weights live in `scripts/aggregate.py` and mirror `judging/judge.md`):
+## Contamination policy
 
-| Pillar | Criteria (×weight) | Max |
-|---|---|---:|
-| Reasoning (REA) | exact_answers (6/task) + rigor ×2 + clarity ×2 | 100 |
-| Frontend (FE) | functionality ×3, visual ×2.5, code ×2, a11y ×1.5, responsive ×1 | 100 |
-| Backend (BE) | spec ×3.5, security ×2, errors ×1.5, modeling ×1, design Q&A ×1.5, code ×0.5 | 100 |
+- Classic statements are kept **verbatim** (fixed dates, fixed numbers, fixed names) so judges can independently re-solve; memorized recall without derivation is punished by the rigor/clarity criteria.
+- Candidates are blind-isolated in Phase 1: only `test.md` is readable; no rubric, no examples, no other submissions. Peer phase adds only `submissions/` + its own peer file.
+- If a dispute arises over an exact answer, the packet's wording plus the cited public source resolves it; a panel majority (or, failing that, 0.5-credit on the disputed task) is the tie-break.
 
-- **Per-judge overall** = mean of that judge's three pillar scores.
-- **Pillar score (official)** = *median* across judges.
-- **NBS** = mean of the three pillar medians, 0–100.
-- **Grades:** `S ≥ 90 · A ≥ 80 · B ≥ 70 · C ≥ 60 · D ≥ 45 · F < 45`.
-- **Agreement:** spread = max − min of per-judge overalls. Spread ≤ 10 is healthy; > 15 adds a review flag.
-- **Outliers:** a judge deviating > 15 NBS points from the median is flagged (kept, not discarded — transparency over silent filtering).
+## Provenance of every task (checked 2026-10-18)
 
-### Dispute protocol (reasoning answers)
-There is **no answer key**; each judge solves R1–R10 independently. If judges disagree on a task: **majority wins**; if there is no majority (all three differ), the task counts **0.5** toward `correct_count`. This is executed when entering `correct_count` — the script accepts halves for exactly this case.
+| Task | Source (verbatim basis) | Link |
+|---|---|---|
+| R1 Boolos "Hardest Logic Puzzle Ever" | G. Boolos, *Harvard Review of Philosophy* 6 (1996) 62–65; clarifications per the standard reprint | https://en.wikipedia.org/wiki/The_Hardest_Logic_Puzzle_Ever |
+| R2 Blue Eyes | Randall Munroe's definitive statement | https://xkcd.com/blue_eyes.html |
+| R3 Cheryl's Birthday | SASMO 2015 (Dr Joseph Yeo Boon Wooi); Q24, verbatim | https://en.wikipedia.org/wiki/Cheryl's_Birthday |
+| R4 Cheryl's Age | the 2015 sequel (NTU/SASMO), verbatim | https://en.wikipedia.org/wiki/Cheryl's_Birthday |
+| R5 Zebra Puzzle | *Life International*, 17 Dec 1962, verbatim 15 clues | https://en.wikipedia.org/wiki/Zebra_puzzle |
+| R6 Ant on a rubber band | Gardner 1982 *aha! Gotcha*; Wikipedia statement | https://en.wikipedia.org/wiki/Ant_on_a_rubber_rope |
+| R7 100 prisoners & the light bulb | circulating classic (no single author); phrasing by NikBench | classic puzzle |
+| R8 Two eggs, 100 floors | egg-dropping classic (DP folklore); phrasing by NikBench | classic puzzle |
+| R9 Fly & the two trains | classic lore, associated with the von Neumann anecdote | classic puzzle |
+| R10 Twelve coins | balance-puzzle classic (counterfeit, unknown sign) | https://en.wikipedia.org/wiki/Balance_puzzle |
+| T1 P vs NP | Millennium-class CS problem | https://en.wikipedia.org/wiki/P_versus_NP_problem |
+| T2 Navier–Stokes | Clay Mathematics Institute, Millennium Problem statement | https://www.claymath.org/millennium-problems/navier-stokes-equation |
+| T3 Riemann Hypothesis | standard mathematical statement | https://en.wikipedia.org/wiki/Riemann_hypothesis |
+| T4 Measurement problem | standard interpretation survey scope | https://en.wikipedia.org/wiki/Measurement_problem |
+| T5 Sleeping Beauty | Elga (2000); Wikipedia summary | https://en.wikipedia.org/wiki/Sleeping_Beauty_problem |
+| T6 What is Life? | nod to Schrödinger 1944; essay is the task | classic question |
+| V1 Mona Lisa | Leonardo da Vinci c. 1503–1519, public domain (Musée du Louvre) | — |
+| V2 Seven Founders | public-history facts (Lovelace, Turing, von Neumann, Shannon, Hopper, Dijkstra, Knuth) | — |
+| V3 LIFTOFF motion | original NikBench spec | — |
+| V4 Café dataset | **synthetic, authored for NikBench** — embedded CSV; the analytics task is real: seasonality vs level vs outlier | — |
 
----
+## Dispute & outlier protocol
 
-## 3. Task provenance & attribution
+- Per-judge pillar details are published in the leaderboard `<details>` block; judges deviating > 15 points from the panel median overall are flagged.
+- Suspected outlier or contamination: a majority of the panel re-judges blind; unresolved → 0.5 credit on the disputed item for all candidates equally.
+- Self-reliability: every model rates itself (last row, `self: true`); the aggregate keeps Peer and Self visible as separate columns rather than hiding the delta.
 
-All Section A reasoning tasks are taken **verbatim from public benchmark datasets** (so the benchmark is a test against the internet's real eval distribution, not invented puzzles):
+## Reproducibility
 
-| Tasks | Dataset | Source | License |
-|---|---|---|---|
-| R1, R2 | **GSM8K** (test split) | [openai/grade-school-math](https://github.com/openai/grade-school-math) | MIT |
-| R3, R4 | **AQuA-RAT** (test split) | [google-deepmind/AQuA](https://github.com/google-deepmind/AQuA) | Apache-2.0 |
-| R5, R6 | **BBH — multistep_arithmetic_two** | [suzgunmirac/BIG-Bench-Hard](https://github.com/suzgunmirac/BIG-Bench-Hard) | MIT |
-| R7 | **BBH — logical_deduction_five_objects** | same | MIT |
-| R8 | **BBH — date_understanding** | same | MIT |
-| R9 | **BBH — tracking_shuffled_objects_five_objects** | same | MIT |
-| R10 | **BBH — web_of_lies** | same | MIT |
-| F1 | original spec (authored for NikBench) | — | — |
-| B1 | original spec (authored for NikBench) | — | — |
-
-**No ground-truth answers are published in this repository.** Judges derive them independently and cross-check each other (§2 dispute protocol).
-
----
-
-## 4. Contamination policy
-
-Public tasks mean public contamination risk: a frontier model may have seen GSM8K/BBH items during training. We accept this trade-off (it is the same exposure every public benchmark has), with these mitigations:
-
-1. **Rigor is judged, not just the letter.** Memorized answers without derivations score low on `rigor`/`clarity`.
-2. **Judging is relative & peer-based** — all models face the same items, so contamination registers as uniform inflation rather than model-differential advantage.
-3. **v1.1 will ship a rotated variant**: same spec structure, items parameterized/seeded at run time (F1/B1 constants get a per-run seed; reasoning items get regenerated from held-out splits).
-4. Report the exact run date in your submission folder so scores can be contextualized.
-
----
-
-## 5. What is *not* measured (v1.0 scope)
-
-- Multimodal/image generation, agentic browsing, tool-loop tasks — planned for v1.2/v1.3 packs.
-- Latency, cost-per-token, safety/red-team robustness — track these separately; NikBench scores *capability of a single generation*.
-- Human visual review of F1 is optional (judges read code); a human may append a visual commentary to the submission folder but cannot override the JSON protocol.
-
-## 6. Versioning
-
-- `v1.0` (current): 10 sourced reasoning tasks + F1 frontend flagship + B1 backend flagship. Fixed packet; scorecards use schema `nikbench.scorecard.v1`.
-- `v1.1` (planned): seeded rotation + held-out task pool.
-- Score compatibility: scorecards from different minor versions are **not** mixed on one leaderboard.
+- Scorer: `python scripts/aggregate.py scorecards --peer-dir peer -o leaderboard.md` (stdlib-only, `--selftest` for CI).
+- Peer parser accepts dict- or list-shaped `ratings`, halves, and prose-wrapped JSON.
+- Worked example (3 judges × demo candidate) lives in `examples/`.

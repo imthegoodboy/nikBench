@@ -1,0 +1,52 @@
+{
+  "schema": "nikbench.scorecard.v1",
+  "judge_id": "judge-gamma",
+  "candidate_id": "example-candidate",
+  "scores": {
+    "rat": {
+      "exact_answers": { "correct_count": 6, "detail": "I also reject R9 shortcut derivation; total six substantive matches" },
+      "rigor": { "score": 6, "detail": "gaps in R1 and R8" },
+      "clarity": { "score": 7, "detail": "fine" }
+    },
+    "tho": {
+      "comprehension": { "score": 7, "detail": "solid" },
+      "synthesis": { "score": 7, "detail": "accurate" },
+      "originality": { "score": 6, "detail": "one novel discriminator experiment in T4" },
+      "argument_rigor": { "score": 6, "detail": "mostly valid" },
+      "intellectual_candor": { "score": 8, "detail": "candor present" }
+    },
+    "vis": {
+      "art_fidelity": { "score": 6, "detail": "acceptable likeness" },
+      "art_craft": { "score": 7, "detail": "palette discipline" },
+      "infographic_facts": { "score": 9, "detail": "all facts verified" },
+      "infographic_design": { "score": 7, "detail": "good rhythm" },
+      "motion_design": { "score": 6, "detail": "decent scenes" },
+      "motion_timing": { "score": 8, "detail": "reduced-motion honored" },
+      "dataviz_choice": { "score": 7, "detail": "justified" },
+      "dataviz_honesty": { "score": 9, "detail": "honest headline, outlier annotated" }
+    },
+    "alg": {
+      "correctness": { "score": 7, "detail": "fine" },
+      "complexity_analysis": { "score": 7, "detail": "argued" },
+      "edge_cases": { "score": 5, "detail": "partial" },
+      "communication": { "score": 8, "detail": "strong write-up" },
+      "innovation": { "score": 5, "detail": "low" }
+    },
+    "fe": {
+      "functionality": { "score": 8, "detail": "spec verified" },
+      "visual_design": { "score": 7, "detail": "cohesive" },
+      "code_quality": { "score": 7, "detail": "ok" },
+      "accessibility": { "score": 8, "detail": "good" },
+      "responsive": { "score": 6, "detail": "one breakpoint miss" }
+    },
+    "be": {
+      "spec_correctness": { "score": 7, "detail": "mostly right" },
+      "security": { "score": 6, "detail": "basic" },
+      "validation_errors": { "score": 8, "detail": "thorough" },
+      "data_modeling": { "score": 7, "detail": "ok" },
+      "design_answers": { "score": 7, "detail": "reasonable" },
+      "code_quality": { "score": 7, "detail": "readable" }
+    }
+  },
+  "flags": []
+}

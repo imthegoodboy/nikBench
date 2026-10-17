@@ -1,0 +1,52 @@
+{
+  "schema": "nikbench.scorecard.v1",
+  "judge_id": "judge-beta",
+  "candidate_id": "example-candidate",
+  "scores": {
+    "rat": {
+      "exact_answers": { "correct_count": 7, "detail": "same seven as alpha; I disagree R2 phrasing but answer substance matches" },
+      "rigor": { "score": 5, "detail": "two clean gaps; Boolos tree unbalanced" },
+      "clarity": { "score": 6, "detail": "dense, occasionally skips steps" }
+    },
+    "tho": {
+      "comprehension": { "score": 7, "detail": "good grasp, T4 interpretation sloppier" },
+      "synthesis": { "score": 6, "detail": "no fabrications, thin novelty" },
+      "originality": { "score": 5, "detail": "safe positions" },
+      "argument_rigor": { "score": 6, "detail": "mostly valid" },
+      "intellectual_candor": { "score": 8, "detail": "honest hedges" }
+    },
+    "vis": {
+      "art_fidelity": { "score": 5, "detail": "silhouette reads, smile lost" },
+      "art_craft": { "score": 6, "detail": "clean but flat" },
+      "infographic_facts": { "score": 8, "detail": "facts check out" },
+      "infographic_design": { "score": 6, "detail": "crowded mid-decades" },
+      "motion_design": { "score": 5, "detail": "beats listed, scenes thin" },
+      "motion_timing": { "score": 7, "detail": "loop exact" },
+      "dataviz_choice": { "score": 6, "detail": "chart fine" },
+      "dataviz_honesty": { "score": 7, "detail": "slight drift toward growth story" }
+    },
+    "alg": {
+      "correctness": { "score": 6, "detail": "A3 hot-key fix incomplete under node death" },
+      "complexity_analysis": { "score": 6, "detail": "sound but swings on 'amortized' too freely" },
+      "edge_cases": { "score": 4, "detail": "several unhandled" },
+      "communication": { "score": 7, "detail": "clear" },
+      "innovation": { "score": 4, "detail": "textbook" }
+    },
+    "fe": {
+      "functionality": { "score": 7, "detail": "countdown LANDED state missing" },
+      "visual_design": { "score": 6, "detail": "serviceable" },
+      "code_quality": { "score": 6, "detail": "some dead code" },
+      "accessibility": { "score": 7, "detail": "good aria coverage" },
+      "responsive": { "score": 5, "detail": "no h-scroll but strip stays 4-col on tablet" }
+    },
+    "be": {
+      "spec_correctness": { "score": 6, "detail": "PATCH on cancelled appointment returns wrong code" },
+      "security": { "score": 6, "detail": "adequate sketch" },
+      "validation_errors": { "score": 7, "detail": "one missed range" },
+      "data_modeling": { "score": 6, "detail": "ok" },
+      "design_answers": { "score": 6, "detail": "D3 window choice under-justified" },
+      "code_quality": { "score": 6, "detail": "fine" }
+    }
+  },
+  "flags": ["spread between my pillar scores and judge-alpha's on alg/fe — see dispute protocol"]
+}

@@ -1,0 +1,52 @@
+{
+  "schema": "nikbench.scorecard.v1",
+  "judge_id": "judge-alpha",
+  "candidate_id": "example-candidate",
+  "scores": {
+    "rat": {
+      "exact_answers": { "correct_count": 7, "detail": "R1 incomplete case tree, R6 half-derived, R8 proof missing; rest match my solve" },
+      "rigor": { "score": 7, "detail": "mostly complete derivations; two gaps" },
+      "clarity": { "score": 8, "detail": "followable throughout" }
+    },
+    "tho": {
+      "comprehension": { "score": 8, "detail": "all six questions stated precisely" },
+      "synthesis": { "score": 7, "detail": "state of the art accurate; one imprecise citation" },
+      "originality": { "score": 6, "detail": "real positions, mostly conventional" },
+      "argument_rigor": { "score": 7, "detail": "conclusions follow" },
+      "intellectual_candor": { "score": 9, "detail": "clean limits stated everywhere" }
+    },
+    "vis": {
+      "art_fidelity": { "score": 6, "detail": "recognizable, hands awkward" },
+      "art_craft": { "score": 7, "detail": "good gradient sfumato, 180 elements" },
+      "infographic_facts": { "score": 8, "detail": "all seven founders correct" },
+      "infographic_design": { "score": 7, "detail": "timeline to scale, 2 arrows" },
+      "motion_design": { "score": 6, "detail": "beats present, ignition weak" },
+      "motion_timing": { "score": 7, "detail": "60s loop verified, seam ok" },
+      "dataviz_choice": { "score": 7, "detail": "line+slope justified" },
+      "dataviz_honesty": { "score": 8, "detail": "outlier decomposed" }
+    },
+    "alg": {
+      "correctness": { "score": 7, "detail": "designs satisfy contracts" },
+      "complexity_analysis": { "score": 7, "detail": "amortized argument present" },
+      "edge_cases": { "score": 5, "detail": "under-scan mutation unmapped" },
+      "communication": { "score": 8, "detail": "implementable" },
+      "innovation": { "score": 5, "detail": "standard choices" }
+    },
+    "fe": {
+      "functionality": { "score": 8, "detail": "10/10 requirements verified" },
+      "visual_design": { "score": 7, "detail": "cohesive control-room theme" },
+      "code_quality": { "score": 7, "detail": "clean modules" },
+      "accessibility": { "score": 8, "detail": "aria + focus + reduced-motion" },
+      "responsive": { "score": 6, "detail": "375px ok, strip 2-col mid breakpoint questionable" }
+    },
+    "be": {
+      "spec_correctness": { "score": 7, "detail": "endpoint matrix correct; overlap touching edge mis-handled" },
+      "security": { "score": 6, "detail": "basic hardening only" },
+      "validation_errors": { "score": 8, "detail": "all fields listed" },
+      "data_modeling": { "score": 6, "detail": "ids fine, statuses ok" },
+      "design_answers": { "score": 7, "detail": "D1/D4 strong" },
+      "code_quality": { "score": 7, "detail": "readable" }
+    }
+  },
+  "flags": []
+}
