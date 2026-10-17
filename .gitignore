@@ -1,0 +1,19 @@
+# NikBench working files
+node_modules/
+dist/
+__pycache__/
+*.pyc
+
+# candidate submissions stay untracked until their leaderboard PR
+submissions/*
+!submissions/README.md
+
+# scorecards stay untracked until their leaderboard PR
+scorecards/*
+!scorecards/README.md
+
+# generated
+
+# OS
+Thumbs.db
+.DS_Store

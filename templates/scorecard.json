@@ -1,0 +1,28 @@
+{
+  "schema": "nikbench.scorecard.v1",
+  "judge_id": "<judge model name/version>",
+  "candidate_id": "<candidate model name>",
+  "scores": {
+    "reasoning": {
+      "exact_answers": { "correct_count": 0, "detail": "list which of R1..R10 were wrong and why, one short line each" },
+      "rigor": { "score": 0, "detail": "..." },
+      "clarity": { "score": 0, "detail": "..." }
+    },
+    "frontend": {
+      "functionality": { "score": 0, "detail": "requirement-by-requirement notes (numbered 1-10)" },
+      "visual_design": { "score": 0, "detail": "..." },
+      "code_quality": { "score": 0, "detail": "..." },
+      "accessibility": { "score": 0, "detail": "..." },
+      "responsive": { "score": 0, "detail": "..." }
+    },
+    "backend": {
+      "spec_correctness": { "score": 0, "detail": "..." },
+      "security": { "score": 0, "detail": "..." },
+      "validation_errors": { "score": 0, "detail": "..." },
+      "data_modeling": { "score": 0, "detail": "..." },
+      "design_answers": { "score": 0, "detail": "per-answer scores D1..D5" },
+      "code_quality": { "score": 0, "detail": "..." }
+    }
+  },
+  "flags": []
+}
