@@ -192,7 +192,10 @@ between rounds; the renders above are extracted verbatim by
 featured B1 Clinic-API servers additionally pass a live contract smoke test
 (`python scripts/smoke_b1.py`, Node run): create doctor → book **201** →
 double-book **409 SLOT_TAKEN** → delete **204** → gone **404**, with clean
-validation errors on malformed input._
+validation errors on malformed input. **Across the whole round** (full run:
+`python scripts/verify_be.py` + `python scripts/verify_fe.py`): BE **6 PASS / 1
+PARTIAL (longcat has no DELETE handler) / 1 NO-B1 (mimo, partial build)**; FE
+**6 of 7 full-pass at 13/13, nemotron missing the `<main>` landmark (12/13)**._
 
 ## 🗂️ Repository map
 
