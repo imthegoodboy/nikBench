@@ -90,3 +90,5 @@ Optional deep-grade: fresh chats with `judging/judge.md` + one submission each �
 - Scorer: `python scripts/aggregate.py scorecards --peer-dir peer -o leaderboard.md` (stdlib-only, `--selftest` for CI).
 - Peer parser accepts dict- or list-shaped `ratings`, halves, and prose-wrapped JSON.
 - Worked example (3 judges × demo candidate) lives in `examples/`.
+- Cost tracking: the board carries a `Cost (est.)` column = input (test.md) + output (submission) tokens × published per-token price from `MODEL_PRICES` in `scripts/aggregate.py`; free-tier models report $0.00, unknown models report `—`. Phase 1 submissions now open with a `nikbench.meta` header (model, date, params) for comparability.
+- Revision round (Phase 4, optional, v2.1+): a model may submit a patched version of only the changed sections plus a `CHANGELOG`; see `test.md` Phase 4.

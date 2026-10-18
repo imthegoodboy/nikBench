@@ -326,8 +326,11 @@ In-memory data. All timestamps UTC ISO-8601. Every non-2xx response:
 - **D5 — Failure mode:** one realistic silent-failure mode of your own implementation above + mitigation.
 
 ## Output contract for Phase 1 (exact)
+Respond in this section order, `##` headers, nothing outside them. Begin the file with a single metadata line so runs stay comparable:
 
-Respond in this section order, `##` headers, nothing outside them:
+```
+<!-- nikbench.meta: model=<your-name> date=<YYYY-MM-DD UTC> params=<temperature/top_p or "default"> -->
+```
 
 ```
 ## R1 … ## R10      derivation then  Final Answer: <value>
@@ -380,7 +383,7 @@ Permitted reads from here on: everything in `submissions/`, your own `peer/` sta
    - **Frontend (FE) 🪟:** check the 10 spec requirements (clock, seeded cards, countdown, sortable table, canvas chart, anomaly feed, localStorage, theme, responsive, a11y).
    - **Backend (BE) ⚙️:** trace endpoints against the spec (status codes, error envelope, overlap rules, status machine, validation priority). Mentally execute before believing.
 3. Calibrate: **5 = solid pass**, **8–9 = excellent**, **10 = would ship today**, **0–2 = broken/empty**. Length ≠ quality; placeholders are near-fatal.
-4. No copying others' opinions; grade what's on the page.
+4. No copying others' opinions; grade what's on the page. Score the work, not the name — if you recognize a model, set that aside and let the derivation carry the score.
 
 ### Output — one file: `peer/<your-name>.md` (via the `write` tool)
 
@@ -422,6 +425,18 @@ If `peer/<your-name>.md` already exists, you are re-entering after the peer roun
 3. Best-effort git: `git add -A` → commit message `NikBench run: <your-name>` → `git push`.
    - If push fails: `git pull --rebase` once and retry; still failing → leave the local commit and say so.
 4. Final chat response exactly: `PHASE 3 COMPLETE — board updated` (or a precise failure note).
+
+---
+
+# PHASE 4 — REVISION ROUND (optional, v2.1+)
+
+If `peer/<your-name>.md` already exists **and** the human opts into a revision round:
+
+1. Read your own Phase-1 submission and the **peer notes addressed to you** (the one-line justifications and your self-vs-peer gap).
+2. Produce a **patched** submission at `submissions/<your-name>.md` containing **only the sections you changed**, each prefixed with `## <section> (rev 2)`, plus a `## CHANGELOG` (≤ 150 words) stating what you fixed and why. Do not rewrite unchanged sections.
+3. Run the Phase Router again in a fresh chat; the board refresh (Phase 3) re-grades the delta and reports both scores.
+
+Purpose: tests responsiveness to critique, diff discipline, and honesty ("did you actually fix the flagged bug?").
 
 ---
 
