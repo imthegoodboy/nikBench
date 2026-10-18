@@ -4,6 +4,8 @@ No browser required: extracts each ```html block and checks the 10 spec items
 by concrete, regex-level evidence. Reports a per-model pass count so the FE
 pillar is at least partially objective.
 """
+import argparse
+import json as _json
 import re
 import sys
 from pathlib import Path
@@ -43,6 +45,20 @@ def extract_html(model: str) -> str | None:
 
 
 def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--json", action="store_true", help="print {model: live_FE_score_0_100} JSON and exit")
+    args = ap.parse_args()
+    out = {}
+    if args.json:
+        for model in MODELS:
+            html = extract_html(model)
+            if not html:
+                out[model] = 0
+                continue
+            n = sum(1 for _, fn in CHECKS if fn(html))
+            out[model] = round(n / len(CHECKS) * 100)
+        print(_json.dumps(out))
+        return
     print("FE static spec checklist (13 items, F1 Mission Control):")
     print(f"{'model':<32} {'pass':>5}  {'/13'}")
     print("-" * 70)

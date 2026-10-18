@@ -1,17 +1,17 @@
 # NikBench — Official Leaderboard
 
-_Last updated: 2026-10-18 06:06 UTC · scorer: `scripts/aggregate.py` · protocol: `docs/methodology.md`_
+_Last updated: 2026-10-18 06:23 UTC · scorer: `scripts/aggregate.py` · protocol: `docs/methodology.md`_
 
-| Rank | Model | Final | Grade | NBS | Peer | Self | RAT | THO | VIS | ALG | FE | BE | Judges | Spread | Cost (est.) |
-|---:|---|---:|:--:|---:|---:|---:|---:|---:|---:|---:|---:|---:|:--:|---:|---:|
-| 1 | **beam-free** | 91.26 | S | 100.0 | 71.3 | 85.0 | 100 | 100 | 100 | 100 | 100 | 100 | 1 | ±0.0 | $0.0000 |
-| 2 | **nemotron-3.5-super-vl-free** | 87.98 | A | 91.8 | 79.4 | 85.0 | 72 | 89 | 100 | 98 | 100 | 100 | 1 | ±0.0 | $0.0000 |
-| 3 | **big-pickle** | 85.93 | A | — | 86.9 | 85.0 | — | — | — | — | — | — | 0 | ±0.0 | $0.0000 |
-| 4 | **glm-5.3-flash-free** | 82.22 | A | — | 81.4 | 83.0 | — | — | — | — | — | — | 0 | ±0.0 | $0.0000 |
-| 5 | **space-bunny-free** | 73.07 | B | — | 76.1 | 70.0 | — | — | — | — | — | — | 0 | ±0.0 | $0.0000 |
-| 6 | **deepseek-v4.1-flash-free** | 71.36 | B | 62.5 | 84.1 | 85.0 | 36 | 50 | 76 | 68 | 82 | 77 | 1 | ±0.0 | $0.0000 |
-| 7 | **longcat-2.5-preview-free** | 66.85 | C | — | 68.7 | 65.0 | — | — | — | — | — | — | 0 | ±0.0 | $0.0000 |
-| 8 | **mimo-v2.6-flash-free** | 37.31 | F | 36.0 | 33.6 | 45.0 | 97 | 83 | 0 | 0 | 0 | 0 | 1 | ±0.0 | $0.0000 |
+| Rank | Model | Final | Grade | NBS | Peer | Self | RAT | THO | VIS | ALG | FE | BE | Judges | Spread | Live (BE/FE) | Cost (est.) |
+|---:|---|---:|:--:|---:|---:|---:|---:|---:|---:|---:|---:|---:|:--:|---:|---:|---:|
+| 1 | **beam-free** | 91.26 | S | 100.0 | 71.3 | 85.0 | 100 | 100 | 100 | 100 | 100 | 100 | 1 | ±0.0 | 100/100 | $0.0000 |
+| 2 | **nemotron-3.5-super-vl-free** | 87.62 | A | 91.2 | 79.4 | 85.0 | 72 | 89 | 100 | 98 | 96 | 100 | 1 | ±0.0 | 100/92 | $0.0000 |
+| 3 | **big-pickle** | 85.93 | A | — | 86.9 | 85.0 | — | — | — | — | — | — | 0 | ±0.0 | 100/100 | $0.0000 |
+| 4 | **glm-5.3-flash-free** | 82.22 | A | — | 81.4 | 83.0 | — | — | — | — | — | — | 0 | ±0.0 | 100/100 | $0.0000 |
+| 5 | **deepseek-v4.1-flash-free** | 73.20 | B | 65.6 | 84.1 | 85.0 | 36 | 50 | 76 | 68 | 91 | 88 | 1 | ±0.0 | 100/100 | $0.0000 |
+| 6 | **space-bunny-free** | 73.07 | B | — | 76.1 | 70.0 | — | — | — | — | — | — | 0 | ±0.0 | 100/100 | $0.0000 |
+| 7 | **longcat-2.5-preview-free** | 66.85 | C | — | 68.7 | 65.0 | — | — | — | — | — | — | 0 | ±0.0 | 50/100 | $0.0000 |
+| 8 | **mimo-v2.6-flash-free** | 37.31 | F | 36.0 | 33.6 | 45.0 | 97 | 83 | 0 | 0 | 0 | 0 | 1 | ±0.0 | 0/0 | $0.0000 |
 
 ## Grade scale
 
@@ -24,7 +24,7 @@ _Last updated: 2026-10-18 06:06 UTC · scorer: `scripts/aggregate.py` · protoco
 | D | ≥ 45 | incomplete work on at least one pillar |
 | F | < 45 | failed to produce usable submissions |
 
-**NBS** = rubric-judge score (weighted across the 6 pillar medians) · **Peer** = mean of the other models' ratings · **Self** = the model's own rating of itself (last, by design) · **Final** = `0.6·NBS + 0.2·Peer + 0.2·Self`. Pillars: **RAT** ratiocination · **THO** thought · **VIS** visual · **ALG** algorithms · **FE** frontend · **BE** backend. Grades follow **Final** when peer data exists. **Cost (est.)** = input (test.md) + output (submission) tokens × published per-token price; free-tier models report $0.00, unknown models report `—`.
+**NBS** = rubric-judge score (weighted across the 6 pillar medians) · **Peer** = mean of the other models' ratings · **Self** = the model's own rating of itself (last, by design) · **Final** = `0.6·NBS + 0.2·Peer + 0.2·Self`. Pillars: **RAT** ratiocination · **THO** thought · **VIS** visual · **ALG** algorithms · **FE** frontend · **BE** backend. Grades follow **Final** when peer data exists. **Cost (est.)** = input (test.md) + output (submission) tokens × published per-token price; free-tier models report $0.00, unknown models report `—`. **Live (BE/FE)** = pass rate of `scripts/verify_be.py` / `scripts/verify_fe.py` (50/50 blended into BE/FE medians when both judge and live data exist).
 
 <details>
 <summary><b>Peer-round notes</b></summary>
@@ -55,7 +55,7 @@ _Last updated: 2026-10-18 06:06 UTC · scorer: `scripts/aggregate.py` · protoco
 Flags:
 - judge:cohere-north-mini: parser-salvaged: original card had invalid JSON (likely unescaped quotes); every score value below extracted verbatim from the raw judge output
 
-### deepseek-v4.1-flash-free — NBS 62.55 (C)
+### deepseek-v4.1-flash-free — NBS 65.62 (C)
 
 | Judge | RAT | THO | VIS | ALG | FE | BE | Judge overall |
 |---|---:|---:|---:|---:|---:|---:|---:|
@@ -75,7 +75,7 @@ Flags:
 - judge:cohere-north-mini: judge said: candidate submission incomplete: V/A/F/B sections missing due to repeated session failures
 - judge:cohere-north-mini: parser-salvaged: original card had invalid JSON (likely unescaped quotes); every score value below extracted verbatim from the raw judge output
 
-### nemotron-3.5-super-vl-free — NBS 91.83 (S)
+### nemotron-3.5-super-vl-free — NBS 91.22 (S)
 
 | Judge | RAT | THO | VIS | ALG | FE | BE | Judge overall |
 |---|---:|---:|---:|---:|---:|---:|---:|

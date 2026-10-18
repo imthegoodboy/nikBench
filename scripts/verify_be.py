@@ -4,7 +4,9 @@ Extracts each model's ```javascript block from its submission, boots it under
 node, and drives the spec contract over real HTTP. Reports a per-model
 VERDICT so the BE pillar stops being 'mentally executed'.
 """
+import argparse
 import json
+import json as _json
 import re
 import subprocess
 import sys
@@ -106,15 +108,27 @@ def run_one(model: str) -> str:
 
 
 def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--json", action="store_true", help="print {model: live_score_0_100} JSON and exit")
+    args = ap.parse_args()
     models = sorted(p.stem for p in (ROOT / "submissions").glob("*.md")
                     if p.name != "README.md")
+    out = {}
+    if args.json:
+        for m in models:
+            v = run_one(m)
+            score = 100 if v == "PASS" else (50 if v.startswith("PARTIAL") else 0)
+            out[m] = score
+        print(_json.dumps(out))
+        for p in SMOKE.glob("*.js"):
+            p.unlink(missing_ok=True)
+        return
     print("BE live contract smoke (port sniffed from each server's code):")
     print(f"{'model':<32} {'verdict'}")
     print("-" * 70)
     for m in models:
         v = run_one(m)
         print(f"{m:<32} {v}")
-    # cleanup smoke dir contents but keep it
     for p in SMOKE.glob("*.js"):
         p.unlink(missing_ok=True)
 

@@ -460,8 +460,8 @@ def render_leaderboard(results, updated: str, peer: dict[str, dict] | None = Non
             "",
             f"_Last updated: {updated} · scorer: `scripts/aggregate.py` · protocol: `docs/methodology.md`_",
             "",
-            "| Rank | Model | Final | Grade | NBS | Peer | Self | RAT | THO | VIS | ALG | FE | BE | Judges | Spread | Cost (est.) |",
-            "|---:|---|---:|:--:|---:|---:|---:|---:|---:|---:|---:|---:|---:|:--:|---:|---:|",
+            "| Rank | Model | Final | Grade | NBS | Peer | Self | RAT | THO | VIS | ALG | FE | BE | Judges | Spread | Live (BE/FE) | Cost (est.) |",
+            "|---:|---|---:|:--:|---:|---:|---:|---:|---:|---:|---:|---:|---:|:--:|---:|---:|---:|",
         ]
         for i, (name, res, peer100, self100, final) in enumerate(ranked, 1):
             m = res["medians"]
@@ -475,11 +475,18 @@ def render_leaderboard(results, updated: str, peer: dict[str, dict] | None = Non
             key_cell = f"{key_score:.2f}" if key_score is not None else "—"
             key_grade = grade(key_score) if key_score is not None else "—"
             cost_cell = (f"${cost_usd(name):.4f}" if cost_usd(name) is not None else "—")
+            lr = res.get("live")
+            if lr:
+                be_s = "—" if lr.get("be") is None else str(int(lr["be"]))
+                fe_s = "—" if lr.get("fe") is None else str(int(lr["fe"]))
+                live_cell = f"{be_s}/{fe_s}"
+            else:
+                live_cell = "—"
             lines.append(
                 f"| {i} | **{name}** | {key_cell} | {key_grade} "
                 f"| {nbs_cell} | {peer_cell} | {self_cell} "
                 f"| {pillar_cells} "
-                f"| {len(res['judges'])} | ±{res['spread']:.1f} | {cost_cell} |"
+                f"| {len(res['judges'])} | ±{res['spread']:.1f} | {live_cell} | {cost_cell} |"
             )
         legend = (
             "**NBS** = rubric-judge score (weighted across the 6 pillar medians) · **Peer** = mean of the other models' ratings · "
@@ -487,7 +494,9 @@ def render_leaderboard(results, updated: str, peer: dict[str, dict] | None = Non
             "Pillars: **RAT** ratiocination · **THO** thought · **VIS** visual · **ALG** algorithms · **FE** frontend · **BE** backend. "
             "Grades follow **Final** when peer data exists. "
             "**Cost (est.)** = input (test.md) + output (submission) tokens × published per-token price; "
-            "free-tier models report $0.00, unknown models report `—`."
+            "free-tier models report $0.00, unknown models report `—`. "
+            "**Live (BE/FE)** = pass rate of `scripts/verify_be.py` / `scripts/verify_fe.py` "
+            "(50/50 blended into BE/FE medians when both judge and live data exist)."
         )
     else:
         lines = [
@@ -566,7 +575,7 @@ def render_peer_notes(peer: dict[str, dict]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def collect(scores_dir: Path) -> tuple[list[tuple[str, dict]], list[str]]:
+def collect(scores_dir: Path, live: dict | None = None) -> tuple[list[tuple[str, dict]], list[str]]:
     by_candidate: dict[str, list[dict]] = {}
     problems: list[str] = []
     files = sorted(scores_dir.rglob("*.json"))
@@ -579,7 +588,25 @@ def collect(scores_dir: Path) -> tuple[list[tuple[str, dict]], list[str]]:
             continue
         cand = str(card.get("candidate_id") or "unknown")
         by_candidate.setdefault(cand, []).append(card)
-    results = [(cand, aggregate(cards)) for cand, cards in by_candidate.items()]
+    results = []
+    for cand, cards in by_candidate.items():
+        res = aggregate(cards)
+        # blend live verification (50/50) into BE/FE medians when available
+        if live and cand in live:
+            lr = live[cand]
+            medians = res["medians"]
+            for pillar, key in (("be", "be"), ("fe", "fe")):
+                if lr.get(key) is not None:
+                    if pillar in medians:
+                        medians[pillar] = round(0.5 * medians[pillar] + 0.5 * float(lr[key]), 2)
+                    else:
+                        medians[pillar] = float(lr[key])
+            if res["judges"] and all(p in medians for p in PILLARS):
+                res["overall"] = round(sum(PILLAR_WEIGHTS[p] * medians[p] for p in PILLARS), 2)
+            res["live"] = lr
+        else:
+            res["live"] = None
+        results.append((cand, res))
     return results, problems
 
 
@@ -639,12 +666,45 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out", "-o", type=Path, default=None)
     parser.add_argument("--peer-dir", "-p", type=Path, default="peer", help="directory of peer-review files; pass 'none' to skip")
     parser.add_argument("--selftest", action="store_true", help="validate examples and peer blending, then exit")
+    parser.add_argument("--live", action="store_true", help="run verify_be.py + verify_fe.py and blend 50/50 into BE/FE medians")
+    parser.add_argument("--live-results", type=Path, default=Path("live_results.json"), help="cache file for live verification results")
     args = parser.parse_args(argv)
 
     if args.selftest:
         return selftest(args.scores_dir, args.peer_dir)
 
-    results, problems = collect(args.scores_dir)
+    live = None
+    if args.live:
+        import subprocess as _sp
+        be = fe = {}
+        try:
+            r = _sp.run([sys.executable, "scripts/verify_be.py", "--json"],
+                        capture_output=True, text=True, timeout=300)
+            be = json.loads(r.stdout) if r.returncode == 0 else {}
+        except Exception as e:  # noqa: BLE001
+            print(f"WARNING: verify_be failed: {e}", file=sys.stderr)
+        try:
+            r = _sp.run([sys.executable, "scripts/verify_fe.py", "--json"],
+                        capture_output=True, text=True, timeout=300)
+            fe = json.loads(r.stdout) if r.returncode == 0 else {}
+        except Exception as e:  # noqa: BLE001
+            print(f"WARNING: verify_fe failed: {e}", file=sys.stderr)
+        live = {}
+        for m in set(be) | set(fe):
+            live[m] = {"be": be.get(m), "fe": fe.get(m)}
+        try:
+            args.live_results.write_text(json.dumps(live, indent=2), encoding="utf-8")
+            print(f"live results written to {args.live_results}")
+        except Exception as e:  # noqa: BLE001
+            print(f"WARNING: could not write live results: {e}", file=sys.stderr)
+    elif args.live_results and args.live_results.exists():
+        try:
+            live = json.loads(args.live_results.read_text(encoding="utf-8"))
+        except Exception as e:  # noqa: BLE001
+            print(f"WARNING: could not read live results {args.live_results}: {e}", file=sys.stderr)
+            live = None
+
+    results, problems = collect(args.scores_dir, live=live)
     for problem in problems:
         print(f"WARNING: {problem}", file=sys.stderr)
 
@@ -671,6 +731,7 @@ def main(argv: list[str] | None = None) -> int:
             results.append((cand, {
                 "judges": [], "medians": {}, "overall": None,
                 "spread": 0.0, "flags": ["no rubric judge covered this candidate"],
+                "live": (live or {}).get(cand),
             }))
         results.sort(key=lambda t: t[0].lower())
 
