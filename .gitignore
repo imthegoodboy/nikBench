@@ -16,6 +16,9 @@ scorecards/*
 peer/*
 !peer/README.md
 
+# transient runtime-test artifacts
+_smoke/
+
 # generated
 
 # OS

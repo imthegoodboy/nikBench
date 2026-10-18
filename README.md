@@ -186,7 +186,13 @@ The frontend task is visual too: a 10-requirement dashboard app. Open the real f
 | **big-pickle** | [`gallery/big-pickle_mission-control.html`](gallery/big-pickle_mission-control.html) | 80.7 |
 | **glm-5.3-flash** | [`gallery/glm-5-3-flash-free_mission-control.html`](gallery/glm-5-3-flash-free_mission-control.html) | 78.6 |
 
-_Full raw builds (all 8 models, all 4 visual tasks plus F1) live in `submissions/` between rounds; the renders above are extracted verbatim by `scripts/build_gallery.py` — no retouching._
+_Full raw builds (all 8 models, all 4 visual tasks plus F1) live in `submissions/`
+between rounds; the renders above are extracted verbatim by
+`scripts/build_gallery.py` — no retouching. **Round-1 extras:** the three
+featured B1 Clinic-API servers additionally pass a live contract smoke test
+(`python scripts/smoke_b1.py`, Node run): create doctor → book **201** →
+double-book **409 SLOT_TAKEN** → delete **204** → gone **404**, with clean
+validation errors on malformed input._
 
 ## 🗂️ Repository map
 
