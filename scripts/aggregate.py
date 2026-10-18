@@ -165,22 +165,24 @@ def _extract_json(text: str) -> dict | None:
 def _extract_last_json(text: str, require_schema: str | None = None) -> dict | None:
     """Parse the last schema-valid JSON object in a mixed markdown+json file.
 
-    Scans from the final '{' backwards, trimming the captured window at the last
-    '}' so trailing prose/code-fences after the block are ignored. Inner objects
-    that lack the required schema are skipped, not fatal.
+    Scans candidate starts ('{' chars) from last to first; for each start, walks
+    candidate ends ('}' chars) from last to first until a loadable, schema-valid
+    object is found. This survives fence tails, leaked scaffolding, or prose
+    after the block (any junk containing stray braces).
     """
     starts = [i for i, ch in enumerate(text) if ch == "{"]
+    ends = [i for i, ch in enumerate(text) if ch == "}"]
     for start in reversed(starts):
-        end = text.rfind("}", start)
-        if end < start:
-            continue
-        try:
-            obj = json.loads(text[start : end + 1])
-        except (json.JSONDecodeError, ValueError):
-            continue
-        if isinstance(obj, dict):
-            if require_schema is None or obj.get("schema") == require_schema:
-                return obj
+        pos_ends = [e for e in reversed(ends) if e > start]
+        for cap, end in enumerate(pos_ends[:200]):
+            try:
+                obj = json.loads(text[start : end + 1])
+            except (json.JSONDecodeError, ValueError):
+                continue
+            if isinstance(obj, dict):
+                if require_schema is None or obj.get("schema") == require_schema:
+                    return obj
+                break  # a smaller-but-valid dict can still envelope our target
     return None
 
 
@@ -221,8 +223,57 @@ def pillar_score(pillar: str, crits: dict) -> tuple[float, list[str]]:
     return points, warnings
 
 
+def _salvage_scorecard(text: str) -> dict | None:
+    """Rebuild a scorecard from a broken (e.g. unescaped inner quotes) JSON dump.
+
+    Extracts judge_id/candidate_id and every verbatim score value per the rigid
+    v1 schema shape; prose details are not recoverable reliably and get a
+    salvage note instead. Never invents a score: criteria missing from the raw
+    text are recorded as 0 with a salvage note.
+    """
+    import re
+    idx = []
+    for p in PILLARS:
+        found = re.search(rf'"{p}"\s*:\s*\{{', text)
+        idx.append((found.start() if found else -1, p))
+    located = [(i, p) for i, p in idx if i >= 0]
+    if not located:
+        return None
+    located.sort()
+    scores: dict[str, dict] = {}
+    for k, (i, pillar) in enumerate(located):
+        end = located[k + 1][0] if k + 1 < len(located) else len(text)
+        seg = text[i:end]
+        pillar_scores: dict = {}
+        if pillar == EXACT_PILLAR:
+            m = re.search(r'"correct_count"\s*:\s*([0-9.]*)', seg)
+            pillar_scores["exact_answers"] = {
+                "correct_count": float(m.group(1)) if m and m.group(1) else 0.0,
+                "detail": "salvaged: detail text unrecoverable, value verbatim",
+            }
+        for crit in WEIGHTS[pillar]:
+            m = re.search(rf'"{re.escape(crit)}"\s*:\s*\{{[^{{}}]*?"score"\s*:\s*([0-9.]+)', seg)
+            pillar_scores[crit] = {
+                "score": float(m.group(1)) if m else 0.0,
+                "detail": "salvaged: detail text unrecoverable" if m else "salvage: criterion not found in raw card (0)",
+            }
+        scores[pillar] = pillar_scores
+    mjudge = re.search(r'"judge_id"\s*:\s*"([^"]*)"', text)
+    mcand = re.search(r'"candidate_id"\s*:\s*"([^"]*)"', text)
+    flags: list[str] = ["parser-salvaged: original card had invalid JSON (likely unescaped quotes); every score value below extracted verbatim from the raw judge output"]
+    mflags = re.search(r'"flags"\s*:\s*\[(.*?)\]', text, re.S)
+    if mflags:
+        for f in re.findall(r'"([^"]+)"', mflags.group(1)):
+            flags.append(f"judge said: {f}")
+    return {"schema": SCHEMA, "judge_id": mjudge.group(1) if mjudge else "unknown",
+            "candidate_id": mcand.group(1) if mcand else "unknown",
+            "scores": scores, "flags": flags}
+
+
 def parse_scorecard(path: Path) -> dict | None:
     obj = _extract_json(path.read_text(encoding="utf-8", errors="replace"))
+    if not obj or not isinstance(obj.get("scores"), dict):
+        obj = _salvage_scorecard(path.read_text(encoding="utf-8", errors="replace"))
     if not obj or not isinstance(obj.get("scores"), dict):
         return None
     return obj

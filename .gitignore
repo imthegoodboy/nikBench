@@ -12,6 +12,10 @@ submissions/*
 scorecards/*
 !scorecards/README.md
 
+# peer reviews stay untracked until their leaderboard PR
+peer/*
+!peer/README.md
+
 # generated
 
 # OS
