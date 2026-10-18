@@ -1,0 +1,72 @@
+<svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="24 months of cafe revenue with renovation and festival annotated">
+  <!-- Data-honest bar chart. Derived numbers (hand-computed): Y1 (months 1–12) mean = €41,170.
+       Y2 months 13–24 excluding the festival month 19: mean = €41,320 → level change ≈ +€150/mo (+0.4%).
+       YoY same-month swings (e.g. m20 vs m8: −4.7%; m14 vs m2: +9.4% with 10 closed days) run ≈ −5%…+9%.
+       Festival month 19 = €63,500 ≈ +€22,400 (+54%) above the median month (€41,100). Scale: y = 420 − (v−35000)*340/30000. -->
+  <rect width="900" height="500" fill="#fbfaf7"/>
+  <text x="60" y="30" font-size="19" font-weight="bold" fill="#16202b" font-family="Helvetica,Arial">Café revenue, 24 months: the renovation effect is ambiguous — Y2 ≈ €41.3k/mo vs Y1 €41.2k (+0.4% ex-festival)</text>
+  <text x="60" y="50" font-size="12" fill="#5a6b7c" font-family="Helvetica,Arial">Seasonality visible in both years; the only real jump is the one-off festival (month 19). YoY months swing −5%…+9% — no "growth story".</text>
+
+  <!-- gridlines + y labels (EUR) -->
+  <g stroke="#e2e6ec" font-family="Helvetica,Arial" font-size="11" fill="#5a6b7c">
+    <line x1="80" y1="363.3" x2="860" y2="363.3"/><text x="74" y="367" text-anchor="end">40k</text>
+    <line x1="80" y1="306.7" x2="860" y2="306.7"/><text x="74" y="310" text-anchor="end">45k</text>
+    <line x1="80" y1="250"   x2="860" y2="250"/><text x="74" y="254" text-anchor="end">50k</text>
+    <line x1="80" y1="193.3" x2="860" y2="193.3"/><text x="74" y="197" text-anchor="end">55k</text>
+    <line x1="80" y1="136.7" x2="860" y2="136.7"/><text x="74" y="141" text-anchor="end">60k</text>
+  </g>
+
+  <!-- axes -->
+  <line x1="80" y1="420" x2="860" y2="420" stroke="#16202b" stroke-width="2"/>
+  <line x1="80" y1="70" x2="80" y2="420" stroke="#16202b" stroke-width="2"/>
+  <text x="34" y="250" font-size="13" fill="#16202b" font-family="Helvetica,Arial" transform="rotate(-90 34 250)">Revenue (EUR)</text>
+  <text x="470" y="470" font-size="12" fill="#16202b" font-family="Helvetica,Arial" text-anchor="middle">Month (1–24 · Year 1 = 1–12, Year 2 = 13–24)</text>
+
+  <!-- renovation band (month 13) -->
+  <rect x="468" y="66" width="34" height="356" fill="#9aa3ad" opacity="0.14"/>
+  <line x1="484" y1="66" x2="484" y2="420" stroke="#5a6b7c" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="484" y="60" font-size="11" fill="#5a6b7c" font-family="Helvetica,Arial" text-anchor="middle">renovation (10 closed days)</text>
+
+  <!-- monthly bars: Y1 slate #5c7aa3, Y2 deep blue #2f4b73 -->
+  <g font-family="Helvetica,Arial">
+    <rect x="80"  y="376.9" width="26" height="43.1" fill="#5c7aa3"/><rect x="112.5" y="386.5" width="26" height="33.5" fill="#5c7aa3"/>
+    <rect x="145" y="350.9" width="26" height="69.1" fill="#5c7aa3"/><rect x="177.5" y="360.9" width="26" height="59.1" fill="#5c7aa3"/>
+    <rect x="210" y="331.8" width="26" height="88.2" fill="#5c7aa3"/><rect x="242.5" y="325.6" width="26" height="94.4" fill="#5c7aa3"/>
+    <rect x="275" y="304.5" width="26" height="115.5" fill="#5c7aa3"/><rect x="307.5" y="308.9" width="26" height="111.1" fill="#5c7aa3"/>
+    <rect x="340" y="341.8" width="26" height="78.2" fill="#5c7aa3"/><rect x="372.5" y="356.5" width="26" height="63.5" fill="#5c7aa3"/>
+    <rect x="405" y="382.6" width="26" height="37.4" fill="#5c7aa3"/><rect x="437.5" y="373" width="26" height="47" fill="#5c7aa3"/>
+    <rect x="470" y="352" width="26" height="68" fill="#2f4b73"/><rect x="502.5" y="346.3" width="26" height="73.7" fill="#2f4b73"/>
+    <rect x="535" y="341.8" width="26" height="78.2" fill="#2f4b73"/><rect x="567.5" y="350.9" width="26" height="69.1" fill="#2f4b73"/>
+    <rect x="600" y="354.1" width="26" height="65.9" fill="#2f4b73"/><rect x="632.5" y="339.5" width="26" height="80.5" fill="#2f4b73"/>
+    <!-- month 19: festival one-off, drawn hatched with outline + cap -->
+    <rect x="665" y="97" width="26" height="323" fill="#d9a441" stroke="#16202b" stroke-width="1.5"/>
+    <line x1="665" y1="110" x2="691" y2="130" stroke="#16202b"/><line x1="665" y1="150" x2="691" y2="170"/>
+    <line x1="665" y1="190" x2="691" y2="210"/><line x1="665" y1="230" x2="691" y2="250"/>
+    <line x1="665" y1="270" x2="691" y2="290"/><line x1="665" y1="310" x2="691" y2="330"/>
+    <rect x="702.5" y="332.7" width="26" height="87.3" fill="#2f4b73"/><rect x="735" y="337.1" width="26" height="82.9" fill="#2f4b73"/>
+    <rect x="767.5" y="353" width="26" height="67" fill="#2f4b73"/><rect x="800" y="365.5" width="26" height="54.5" fill="#2f4b73"/>
+    <rect x="832.5" y="362.1" width="26" height="57.9" fill="#2f4b73"/>
+    <!-- month labels -->
+    <g font-size="10" fill="#5a6b7c" text-anchor="middle">
+      <text x="93" y="436">1</text><text x="158" y="436">3</text><text x="223" y="436">5</text>
+      <text x="288" y="436">7</text><text x="353" y="436">9</text><text x="418" y="436">11</text>
+      <text x="483" y="436">13</text><text x="548" y="436">15</text><text x="613" y="436">17</text>
+      <text x="678" y="436">19</text><text x="743" y="436">21</text><text x="808" y="436">23</text>
+    </g>
+  </g>
+
+  <!-- year means ex-outlier: Y1 €41,170 → y=350.1 ; Y2 ex-festival €41,320 → y=348.4 -->
+  <line x1="80" y1="350.1" x2="465" y2="350.1" stroke="#16202b" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <line x1="504" y1="348.4" x2="860" y2="348.4" stroke="#16202b" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="86" y="345" font-size="10.5" fill="#16202b" font-family="Helvetica,Arial">Y1 mean €41.2k</text>
+  <text x="750" y="343" font-size="10.5" fill="#16202b" font-family="Helvetica,Arial">Y2 mean €41.3k (ex-festival)</text>
+
+  <!-- outlier callout -->
+  <line x1="678" y1="97" x2="700" y2="80" stroke="#16202b"/>
+  <text x="704" y="86" font-size="12" font-weight="bold" fill="#16202b" font-family="Helvetica,Arial">Festival weekend (one-off): +€22.4k vs a typical month (≈ +54%)</text>
+
+  <!-- legend -->
+  <rect x="700" y="452" width="14" height="10" fill="#5c7aa3"/><text x="718" y="461" font-size="11" fill="#16202b" font-family="Helvetica,Arial">Year 1</text>
+  <rect x="762" y="452" width="14" height="10" fill="#2f4b73"/><text x="780" y="461" font-size="11" fill="#16202b" font-family="Helvetica,Arial">Year 2</text>
+  <rect x="828" y="452" width="14" height="10" fill="#d9a441" stroke="#16202b"/><text x="846" y="461" font-size="11" fill="#16202b" font-family="Helvetica,Arial">one-off</text>
+</svg>

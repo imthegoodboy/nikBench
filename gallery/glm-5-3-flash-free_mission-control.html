@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NIKBENCH-1 — Mission Control</title>
+<style>
+:root{
+  --bg:#0b1118; --panel:#131c26; --ink:#e6edf3; --muted:#93a4b6; --line:#2a3b4d;
+  --ac:#4fd1c5; --warn:#f6ad55; --crit:#fc8181; --btn:#1c2a39;
+  --chart-line:#4fd1c5; --chart-grid:#243345; --chart-axis:#93a4b6; --ok:#4fd1c5;
+}
+html[data-theme="light"]{
+  --bg:#eef2f6; --panel:#ffffff; --ink:#17222e; --muted:#5b6c7d; --line:#d3dde7;
+  --ac:#0d7d72; --warn:#a15c07; --crit:#b43030; --btn:#e2eaf1;
+  --chart-line:#0d7d72; --chart-grid:#e0e8f0; --chart-axis:#5b6c7d; --ok:#0d7d72;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,"Segoe UI",sans-serif}
+header{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  padding:12px 20px;border-bottom:1px solid var(--line)}
+h1{margin:0;font-size:17px;letter-spacing:.1em}
+#clock{font-variant-numeric:tabular-nums;color:var(--muted)}
+#clock b{color:var(--ink);font-size:16px}
+button{background:var(--btn);color:var(--ink);border:1px solid var(--line);border-radius:8px;
+  padding:7px 14px;cursor:pointer;font:600 13px system-ui}
+button:hover{border-color:var(--ac)}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+main{display:grid;gap:14px;padding:14px 20px}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat h2{margin:0;font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.stat p{margin:6px 0 0;font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.grid{display:grid;grid-template-columns:3fr 2fr;gap:14px}
+section,aside{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
+h2{margin:0 0 8px;font-size:13px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{color:var(--muted);cursor:pointer;user-select:none}
+th .arr{display:inline-block;width:1em}
+.badge{padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700}
+.s-ACTIVE{color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,transparent)}
+.s-DEGRADED{color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,transparent)}
+.s-OFFLINE{color:var(--crit);background:color-mix(in srgb,var(--crit) 14%,transparent)}
+#anomalies{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+#anomalies li{display:flex;gap:10px;align-items:baseline;border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+#anomalies time{color:var(--muted);font-variant-numeric:tabular-nums;flex:none}
+.sev{flex:none;font-weight:700;font-size:11px}
+.sev.INFO{color:var(--muted)} .sev.WARN{color:var(--warn)} .sev.CRIT{color:var(--crit)}
+#anomalies .msg{flex:1;min-width:0}
+.x{flex:none;padding:2px 8px;border-radius:6px}
+canvas{width:100%;height:180px;display:block}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+@media(max-width:700px){.metrics{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.metrics{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <h1>NIKBENCH-1 · MISSION CONTROL</h1>
+  <div id="clock">UTC <b id="hms">--:--:--</b></div>
+  <button id="themeBtn" aria-label="Toggle light/dark theme" aria-pressed="false">◐ Theme</button>
+</header>
+<main>
+  <div class="metrics" aria-label="Key metrics">
+    <div class="stat"><h2>Fuel</h2><p id="mFuel">–</p></div>
+    <div class="stat"><h2>Battery</h2><p id="mBatt">–</p></div>
+    <div class="stat"><h2>Signal</h2><p id="mSig">–</p></div>
+    <div class="stat"><h2>Crew</h2><p id="mCrew">–</p></div>
+  </div>
+
+  <div class="grid">
+    <section aria-labelledby="tTel">
+      <h2 id="tTel">Telemetry — signal, last 60 s</h2>
+      <canvas id="chart" width="600" height="180" role="img" aria-label="Line chart of signal level over the last 60 seconds"></canvas>
+    </section>
+    <aside aria-labelledby="tAn" style="display:flex;flex-direction:column;gap:10px">
+      <h2 id="tAn">Anomaly feed</h2>
+      <button id="diag" aria-label="Run diagnostic and add an anomaly event">RUN DIAGNOSTIC</button>
+      <ul id="anomalies" aria-live="polite"></ul>
+    </aside>
+
+    <section aria-labelledby="tSat" style="grid-column:1/-1">
+      <h2 id="tSat">Satellite constellation · <span id="cdStatus">T-</span><span id="countdown">--</span> to 2026-12-01 09:00Z</h2>
+      <table id="satTable"><thead><tr id="satHead"></tr></thead><tbody id="satBody"></tbody></table>
+    </section>
+  </div>
+</main>
+
+<script>
+"use strict";
+/* Mulberry32 — deterministic PRNG, seed 42 (stated constant) */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const K="nikbench.f1.";
+const load=(k,d)=>{try{const v=localStorage.getItem(K+k);return v?JSON.parse(v):d;}catch(e){return d;}};
+const save=(k,v)=>{try{localStorage.setItem(K+k,JSON.stringify(v));}catch(e){}};
+
+/* metrics: seed 42 → init, then bounded random walk every 5 s */
+const rnd=mulberry32(42);
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+let metrics=load("metrics",null)||{
+  fuel:+(40+rnd()*50).toFixed(2),
+  battery:+(40+rnd()*50).toFixed(2),
+  signal:Math.floor(10+rnd()*80),
+  crew:Math.floor(2+rnd()*4)
+};
+metrics.fuel=clamp(metrics.fuel,0,100);metrics.battery=clamp(metrics.battery,0,100);
+metrics.signal=clamp(metrics.signal,0,99);metrics.crew=clamp(metrics.crew,0,6);
+function walk(){
+  metrics.fuel=+clamp(metrics.fuel+(rnd()-.5)*1.5,0,100).toFixed(2);
+  metrics.battery=+clamp(metrics.battery+(rnd()-.5)*1.5,0,100).toFixed(2);
+  metrics.signal=clamp(Math.round(metrics.signal+(rnd()-.5)*5),0,99);
+  metrics.crew=clamp(metrics.crew+(rnd()<.5?-1:1),0,6);
+  save("metrics",metrics);renderMetrics();
+}
+function renderMetrics(){
+  mFuel.textContent=metrics.fuel.toFixed(2)+" %";
+  mBatt.textContent=metrics.battery.toFixed(2)+" %";
+  mSig.textContent=metrics.signal+" dB";
+  mCrew.textContent=metrics.crew+" / 6";
+}
+
+/* satellites: 8 fixed rows, contacts seeded, "last contact" counts up live */
+const SATS=[
+ ["NX-01","Pioneer",   "LEO","ACTIVE",   3],
+ ["NX-02","Voskhod-9", "LEO","DEGRADED", 11],
+ ["NX-03","Helios-4",  "MEO","ACTIVE",   47],
+ ["NX-04","Kepler-B",  "MEO","ACTIVE",   88],
+ ["NX-05","Anchorage", "GEO","ACTIVE",   240],
+ ["NX-06","Meridian",  "LEO","OFFLINE",  901],
+ ["NX-07","Tundra-2",  "MEO","DEGRADED", 366],
+ ["NX-08","Zenith-1",  "GEO","ACTIVE",   15]
+].map((r,i)=>({id:r[0],name:r[1],orbit:r[2],status:r[3],t0:Date.now()-r[4]*60000}));
+let sort=load("sort",{key:"id",dir:1});
+const COLS=[["id","ID"],["name","Name"],["orbit","Orbit type"],["status","Status"],["lastContact","Last contact"]];
+function ago(ms){const m=Math.round(ms/60000);
+  return m<60?m+"m ago":Math.floor(m/60)+"h "+(m%60)+"m ago";}
+function renderHead(){
+  satHead.innerHTML=COLS.map(([k,l])=>{
+    const on=sort.key===k, arr=sort.key==="lastContact"?"":(on?(sort.dir>0?"▲":"▼")+(on?" ▼":"▼"):"");
+    const arrow=on?(sort.dir>0?"▲":"▼"):"";
+    return "<th tabindex=0 role=button aria-sort='"+(on?(sort.dir>0?"ascending":"descending"):"none")+
+      "' data-k='"+k+"' aria-label='Sort by "+l+"'>"+l+" <span class=arr>"+arrow+"</span></th>";
+  }).join("");
+  [...satHead.children].forEach(th=>{
+    th.onclick=()=>{const k=th.dataset.k;
+      sort=(sort.key===k)?{key:k,dir:-sort.dir}:{key:k,dir:1};
+      save("sort",sort);renderTable();};
+    th.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();th.click();}};
+  });
+}
+function renderTable(){
+  const rows=[...SATS].sort((a,b)=>{
+    const va=sort.key==="lastContact"?Date.now()-a.t0:a[sort.key];
+    const vb=sort.key==="lastContact"?Date.now()-b.t0:b[sort.key];
+    return (va<vb?-1:va>vb?1:0)*sort.dir;});
+  satBody.innerHTML=rows.map(s=>{
+    const dt=Date.now()-s.t0;
+    return "<tr><td>"+s.id+"</td><td>"+s.name+"</td><td>"+s.orbit+
+      "</td><td><span class='badge s-"+s.status+"'>"+s.status+"</span></td><td>"+ago(dt)+"</td></tr>";
+  }).join("");
+}
+
+/* chart: 60 samples of signal, one per second, colors from CSS variables */
+const canvas=document.getElementById("chart"),cx=canvas.getContext("2d");
+let samples=load("samples",null)||(()=>{const r=mulberry32(42),a=[];
+  for(let i=0;i<60;i++)a.push(clamp(metrics.signal+Math.round((r()-.5)*10),0,99));return a;})();
+const css=getComputedStyle(document.documentElement);
+const C=n=>css.getPropertyValue(n).trim();
+function drawChart(){
+  const w=canvas.width,hh=canvas.height,min=Math.min(...samples),max=Math.max(...samples);
+  const pad=10,lo=Math.max(0,min-3),hi=Math.min(99,max+3);
+  cx.clearRect(0,0,w,hh);
+  cx.strokeStyle=C("--chart-axis");cx.fillStyle=C("--chart-axis");
+  cx.font="11px system-ui";cx.textAlign="left";
+  cx.beginPath();cx.moveTo(0,hh-14);cx.lineTo(w,hh-14);cx.stroke(); /* baseline axis */
+  cx.fillText(String(Math.min(99,Math.round(hi))),4,12);
+  cx.fillText(String(Math.max(0,Math.round(lo))),4,hh-18);
+  cx.fillStyle=C("--chart-grid");
+  for(let i=1;i<6;i++){const y=(hh-14)*i/6;cx.fillRect(0,y,w,1);}
+  cx.strokeStyle=C("--chart-line");cx.lineWidth=2;cx.beginPath();
+  samples.forEach((v,i)=>{const x=i*w/(samples.length-1),y=(hh-16)*(1-(v-lo)/(hi-lo||1));
+    i?cx.lineTo(x,y):cx.moveTo(x,y);});
+  cx.stroke();
+}
+
+/* anomalies */
+const POOL=[" Gyro drift beyond tolerance — realigning"," Solar panel yield 12% below forecast",
+ " Signal dropout burst on downlink"," Thermal spike in avionics bay A",
+ " Backup antenna failed self-test"," Star tracker image smeared — retry",
+ " Payload bus voltage ripple detected"," Debris conjunction warning: maneuver planned"];
+const SEV=["INFO","WARN","CRIT"];
+let anoms=load("anomalies",[]);
+function addAnomaly(){
+  const i=Math.floor(rnd()*POOL.length);
+  anoms.push({t:Date.now(),sev:SEV[Math.floor(rnd()*3)],msg:POOL[i]});
+  if(anoms.length>30)anoms=anoms.slice(-30);
+  save("anomalies",anoms);renderAnoms();
+}
+function renderAnoms(){
+  anomalies.innerHTML=anoms.map((a,i)=>
+    "<li><time>"+new Date(a.t).toISOString().slice(11,19)+"Z</time><span class='sev "+a.sev+"'>"+
+    a.sev+"</span><span class='msg'>"+a.msg+"</span><button class='x' data-i='"+i+
+    "' aria-label='Dismiss anomaly: "+a.msg+"'>✕</button></li>").join("")||
+    "<li><span class='msg' style='color:var(--muted)'>No anomalies logged.</span></li>";
+  [...anomalies.querySelectorAll(".x")].forEach(b=>b.onclick=()=>{
+    anoms.splice(+b.dataset.i,1);save("anomalies",anoms);renderAnoms();});
+}
+
+/* countdown to 2026-12-01T09:00:00Z */
+const TARGET=Date.parse("2026-12-01T09:00:00Z");
+function tick(){
+  hms.textContent=new Date().toISOString().slice(11,19);
+  let d=TARGET-Date.now();
+  if(d<=0){countdown.textContent="00:00:00:00";cdStatus.textContent="T-";/* spec: LANDED */
+    document.querySelector("h2#tSat").nextSibling;cdStatus.textContent=""; 
+    document.getElementById("cdStatus").textContent="LANDED · T-";
+  }else{
+    const dd=Math.floor(d/864e5),hh=Math.floor(d%864e5/36e5),mm=Math.floor(d%36e5/6e4),ss=Math.floor(d%6e4/1000);
+    countdown.textContent=String(dd).padStart(2,"0")+":"+String(hh).padStart(2,"0")+":"+
+      String(mm).padStart(2,"0")+":"+String(ss).padStart(2,"0");
+    document.getElementById("cdStatus").textContent="T-";
+  }
+}
+
+/* theme */
+function setTheme(t){document.documentElement.dataset.theme=t;
+  themeBtn.setAttribute("aria-pressed",String(t==="light"));
+  themeBtn.textContent=t==="dark"?"◐ Theme":"◑ Theme";
+  save("theme",t);drawChart();}
+function toggleTheme(){setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");}
+themeBtn.onclick=toggleTheme;
+addEventListener("keydown",e=>{if((e.key==="d"||e.key==="D")&&!e.ctrlKey&&!e.metaKey&&!e.altKey)toggleTheme();});
+
+/* wiring */
+setTheme(load("theme","dark"));
+renderMetrics();renderHead();renderTable();renderAnoms();drawChart();
+setInterval(tick,1000);          /* UTC clock + countdown + chart sample (1 Hz) */
+setInterval(walk,5000);          /* metric walk, 5 s */
+setInterval(renderTable,30000);  /* refresh relative "last contact" labels */
+let lastSample=0;
+setInterval(()=>{const n=Date.now();
+  if(n-lastSample>=1000){lastSample=n;samples.push(metrics.signal);
+    if(samples.length>60)samples=samples.slice(-60);save("samples",samples);drawChart();}},500);
+diag.onclick=addAnomaly;
+tick();addAnomaly===undefined;renderTable();
+</script>
+</body>
+</html>

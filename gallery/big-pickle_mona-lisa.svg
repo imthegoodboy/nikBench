@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600" role="img" aria-label="Mona Lisa — hand-authored vector art">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7d94a2"/>
+      <stop offset="0.45" stop-color="#a9b6b0"/>
+      <stop offset="1" stop-color="#6d7a63"/>
+    </linearGradient>
+    <linearGradient id="mtn" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8b9aa0"/>
+      <stop offset="1" stop-color="#5f6d63"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9fb0ac"/>
+      <stop offset="1" stop-color="#7b8a78"/>
+    </linearGradient>
+    <radialGradient id="faceG" cx="0.5" cy="0.42" r="0.68">
+      <stop offset="0" stop-color="#f2ddbd"/>
+      <stop offset="0.55" stop-color="#e6c398"/>
+      <stop offset="1" stop-color="#c4936a"/>
+    </radialGradient>
+    <radialGradient id="shadow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#3a2415" stop-opacity="0"/>
+      <stop offset="1" stop-color="#2b1a0f" stop-opacity="0.5"/>
+    </radialGradient>
+    <linearGradient id="hair" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4a3623"/>
+      <stop offset="1" stop-color="#1b110a"/>
+    </linearGradient>
+    <linearGradient id="dress" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#54412a"/>
+      <stop offset="0.5" stop-color="#3a2b1c"/>
+      <stop offset="1" stop-color="#1d150e"/>
+    </linearGradient>
+    <linearGradient id="veil" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ded8c8" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#8f8a79" stop-opacity="0.12"/>
+    </linearGradient>
+    <linearGradient id="skinArm" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eccba4"/>
+      <stop offset="1" stop-color="#b98a5f"/>
+    </linearGradient>
+    <filter id="soft" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="2.4"/>
+    </filter>
+  </defs>
+
+  <!-- background stratum -->
+  <rect x="0" y="0" width="400" height="600" fill="url(#sky)"/>
+  <rect x="0" y="250" width="400" height="350" fill="url(#water)" opacity="0.55"/>
+
+  <!-- distant landscape: hazy hills, a lake, a winding road -->
+  <path d="M0,240 L60,214 L110,236 L170,206 L235,232 L300,210 L360,236 L400,222 L400,300 L0,300 Z" fill="url(#mtn)" opacity="0.75"/>
+  <path d="M0,262 L70,246 L140,258 L210,240 L280,256 L350,244 L400,254 L400,320 L0,320 Z" fill="#6f7d6c" opacity="0.6" filter="url(#soft)"/>
+  <path d="M0,300 C90,286 150,300 210,292 C270,284 330,296 400,288 L400,360 L0,360 Z" fill="#8a977f" opacity="0.5"/>
+  <path d="M120,600 C150,480 176,400 196,320 C206,286 214,286 226,320 C250,400 268,500 292,600 Z" fill="#9aa08b" opacity="0.35"/>
+  <path d="M150,600 C166,500 184,420 198,352 C206,318 210,318 218,352 C236,440 254,520 268,600 Z" fill="#b7b297" opacity="0.25" filter="url(#soft)"/>
+
+  <!-- gown / shoulders -->
+  <path d="M78,600 L104,398 C124,352 156,330 178,322 L200,314 L222,322 C244,330 276,352 296,398 L322,600 Z" fill="url(#dress)"/>
+  <path d="M150,360 C170,346 230,346 250,362 C268,376 276,410 280,440 L120,440 C126,408 134,374 150,360 Z" fill="#2a1f14" opacity="0.55" filter="url(#soft)"/>
+
+  <!-- hair mass behind head -->
+  <path d="M118,340 C106,208 132,128 200,124 C268,128 294,208 282,340 C276,430 246,486 200,486 C154,486 124,430 118,340 Z" fill="url(#hair)"/>
+  <path d="M128,256 C150,282 170,300 174,360 C176,300 168,270 150,246 Z" fill="#120b06" opacity="0.6"/>
+
+  <!-- neck -->
+  <path d="M180,262 L220,262 L226,318 L174,318 Z" fill="#d9b183"/>
+  <path d="M180,262 L200,300 L220,262 L220,286 C210,304 190,304 180,286 Z" fill="#a97a52" opacity="0.5"/>
+
+  <!-- face -->
+  <ellipse cx="200" cy="208" rx="51" ry="65" fill="url(#faceG)"/>
+  <ellipse cx="200" cy="208" rx="51" ry="65" fill="url(#shadow)" opacity="0.5"/>
+  <path d="M158,196 C168,176 232,176 242,196 C232,186 168,186 158,196 Z" fill="#f7e6c8" opacity="0.5" filter="url(#soft)"/>
+  <ellipse cx="176" cy="232" rx="14" ry="9" fill="#dcaa7c" opacity="0.5" filter="url(#soft)"/>
+  <ellipse cx="224" cy="232" rx="14" ry="9" fill="#dcaa7c" opacity="0.5" filter="url(#soft)"/>
+
+  <!-- eyes, brows -->
+  <path d="M166,198 C172,192 188,192 194,197" fill="none" stroke="#6a4a30" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M206,197 C212,192 228,192 234,198" fill="none" stroke="#6a4a30" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M170,206 C176,202 188,202 193,206" fill="none" stroke="#5d4530" stroke-width="1.2"/>
+  <path d="M207,206 C212,202 224,202 230,206" fill="none" stroke="#5d4530" stroke-width="1.2"/>
+  <ellipse cx="181" cy="207" rx="6.2" ry="3.6" fill="#efe3cf"/>
+  <ellipse cx="219" cy="207" rx="6.2" ry="3.6" fill="#efe3cf"/>
+  <circle cx="181.5" cy="207" r="2.7" fill="#4a3320"/>
+  <circle cx="218.5" cy="207" r="2.7" fill="#4a3320"/>
+  <circle cx="182.4" cy="206.2" r="0.8" fill="#fdf7ea"/>
+  <circle cx="219.4" cy="206.2" r="0.8" fill="#fdf7ea"/>
+
+  <!-- nose -->
+  <path d="M200,208 C198,220 195,230 191,236 C196,238 204,238 209,236 C205,230 202,220 200,208 Z" fill="#d5a877" opacity="0.6" filter="url(#soft)"/>
+  <path d="M193,236 C196,238 204,238 207,236" fill="none" stroke="#a9784f" stroke-width="1" opacity="0.7"/>
+
+  <!-- mouth: the faint, famous smile -->
+  <path d="M184,246 C192,250 208,250 216,244" fill="none" stroke="#9c6248" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M187,248 C194,252 206,252 213,248" fill="none" stroke="#7d4634" stroke-width="1.1" opacity="0.7"/>
+  <path d="M182,245 C188,242 194,243 200,244 C206,243 212,242 218,245 C212,241 206,240 200,240 C194,240 188,241 182,245 Z" fill="#a86e52" opacity="0.55" filter="url(#soft)"/>
+
+  <!-- hair strands falling over the face, and the mantle -->
+  <path d="M152,180 C140,240 142,320 150,392 C140,320 134,236 146,176 Z" fill="#2a1c11" opacity="0.85"/>
+  <path d="M248,180 C260,240 258,320 250,392 C260,320 266,236 254,176 Z" fill="#2a1c11" opacity="0.85"/>
+  <path d="M150,300 C138,352 138,412 148,452 C134,404 132,340 144,296 Z" fill="#c9c2ac" opacity="0.35"/>
+  <path d="M250,300 C262,352 262,412 252,452 C266,404 268,340 256,296 Z" fill="#c9c2ac" opacity="0.35"/>
+
+  <!-- veil over crown -->
+  <path d="M138,268 C132,180 150,112 200,106 C250,112 268,180 262,268 C252,196 236,146 200,140 C164,146 148,196 138,268 Z" fill="url(#veil)"/>
+  <path d="M138,268 C128,214 138,132 200,118 C262,132 272,214 262,268 C262,214 250,142 200,132 C150,142 138,214 138,268 Z" fill="#cfc9bb" opacity="0.22" filter="url(#soft)"/>
+  <path d="M154,232 C160,180 176,158 200,154 C224,158 240,180 246,232" fill="none" stroke="#e9e3d4" stroke-width="1" opacity="0.35"/>
+
+  <!-- crossed hands, lower centre -->
+  <path d="M96,600 C104,520 132,470 168,452 C188,442 210,444 220,456 C214,486 190,506 168,520 C140,538 122,564 118,600 Z" fill="url(#skinArm)"/>
+  <path d="M304,600 C296,520 268,470 232,452 C212,442 190,444 180,456 C186,486 210,506 232,520 C260,538 278,564 282,600 Z" fill="url(#skinArm)"/>
+  <ellipse cx="168" cy="470" rx="34" ry="20" fill="url(#skinArm)" transform="rotate(-18 168 470)"/>
+  <ellipse cx="232" cy="474" rx="34" ry="20" fill="url(#skinArm)" transform="rotate(18 232 474)"/>
+  <ellipse cx="196" cy="492" rx="30" ry="18" fill="url(#skinArm)" transform="rotate(-8 196 492)"/>
+  <path d="M150,486 C166,478 186,480 198,490 C186,486 166,484 150,486 Z" fill="#a97a52" opacity="0.5"/>
+  <path d="M206,490 C218,480 238,478 254,486 C238,484 218,486 206,490 Z" fill="#a97a52" opacity="0.5"/>
+  <path d="M132,512 C148,498 176,494 196,504" fill="none" stroke="#b98a5f" stroke-width="1.2" opacity="0.6"/>
+  <path d="M268,512 C252,498 224,494 204,504" fill="none" stroke="#b98a5f" stroke-width="1.2" opacity="0.6"/>
+
+  <!-- faint sfumato vignette on the figure -->
+  <ellipse cx="200" cy="250" rx="120" ry="170" fill="url(#shadow)" opacity="0.25" filter="url(#soft)"/>
+</svg>

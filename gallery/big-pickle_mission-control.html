@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NIKBENCH-1 Mission Control</title>
+<style>
+  :root{
+    --bg:#0b1220; --panel:#121b2c; --panel2:#0f1727; --fg:#e8eef7; --muted:#8ea3bd;
+    --accent:#4fd1c5; --accent2:#7aa2ff; --border:#22304a;
+    --danger:#ff7a7a; --warn:#ffcf5c; --ok:#5ee08a;
+    --shadow:0 6px 18px rgba(0,0,0,.35); --radius:12px;
+  }
+  html[data-theme="light"]{
+    --bg:#f2f5fa; --panel:#ffffff; --panel2:#eef2f8; --fg:#0d1522; --muted:#4d5f76;
+    --accent:#0b8f83; --accent2:#2b5fd9; --border:#cfd9e6;
+    --danger:#b02525; --warn:#8a6300; --ok:#1c7a45;
+    --shadow:0 6px 18px rgba(20,40,80,.12);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.45 "Segoe UI",system-ui,Arial,sans-serif}
+  :focus-visible{outline:3px solid var(--accent2);outline-offset:2px;border-radius:6px}
+  header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+         padding:14px 18px;background:var(--panel);border-bottom:1px solid var(--border);box-shadow:var(--shadow)}
+  h1{font-size:18px;margin:0;letter-spacing:1px}
+  h1 span{color:var(--accent)}
+  .clock{font-variant-numeric:tabular-nums;font-size:16px;color:var(--accent)}
+  button{background:var(--panel2);color:var(--fg);border:1px solid var(--border);border-radius:8px;
+         padding:8px 12px;cursor:pointer;font:inherit}
+  button:hover{border-color:var(--accent)}
+  main{padding:16px;display:grid;gap:16px;max-width:1100px;margin:0 auto}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow)}
+  .card h3{margin:0 0 6px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+  .card .val{font-size:24px;font-variant-numeric:tabular-nums}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+  .panel h2{margin:0 0 10px;font-size:14px;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
+  .countdown{display:flex;flex-wrap:wrap;gap:14px;align-items:baseline}
+  .countdown .big{font-size:28px;font-variant-numeric:tabular-nums;color:var(--accent2)}
+  .status{font-size:12px;padding:3px 9px;border-radius:999px;background:var(--panel2);color:var(--muted);border:1px solid var(--border)}
+  table{width:100%;border-collapse:collapse}
+  th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+  th{background:var(--panel2);cursor:pointer;user-select:none}
+  th .arrow{color:var(--accent);margin-left:4px}
+  tbody tr:hover{background:var(--panel2)}
+  .tblwrap{overflow-x:auto}
+  canvas{width:100%;height:200px;display:block;border-radius:8px}
+  .row2{display:grid;grid-template-columns:1fr;gap:16px}
+  ul.feed{list-style:none;margin:0;padding:0;display:grid;gap:8px;max-height:260px;overflow:auto}
+  ul.feed li{display:flex;justify-content:space-between;gap:10px;align-items:center;
+             background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:8px 10px}
+  .sev{font-size:11px;font-weight:700;padding:2px 6px;border-radius:6px;margin-right:8px}
+  .sev.INFO{background:color-mix(in srgb, var(--ok) 25%, transparent);color:var(--ok)}
+  .sev.WARN{background:color-mix(in srgb, var(--warn) 25%, transparent);color:var(--warn)}
+  .sev.CRIT{background:color-mix(in srgb, var(--danger) 25%, transparent);color:var(--danger)}
+  .msg{flex:1 1 auto}
+  .time{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+  .dismiss{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:15px;padding:2px 6px}
+  .dismiss:hover{color:var(--danger)}
+  @media (max-width:768px){ .cards{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:480px){ .cards{grid-template-columns:1fr} }
+  @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important} }
+</style>
+</head>
+<body>
+<header>
+  <h1>NIKBENCH-1 <span>· Mission Control</span></h1>
+  <div style="display:flex;gap:12px;align-items:center">
+    <div class="clock" id="utc" aria-live="off">--:--:-- UTC</div>
+    <button id="themeBtn" aria-label="Switch to light theme">☀ Light</button>
+  </div>
+</header>
+
+<main>
+  <section class="cards" aria-label="Live mission metrics">
+    <div class="card"><h3>Fuel</h3><div class="val" id="mFuel">--</div></div>
+    <div class="card"><h3>Battery</h3><div class="val" id="mBatt">--</div></div>
+    <div class="card"><h3>Signal</h3><div class="val" id="mSig">--</div></div>
+    <div class="card"><h3>Crew</h3><div class="val" id="mCrew">--</div></div>
+  </section>
+
+  <section class="panel" aria-label="Countdown to launch">
+    <h2>Countdown · T-minus to 2026-12-01T09:00:00Z</h2>
+    <div class="countdown">
+      <div class="big" id="cd">T-00:00:00:00</div>
+      <div class="status" id="cdStatus">—</div>
+    </div>
+  </section>
+
+  <section class="panel" aria-label="Signal telemetry chart">
+    <h2>Telemetry · Signal (dB)</h2>
+    <canvas id="chart" role="img" aria-label="Line chart of signal strength over the last 60 seconds"></canvas>
+  </section>
+
+  <section class="panel" aria-label="Satellite status table">
+    <h2>Satellites</h2>
+    <div class="tblwrap">
+      <table id="satTable">
+        <thead>
+          <tr>
+            <th data-col="id" tabindex="0" aria-sort="ascending">ID<span class="arrow"></span></th>
+            <th data-col="name" tabindex="0">Name<span class="arrow"></span></th>
+            <th data-col="orbit" tabindex="0">Orbit<span class="arrow"></span></th>
+            <th data-col="status" tabindex="0">Status<span class="arrow"></span></th>
+            <th data-col="contact" tabindex="0">Last contact<span class="arrow"></span></th>
+          </tr>
+        </thead>
+        <tbody id="satBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" aria-label="Anomaly feed">
+    <h2>Anomaly feed</h2>
+    <p><button id="diagBtn" aria-label="Run a diagnostic and add a simulated event">RUN DIAGNOSTIC</button>
+       <button id="clearBtn" aria-label="Dismiss all anomaly items">Clear all</button></p>
+    <ul class="feed" id="feed" aria-live="polite"></ul>
+  </section>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var LS = "nikbench.f1.";
+  function $(s) { return document.querySelector(s); }
+  function pad(n, w) { n = String(Math.floor(n)); while (n.length < (w || 2)) n = "0" + n; return n; }
+
+  /* deterministic PRNG: mulberry32, seed 42 */
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  var rand = mulberry32(42);
+
+  /* ---------- theme (persisted) ---------- */
+  var theme = localStorage.getItem(LS + "theme") || "dark";
+  function applyTheme(t) {
+    theme = t;
+    document.documentElement.setAttribute("data-theme", t);
+    localStorage.setItem(LS + "theme", t);
+    var b = $("#themeBtn");
+    b.textContent = (t === "dark") ? "☀ Light" : "🌙 Dark";
+    b.setAttribute("aria-label", "Switch to " + (t === "dark" ? "light" : "dark") + " theme");
+    drawChart();
+  }
+  $("#themeBtn").addEventListener("click", function () { applyTheme(theme === "dark" ? "light" : "dark"); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "d" || e.key === "D") {
+      var el = document.activeElement;
+      if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) return;
+      applyTheme(theme === "dark" ? "light" : "dark");
+    }
+  });
+
+  /* ---------- metrics (seeded, persisted, 5 s bounded random walk) ---------- */
+  var metrics;
+  try { metrics = JSON.parse(localStorage.getItem(LS + "metrics")); } catch (e) { metrics = null; }
+  if (!metrics || typeof metrics.fuel !== "number") {
+    metrics = {
+      fuel: 100 * rand(),
+      battery: 100 * rand(),
+      signal: Math.floor(rand() * 100),
+      crew: Math.max(1, Math.round(rand() * 6))
+    };
+  }
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+  function renderMetrics() {
+    $("#mFuel").textContent = metrics.fuel.toFixed(2) + " %";
+    $("#mBatt").textContent = metrics.battery.toFixed(2) + " %";
+    $("#mSig").textContent = Math.round(metrics.signal) + " dB";
+    $("#mCrew").textContent = String(metrics.crew);
+  }
+  function walk() {
+    var r = mulberry32((Date.now() / 5000) | 0); // deterministic-ish per 5 s tick
+    metrics.fuel = clamp(metrics.fuel + (r() - 0.5) * 4, 0, 100);
+    metrics.battery = clamp(metrics.battery + (r() - 0.5) * 4, 0, 100);
+    metrics.signal = clamp(Math.round(metrics.signal + (r() - 0.5) * 6), 0, 99);
+    if (r() < 0.25) metrics.crew = clamp(metrics.crew + (r() < 0.5 ? -1 : 1), 0, 6);
+    localStorage.setItem(LS + "metrics", JSON.stringify(metrics));
+    renderMetrics();
+  }
+
+  /* ---------- UTC clock ---------- */
+  function tickClock() {
+    $("#utc").textContent = new Date().toISOString().slice(11, 19) + " UTC";
+  }
+
+  /* ---------- countdown ---------- */
+  var TARGET = Date.UTC(2026, 11, 1, 9, 0, 0); // 2026-12-01T09:00:00Z, UTC everywhere
+  function tickCountdown() {
+    var diff = TARGET - Date.now();
+    var el = $("#cd"), st = $("#cdStatus");
+    if (diff <= 0) { el.textContent = "T-00:00:00:00"; st.textContent = "LANDED"; return; }
+    var s = Math.floor(diff / 1000);
+    var d = Math.floor(s / 86400); s -= d * 86400;
+    var h = Math.floor(s / 3600); s -= h * 3600;
+    var m = Math.floor(s / 60); s -= m * 60;
+    el.textContent = "T-" + pad(d) + ":" + pad(h) + ":" + pad(m) + ":" + pad(s);
+    st.textContent = "COUNTDOWN";
+  }
+
+  /* ---------- telemetry history + chart ---------- */
+  var history = [];
+  function pushSample() {
+    history.push(metrics.signal);
+    if (history.length > 60) history.shift();
+  }
+  function drawChart() {
+    var c = $("#chart");
+    if (!c) return;
+    var ctx = c.getContext("2d");
+    var dpr = window.devicePixelRatio || 1;
+    var w = c.clientWidth || 300, h = c.clientHeight || 200;
+    c.width = w * dpr; c.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var cs = getComputedStyle(document.documentElement);
+    var accent = cs.getPropertyValue("--accent").trim();
+    var border = cs.getPropertyValue("--border").trim();
+    var muted = cs.getPropertyValue("--muted").trim();
+    var panel = cs.getPropertyValue("--panel").trim();
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = panel; ctx.fillRect(0, 0, w, h);
+    var padL = 34, padR = 12, padT = 20, padB = 22;
+    var pw = w - padL - padR, ph = h - padT - padB;
+    var min = 0, max = 99;
+    ctx.strokeStyle = border; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + ph); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(padL, padT + ph); ctx.lineTo(padL + pw, padT + ph); ctx.stroke();
+    ctx.fillStyle = muted; ctx.font = "11px Segoe UI, Arial, sans-serif"; ctx.textAlign = "right";
+    ctx.fillText(String(max), padL - 5, padT + 4);
+    ctx.fillText(String(min), padL - 5, padT + ph);
+    ctx.textAlign = "left";
+    ctx.fillText("Signal dB · 60 s", padL, padT - 6);
+    if (history.length > 1) {
+      ctx.strokeStyle = accent; ctx.lineWidth = 2; ctx.beginPath();
+      for (var i = 0; i < history.length; i++) {
+        var x = padL + pw * (i / Math.max(1, history.length - 1));
+        var y = padT + ph - ph * ((history[i] - min) / (max - min));
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+  }
+
+  /* ---------- satellites ---------- */
+  var satellites = [
+    { id: "SAT-01", name: "Aurora",   orbit: "LEO", status: "ACTIVE",   off: 4 * 60 * 1000 },
+    { id: "SAT-02", name: "Borealis", orbit: "MEO", status: "DEGRADED", off: 12 * 60 * 1000 },
+    { id: "SAT-03", name: "Comet",    orbit: "LEO", status: "ACTIVE",   off: 1 * 60 * 1000 },
+    { id: "SAT-04", name: "Draco",    orbit: "GEO", status: "OFFLINE",  off: 3 * 3600 * 1000 },
+    { id: "SAT-05", name: "Equinox",  orbit: "MEO", status: "ACTIVE",   off: 25 * 60 * 1000 },
+    { id: "SAT-06", name: "Fenrir",   orbit: "LEO", status: "DEGRADED", off: 47 * 60 * 1000 },
+    { id: "SAT-07", name: "Gemini",   orbit: "GEO", status: "ACTIVE",   off: 6 * 3600 * 1000 },
+    { id: "SAT-08", name: "Helios",   orbit: "MEO", status: "OFFLINE",  off: 2 * 3600 * 1000 }
+  ];
+  var baseTime = Date.now();
+  function relTime(off) {
+    var s = Math.floor((Date.now() - baseTime + off) / 1000);
+    if (s < 60) return s + "s ago";
+    if (s < 3600) return Math.floor(s / 60) + "m ago";
+    return Math.floor(s / 3600) + "h ago";
+  }
+  var sortCol = localStorage.getItem(LS + "sort") || "id";
+  var sortDir = localStorage.getItem(LS + "sortDir") || "asc";
+  function setHeaderArrows() {
+    var ths = document.querySelectorAll("#satTable th");
+    for (var i = 0; i < ths.length; i++) {
+      var col = ths[i].getAttribute("data-col");
+      var arr = ths[i].querySelector(".arrow");
+      arr.textContent = (col === sortCol) ? (sortDir === "asc" ? "▲" : "▼") : "";
+      ths[i].setAttribute("aria-sort", col === sortCol ? (sortDir === "asc" ? "ascending" : "descending") : "none");
+    }
+  }
+  function renderTable() {
+    var rows = satellites.slice();
+    rows.sort(function (a, b) {
+      var k = sortCol;
+      var va = (k === "contact") ? (baseTime - a.off) : a[k];
+      var vb = (k === "contact") ? (baseTime - b.off) : b[k];
+      if (typeof va === "number") { return sortDir === "asc" ? va - vb : vb - va; }
+      va = String(va).toLowerCase(); vb = String(vb).toLowerCase();
+      if (va < vb) return sortDir === "asc" ? -1 : 1;
+      if (va > vb) return sortDir === "asc" ? 1 : -1;
+      return 0;
+    });
+    var body = $("#satBody");
+    body.innerHTML = "";
+    rows.forEach(function (r) {
+      var tr = document.createElement("tr");
+      function td(txt) { var c = document.createElement("td"); c.textContent = txt; return c; }
+      tr.appendChild(td(r.id));
+      tr.appendChild(td(r.name));
+      tr.appendChild(td(r.orbit));
+      tr.appendChild(td(r.status));
+      tr.appendChild(td(relTime(r.off)));
+      body.appendChild(tr);
+    });
+  }
+  function sortBy(col) {
+    if (col === sortCol) sortDir = (sortDir === "asc" ? "desc" : "asc");
+    else { sortCol = col; sortDir = "asc"; }
+    localStorage.setItem(LS + "sort", sortCol);
+    localStorage.setItem(LS + "sortDir", sortDir);
+    setHeaderArrows(); renderTable();
+  }
+  (function wireHeaders() {
+    var ths = document.querySelectorAll("#satTable th");
+    for (var i = 0; i < ths.length; i++) {
+      (function (th) {
+        var col = th.getAttribute("data-col");
+        th.addEventListener("click", function () { sortBy(col); });
+        th.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); sortBy(col); }
+        });
+      })(ths[i]);
+    }
+  })();
+
+  /* ---------- anomaly feed (persisted) ---------- */
+  var POOL = [
+    { sev: "INFO", msg: "Telemetry sync nominal" },
+    { sev: "WARN", msg: "Signal fading on LEO-2 downlink" },
+    { sev: "CRIT", msg: "Battery cell imbalance detected" },
+    { sev: "INFO", msg: "Attitude correction complete" },
+    { sev: "WARN", msg: "Thermal drift in radiator loop" },
+    { sev: "CRIT", msg: "Gyro spike — recalculating attitude" }
+  ];
+  var feed;
+  try { feed = JSON.parse(localStorage.getItem(LS + "feed")); } catch (e) { feed = null; }
+  if (!Array.isArray(feed)) feed = [];
+  function persistFeed() { localStorage.setItem(LS + "feed", JSON.stringify(feed)); }
+  function renderFeed() {
+    var ul = $("#feed");
+    ul.innerHTML = "";
+    feed.forEach(function (a, idx) {
+      var li = document.createElement("li");
+      var left = document.createElement("div");
+      left.className = "msg";
+      var sev = document.createElement("span");
+      sev.className = "sev " + a.sev; sev.textContent = a.sev;
+      var txt = document.createElement("span"); txt.textContent = a.msg;
+      left.appendChild(sev); left.appendChild(txt);
+      var right = document.createElement("div");
+      right.style.display = "flex"; right.style.alignItems = "center"; right.style.gap = "8px";
+      var t = document.createElement("span"); t.className = "time"; t.textContent = a.time;
+      var b = document.createElement("button");
+      b.className = "dismiss"; b.textContent = "✕";
+      b.setAttribute("aria-label", "Dismiss anomaly: " + a.msg);
+      b.addEventListener("click", function () {
+        feed.splice(idx, 1); persistFeed(); renderFeed();
+      });
+      right.appendChild(t); right.appendChild(b);
+      li.appendChild(left); li.appendChild(right);
+      ul.appendChild(li);
+    });
+  }
+  $("#diagBtn").addEventListener("click", function () {
+    var pick = POOL[Math.floor(rand() * POOL.length)];
+    feed.unshift({ sev: pick.sev, msg: pick.msg, time: new Date().toISOString().slice(11, 19) + "Z" });
+    if (feed.length > 50) feed.length = 50;
+    persistFeed(); renderFeed();
+  });
+  $("#clearBtn").addEventListener("click", function () { feed = []; persistFeed(); renderFeed(); });
+
+  /* ---------- boot + timers ---------- */
+  renderMetrics();
+  renderFeed();
+  setHeaderArrows();
+  renderTable();
+  tickClock();
+  tickCountdown();
+  for (var k = 0; k < 60; k++) history.push(metrics.signal);
+  drawChart();
+  window.addEventListener("resize", drawChart);
+  setInterval(tickClock, 1000);
+  setInterval(tickCountdown, 1000);
+  setInterval(function () { pushSample(); drawChart(); renderTable(); }, 1000);
+  setInterval(walk, 5000);
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduce) { applyTheme(theme); }
+})();
+</script>
+</body>
+</html>

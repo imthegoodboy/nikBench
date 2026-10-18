@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" width="900" height="500" role="img" aria-label="Café revenue, 24 months: seasonality, a modest renovation, and one festival outlier">
+  <defs>
+    <style>
+      .ax { font-family: "Segoe UI", Arial, sans-serif; fill: #5b6b7a; font-size: 11px; }
+      .ttl { font-family: "Segoe UI", Arial, sans-serif; fill: #16222e; font-weight: 700; font-size: 15px; }
+      .sub { font-family: "Segoe UI", Arial, sans-serif; fill: #46596a; font-size: 11.5px; }
+      .ann { font-family: "Segoe UI", Arial, sans-serif; fill: #b2470f; font-size: 11px; font-weight: 600; }
+      .leg { font-family: "Segoe UI", Arial, sans-serif; fill: #46596a; font-size: 11px; }
+    </style>
+  </defs>
+  <rect x="0" y="0" width="900" height="500" fill="#fbf7f0"/>
+
+  <text class="ttl" x="70" y="26">Café revenue, 24 months (EUR) — a flat series with a one-off festival, not growth</text>
+  <text class="sub" x="70" y="44">Headline: renovation changed the level ~0%. Pre-mean €41,170 vs post-mean ex-outlier €41,291 (+0.3%). Seasonality is ±6%; month 19 is a one-off (+54%), not a trend.</text>
+
+  <!-- gridlines + y axis -->
+  <g stroke="#e3dccf" stroke-width="1">
+    <line x1="80" y1="91.3" x2="860" y2="91.3"/>
+    <line x1="80" y1="147.7" x2="860" y2="147.7"/>
+    <line x1="80" y1="204.2" x2="860" y2="204.2"/>
+    <line x1="80" y1="260.6" x2="860" y2="260.6"/>
+    <line x1="80" y1="317.1" x2="860" y2="317.1"/>
+    <line x1="80" y1="373.5" x2="860" y2="373.5"/>
+  </g>
+  <g class="ax" text-anchor="end">
+    <text x="72" y="95">65k</text>
+    <text x="72" y="151">60k</text>
+    <text x="72" y="208">55k</text>
+    <text x="72" y="264">50k</text>
+    <text x="72" y="320">45k</text>
+    <text x="72" y="377">40k</text>
+    <text x="72" y="433">35k</text>
+  </g>
+  <line x1="80" y1="430" x2="860" y2="430" stroke="#7d8a96" stroke-width="1.6"/>
+  <line x1="80" y1="80" x2="80" y2="430" stroke="#7d8a96" stroke-width="1.6"/>
+  <text class="ax" x="80" y="452" text-anchor="middle">Jan</text>
+  <text class="ax" x="248" y="452" text-anchor="middle">Apr</text>
+  <text class="ax" x="419" y="452" text-anchor="middle">Jul</text>
+  <text class="ax" x="588" y="452" text-anchor="middle">Oct</text>
+  <text class="ax" x="792" y="452" text-anchor="middle">Jan⁺¹</text>
+  <text class="ax" x="860" y="466" text-anchor="end">month →</text>
+  <text class="ax" x="80" y="470">revenue (EUR)</text>
+
+  <!-- mean reference lines -->
+  <line x1="80" y1="360.3" x2="860" y2="360.3" stroke="#3f7f6a" stroke-width="1" stroke-dasharray="7 4"/>
+  <text class="leg" x="864" y="358" style="fill:#3f7f6a">pre-mean 41,170</text>
+  <line x1="80" y1="359.0" x2="860" y2="359.0" stroke="#8a6fc0" stroke-width="1" stroke-dasharray="2 4"/>
+  <text class="leg" x="864" y="374" style="fill:#8a6fc0">post ex-outlier 41,291</text>
+
+  <!-- renovation marker at month 13 -->
+  <line x1="487" y1="80" x2="487" y2="430" stroke="#c98a2b" stroke-width="1.6" stroke-dasharray="5 4"/>
+  <text class="ann" x="487" y="74" text-anchor="middle" fill="#c98a2b">renovation (month 13, closed 10 days)</text>
+
+  <!-- revenue line -->
+  <polyline fill="none" stroke="#2b5f8a" stroke-width="2.2"
+    points="80,387.1 113.9,396.7 147.8,361.1 181.7,371.3 215.7,342.5 249.6,336.3 283.5,315.0 317.4,319.4 351.3,352.1 385.2,366.8 419.1,392.7 453.0,383.1 487.0,362.3 520.9,356.6 554.8,352.1 588.7,361.1 622.6,364.5 656.5,349.8 690.4,108.2 724.4,343.1 758.3,347.6 792.2,363.4 826.1,375.8 860.0,372.4"/>
+
+  <!-- data markers -->
+  <g fill="#2b5f8a">
+    <circle cx="80" cy="387.1" r="2.6"/><circle cx="113.9" cy="396.7" r="2.6"/>
+    <circle cx="147.8" cy="361.1" r="2.6"/><circle cx="181.7" cy="371.3" r="2.6"/>
+    <circle cx="215.7" cy="342.5" r="2.6"/><circle cx="249.6" cy="336.3" r="2.6"/>
+    <circle cx="283.5" cy="315.0" r="2.6"/><circle cx="317.4" cy="319.4" r="2.6"/>
+    <circle cx="351.3" cy="352.1" r="2.6"/><circle cx="385.2" cy="366.8" r="2.6"/>
+    <circle cx="419.1" cy="392.7" r="2.6"/><circle cx="453.0" cy="383.1" r="2.6"/>
+    <circle cx="487.0" cy="362.3" r="2.6"/><circle cx="520.9" cy="356.6" r="2.6"/>
+    <circle cx="554.8" cy="352.1" r="2.6"/><circle cx="588.7" cy="361.1" r="2.6"/>
+    <circle cx="622.6" cy="364.5" r="2.6"/><circle cx="656.5" cy="349.8" r="2.6"/>
+    <circle cx="724.4" cy="343.1" r="2.6"/><circle cx="758.3" cy="347.6" r="2.6"/>
+    <circle cx="792.2" cy="363.4" r="2.6"/><circle cx="826.1" cy="375.8" r="2.6"/>
+    <circle cx="860.0" cy="372.4" r="2.6"/>
+  </g>
+
+  <!-- one-off outlier annotation -->
+  <circle cx="690.4" cy="108.2" r="5.5" fill="none" stroke="#b2470f" stroke-width="2"/>
+  <line x1="690.4" y1="108.2" x2="742" y2="150" stroke="#b2470f" stroke-width="1.2"/>
+  <text class="ann" x="746" y="146">month 19: festival weekend</text>
+  <text class="ann" x="746" y="161">one-off +54%; excluded from trend</text>
+  <text class="ann" x="746" y="176">(it is not recurring seasonality)</text>
+
+  <!-- explanatory legend -->
+  <g class="leg">
+    <rect x="80" y="478" width="0" height="0" fill="none"/>
+    <text x="80" y="490">Line = monthly revenue (seasonally oscillating ~±6%). Dashed lines = pre vs post level. Festival peak annotated, not smoothed away.</text>
+  </g>
+</svg>

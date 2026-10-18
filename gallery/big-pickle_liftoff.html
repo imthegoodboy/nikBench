@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NKB-1 // T-MINUS — 60s loop</title>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #000; overflow: hidden; }
+  #stage { position: fixed; inset: 0; display: block; }
+  #poster { position: fixed; inset: 0; display: none; place-items: center; color: #e8eef4;
+            font: 700 clamp(20px, 5vw, 64px)/1.1 "Segoe UI", Arial, sans-serif; text-align: center;
+            background: radial-gradient(circle at 50% 70%, #21324a 0%, #05080d 70%); }
+  @media (prefers-reduced-motion: reduce) { #stage { display: none; } #poster { display: grid; } }
+</style>
+</head>
+<body>
+<canvas id="stage" width="1280" height="720" aria-label="Rocket launch motion graphic"></canvas>
+<div id="poster">NKB-1 // T-MINUS<br><span style="font-size:.4em;color:#7fd3c7">static poster · reduced motion</span></div>
+<script>
+(function () {
+  "use strict";
+  var cv = document.getElementById("stage");
+  var ctx = cv.getContext("2d");
+  var LOOP = 60000; // exactly 60.000 s
+  function fit() { cv.width = window.innerWidth; cv.height = window.innerHeight; }
+  window.addEventListener("resize", fit); fit();
+
+  // deterministic hash for repeatable "random" particles / shake
+  function rnd(n) { var x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
+
+  function ramp(t, a, b) { return Math.max(0, Math.min(1, (t - a) / (b - a))); }
+  function text(s, x, y, size, color, align, weight, sp) {
+    ctx.save();
+    ctx.fillStyle = color;
+    ctx.font = (weight || 700) + " " + size + "px 'Segoe UI', Arial, sans-serif";
+    ctx.textAlign = align || "center";
+    ctx.textBaseline = "middle";
+    if (sp) { ctx.letterSpacing = sp; } // supported in Chromium; harmless elsewhere
+    ctx.fillText(s, x, y);
+    ctx.restore();
+  }
+  function starfield(t, phase) {
+    var W = cv.width, H = cv.height;
+    for (var i = 0; i < 160; i++) {
+      var sx = rnd(i * 3.1) * W;
+      var sy = rnd(i * 7.7) * H * 0.82;
+      var tw = 0.5 + 0.5 * Math.sin(t / 600 + i);
+      ctx.globalAlpha = 0.25 + 0.55 * tw;
+      ctx.fillStyle = i % 7 === 0 ? "#9fdcff" : "#dfe9f5";
+      ctx.fillRect(sx, (sy + phase * 4) % (H * 0.82), 1.6, 1.6);
+    }
+    ctx.globalAlpha = 1;
+  }
+  function bars(t, base) {
+    // animated telemetry bars
+    var W = cv.width, H = cv.height, n = 8;
+    for (var i = 0; i < n; i++) {
+      var h = 30 + 90 * Math.abs(Math.sin(t / 420 + i * 0.9));
+      var x = W / 2 - (n * 26) / 2 + i * 26;
+      var y = H * 0.68;
+      ctx.fillStyle = "rgba(110,210,200,0.85)";
+      ctx.fillRect(x, y - h, 14, h);
+      ctx.fillStyle = "rgba(60,90,120,0.5)";
+      ctx.fillRect(x, y, 14, 6);
+    }
+    text(base, W / 2, H * 0.82, Math.max(12, W * 0.014), "#8fa3b5", "center", 600);
+  }
+
+  // ---------- 0–8 s · TITLE ----------
+  function titleCard(t) {
+    var W = cv.width, H = cv.height;
+    var a = ramp(t, 0, 2500);
+    ctx.globalAlpha = a;
+    var grow = 6 + 26 * ramp(t, 0, 8000);
+    text("NKB-1 // T-MINUS", W / 2, H * 0.42, Math.max(24, Math.min(W * 0.07, 88)), "#f3f7fb", "center", 800, grow + "px");
+    ctx.globalAlpha = a * 0.8;
+    text("MISSION CONTROL MOTION REEL", W / 2, H * 0.55, Math.max(11, Math.min(W * 0.017, 20)), "#6fd3c7", "center", 600, "6px");
+    ctx.globalAlpha = 1;
+  }
+
+  // ---------- 8–25 s · COUNTDOWN ----------
+  function countdown(t) {
+    var W = cv.width, H = cv.height;
+    var p = (t - 8000) / 17000;             // 0..1 across the beat
+    var n = Math.max(0, 10 - Math.floor(p * 10.999));
+    var pulse = 1 + 0.08 * Math.sin(t / 90);
+    ctx.save();
+    ctx.translate(W / 2, H * 0.36);
+    ctx.scale(pulse, pulse);
+    var col = n <= 3 ? "#ff7a59" : "#f3f7fb";
+    text(String(n).padStart(2, "0"), 0, 0, Math.max(48, Math.min(W * 0.16, 190)), col, "center", 800);
+    ctx.restore();
+    text("T-MINUS", W / 2, H * 0.2, Math.max(14, W * 0.02), "#8fa3b5", "center", 700, "4px");
+    bars(t, "TELEMETRY · GO");
+  }
+
+  // ---------- 25–40 s · IGNITION & ASCENT ----------
+  function ascent(t) {
+    var W = cv.width, H = cv.height;
+    var p = (t - 25000) / 15000;
+    var shake = ramp(t, 25000, 28000) * (1 - ramp(t, 36000, 40000)) * 5;
+    var ox = (rnd(t) - 0.5) * shake, oy = (rnd(t + 99) - 0.5) * shake;
+    ctx.save();
+    ctx.translate(ox, oy);
+    // receding ground: horizontal bands scrolling downward, spacing growing (perspective)
+    for (var i = 0; i < 9; i++) {
+      var yy = ((t / 22) + i * i * 14) % H;
+      ctx.globalAlpha = 0.10 + 0.22 * (1 - yy / H);
+      ctx.fillStyle = "#5a7d6a";
+      ctx.fillRect(0, H - (i * i * 14) - (t / 22) % (i * i * 14 + 1) + i * 0, 0, 0); // no-op guard
+    }
+    // simpler visible ground streaks
+    for (var g = 0; g < 26; g++) {
+      var gy = ((t / 18) + g * 30) % H;
+      ctx.globalAlpha = 0.28 * (gy / H);
+      ctx.strokeStyle = "#7fae8f";
+      ctx.beginPath(); ctx.moveTo(0, H - gy); ctx.lineTo(W, H - gy); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    // rocket
+    var rx = W / 2, ry = H * 0.62 - 60 * p;
+    ctx.fillStyle = "#e8eef4";
+    ctx.beginPath();
+    ctx.moveTo(rx, ry - 90);
+    ctx.quadraticCurveTo(rx + 26, ry - 20, rx + 22, ry + 40);
+    ctx.lineTo(rx - 22, ry + 40);
+    ctx.quadraticCurveTo(rx - 26, ry - 20, rx, ry - 90);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "#2a4a6a";
+    ctx.beginPath(); ctx.moveTo(rx - 22, ry + 40); ctx.lineTo(rx - 46, ry + 74); ctx.lineTo(rx - 22, ry + 60); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(rx + 22, ry + 40); ctx.lineTo(rx + 46, ry + 74); ctx.lineTo(rx + 22, ry + 60); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "#6fd3c7"; ctx.beginPath(); ctx.arc(rx, ry - 40, 9, 0, Math.PI * 2); ctx.fill();
+    // flame particles
+    for (var f = 0; f < 60; f++) {
+      var life = ((t / 300) + f * 0.37) % 1;
+      var fx = rx + (rnd(f * 1.7) - 0.5) * 46;
+      var fy = ry + 42 + life * (120 + 40 * p);
+      var rr = 14 * (1 - life) + 2;
+      ctx.globalAlpha = 0.9 * (1 - life);
+      ctx.fillStyle = life < 0.3 ? "#fff1c2" : (life < 0.7 ? "#ff9a3c" : "#ff5a2a");
+      ctx.beginPath(); ctx.arc(fx, fy, rr, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    ctx.restore();
+    text("IGNITION · ASCENT", W / 2, H * 0.14, Math.max(14, W * 0.02), "#ff9a3c", "center", 700, "3px");
+  }
+
+  // ---------- 40–60 s · ORBIT & CREDITS ----------
+  function orbit(t) {
+    var W = cv.width, H = cv.height;
+    var p = (t - 40000) / 20000;
+    starfield(t, 1);
+    // earth curvature: large circle whose centre drifts
+    var cx = W * 0.5 + 40 * Math.sin(p * Math.PI);
+    var cy = H + 0.62 * Math.max(W, H) - 40 * p;
+    var R = Math.max(W, H) * 0.95;
+    var grd = ctx.createRadialGradient(cx - R * 0.3, cy - R * 0.5, R * 0.2, cx, cy, R);
+    grd.addColorStop(0, "#3b7fb0");
+    grd.addColorStop(0.6, "#1d4a72");
+    grd.addColorStop(1, "#0a1c30");
+    ctx.fillStyle = grd;
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = "rgba(160,220,255,0.5)"; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(cx, cy, R, Math.PI, Math.PI * 2); ctx.stroke();
+    // satellite crossing
+    var sx = -60 + (W + 120) * p;
+    var sy = H * 0.3 + 30 * Math.sin(p * Math.PI * 3);
+    ctx.fillStyle = "#cfd8e4"; ctx.fillRect(sx - 10, sy - 6, 20, 12);
+    ctx.fillStyle = "#2a4a6a"; ctx.fillRect(sx - 34, sy - 10, 20, 20); ctx.fillRect(sx + 14, sy - 10, 20, 20);
+    // credits
+    var ca = ramp(t, 44000, 52000) * (1 - ramp(t, 57000, 59000));
+    ctx.globalAlpha = ca;
+    text("NKB-1 // T-MINUS", W / 2, H * 0.34, Math.max(20, W * 0.05), "#f3f7fb", "center", 800, "3px");
+    text("DIRECTED BY  BIG-PICKLE", W / 2, H * 0.46, Math.max(13, W * 0.018), "#9fdcff", "center", 600, "2px");
+    text("TELEMETRY · VECTOR · SOUND", W / 2, H * 0.55, Math.max(12, W * 0.016), "#8fa3b5", "center", 600);
+    text("ORBIT ACHIEVED", W / 2, H * 0.64, Math.max(12, W * 0.016), "#6fd3c7", "center", 700);
+    ctx.globalAlpha = 1;
+    // fade back to black for a seamless seam to t=0
+    var fade = ramp(t, 58500, 60000);
+    if (fade > 0) { ctx.globalAlpha = fade; ctx.fillStyle = "#000"; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1; }
+  }
+
+  function frame(t) {
+    var W = cv.width, H = cv.height;
+    // backdrop differs per beat
+    if (t < 25000) {
+      var g = ctx.createLinearGradient(0, 0, 0, H);
+      g.addColorStop(0, "#05080d"); g.addColorStop(1, "#0e1a26");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      starfield(t, 0);
+      if (t < 8000) titleCard(t); else countdown(t);
+    } else if (t < 40000) {
+      var g2 = ctx.createLinearGradient(0, 0, 0, H);
+      g2.addColorStop(0, "#0a1020"); g2.addColorStop(0.6, "#5a86b0"); g2.addColorStop(1, "#c9d6c0");
+      ctx.fillStyle = g2; ctx.fillRect(0, 0, W, H);
+      ascent(t);
+    } else {
+      ctx.fillStyle = "#04070d"; ctx.fillRect(0, 0, W, H);
+      orbit(t);
+    }
+  }
+
+  var t0 = null;
+  function loop(now) {
+    if (t0 === null) t0 = now;
+    var t = (now - t0) % LOOP;      // exact 60000 ms wrap ⇒ seamless
+    frame(t);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

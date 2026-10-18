@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>NKB-1 // LIFTOFF — 60.000s loop</title>
+<style>
+  html,body{height:100%;margin:0;background:#000;overflow:hidden}
+  canvas{width:100vw;height:100vh;display:block}
+</style>
+</head>
+<body>
+<canvas id="c" width="1280" height="720"></canvas>
+<script>
+"use strict";
+/* LIFTOFF — single master timeline: t = (now % 60000); every drawn value is a pure
+   function of t seconds in [0,60), so the 60.000s loop is seamless at the seam.
+   BEATS: 0–8s TITLE | 8–25s COUNTDOWN | 25–40s IGNITION & ASCENT | 40–60s ORBIT & CREDITS */
+const LOOP = 60000, W = 1280, H = 720;
+const cv = document.getElementById("c"), ctx = cv.getContext("2d");
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function fit(){ const s = Math.min(innerWidth/W, innerHeight/H);
+  cv.style.width = (W*s)+"px"; cv.style.height = (H*s)+"px"; }
+addEventListener("resize", fit); fit();
+
+/* deterministic helpers: no external assets, no randomness that could desync the loop */
+function hic(n){ n = (n^0x9e3779b9)>>>0; n = Math.imul(n, 0x85ebca6b)>>>0;
+  n ^= n>>>13; n = Math.imul(n, 0xc2b2ae35)>>>0; return ((n ^ (n>>>16))>>>0)/4294967296; }
+function sstep(a,b,x){ const t = Math.min(1, Math.max(0,(x-a)/(b-a))); return t*t*(3-2*t); }
+function ease(x){ x = Math.min(1, Math.max(0,x)); return 1 - Math.pow(1-x, 3); }
+
+function draw(t){                       /* t in [0,60) seconds */
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.fillStyle = "#02030a"; ctx.fillRect(0,0,W,H);
+
+  /* starfield (always on, slow drift so the seam matches: drift is periodic in 60s via sin) */
+  ctx.fillStyle = "#cfd6ea";
+  for(let i=0;i<90;i++){
+    const bx = hic(i)*W, drift = Math.sin((t/60)*2*Math.PI + hic(i+300)*6.28)*14;
+    const by = hic(i+77)*H*0.9, s = 0.7 + hic(i+13)*1.8;
+    ctx.globalAlpha = 0.25 + hic(i+5)*0.6;
+    ctx.fillRect((bx+drift+W)%W, by, s, s);
+  }
+  ctx.globalAlpha = 1;
+
+  /* ---- 0–8s TITLE: "NKB-1 // T-MINUS" with subtle build-up ---- */
+  if(t < 8){
+    const a  = sstep(0.4, 2.6, t) * (1 - sstep(6.6, 8.0, t));
+    const sc = 0.96 + 0.04*sstep(0.4, 3.2, t);
+    ctx.save(); ctx.translate(W/2, H/2-40); ctx.scale(sc,sc);
+    ctx.globalAlpha = a; ctx.fillStyle = "#e8eeff";
+    ctx.font = "700 64px 'Cascadia Mono', Consolas, monospace";
+    ctx.textAlign = "center"; ctx.fillText("NKB-1 // T-MINUS", 0, 0);
+    ctx.fillRect(-170, 34, 340*sstep(0.8, 4.2, t), 3);
+    ctx.font = "24px 'Cascadia Mono', Consolas, monospace";
+    ctx.globalAlpha = a*0.7; ctx.fillText("flight loop — 60.000 s", 0, 78);
+    ctx.restore();
+  }
+
+  /* ---- 8–25s COUNTDOWN: 10 → 0 with animated telemetry bars ---- */
+  if(t >= 8 && t < 25){
+    const rem = 25 - t;                       /* 17 s → count 10..0 */
+    const n = Math.max(0, Math.ceil(rem / 1.7));
+    const frac = (rem/1.7) % 1;               /* fraction inside current count */
+    ctx.fillStyle = "#e8eeff"; ctx.textAlign = "center";
+    ctx.font = "700 220px 'Cascadia Mono', Consolas, monospace";
+    ctx.globalAlpha = 0.25 + 0.75*(1 - frac*0.6);
+    ctx.fillText(String(n), W/2, H/2 + 60);
+    ctx.globalAlpha = 1;
+    ctx.font = "26px 'Cascadia Mono', Consolas, monospace"; ctx.fillStyle = "#7f8aa3";
+    ctx.fillText("T-00:00:" + String(Math.ceil(rem)).padStart(2,"0"), W/2, H/2 + 130);
+    /* telemetry bars: 5 bars, deterministic heights */
+    for(let i=0;i<5;i++){
+      const bx = W/2 - 160 + i*70;
+      const h = 30 + 90*(0.5 + 0.5*Math.sin(t*3.1 + i*1.9));
+      ctx.fillStyle = i===n%5 ? "#7de2d1" : "#2c3a55";
+      ctx.fillRect(bx, H-120-h, 44, h);
+      ctx.fillStyle = "#4c5c78"; ctx.fillRect(bx, H-120, 44, 2);
+      ctx.font = "14px 'Cascadia Mono', Consolas, monospace"; ctx.fillStyle = "#7f8aa3";
+      ctx.fillText(["LOX","RP-1","HE-1","PWR","GUID"][i], bx+22, H-98);
+    }
+  }
+
+  /* ---- 25–40s IGNITION & ASCENT: flame particles, camera shake, receding ground ---- */
+  const asc  = ease((t-25)/15);                            /* 0→1 over the beat */
+  const shake = t<25 ? 0 : Math.max(0, 1-(t-25)/7);        /* big early, dying off */
+  const sx = shake ? (hic(Math.floor(t*40))*2-1)*10*shake : 0;
+  const sy = shake ? (hic(Math.floor(t*40)+9)*2-1)*8*shake  : 0;
+  ctx.save(); ctx.translate(sx, sy);
+
+  if(t >= 25 && t < 40){
+    /* ground: a horizon plane receding as we rise */
+    const gy = H*0.78 + asc*H*0.55;
+    ctx.fillStyle = "#141b2c"; ctx.fillRect(-40, gy, W+80, H);
+    ctx.strokeStyle = "#2c3a55"; ctx.lineWidth = 2; ctx.beginPath();
+    ctx.moveTo(-40, gy); ctx.lineTo(W+40, gy); ctx.stroke();
+    ctx.globalAlpha = 0.5; ctx.fillStyle = "#2c3a55";
+    for(let i=0;i<10;i++){ /* receding pad details */
+      const px = 120 + i*110 - (t*40)%110;
+      ctx.fillRect(px, gy+6, 60, 4);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /* rocket (visible 25–36s, then it exits top) */
+  if(t >= 25 && t < 36){
+    const ry = H*0.55 + asc*(-H*0.9);
+    const rx = W/2;
+    ctx.save(); ctx.translate(rx, ry);
+    /* flame particles: 60 deterministic sparks cycling */
+    for(let i=0;i<60;i++){
+      const p = ((t*0.85) + hic(i*7)) % 1;
+      const fx = (hic(i+31)*2-1)*(10 + p*38);
+      const fy = 52 + p*(90 + 60*asc);
+      const s  = (1-p)*11;
+      ctx.globalAlpha = (1-p)*0.9;
+      ctx.fillStyle = p < 0.35 ? "#ffd27d" : (p < 0.7 ? "#ff8c42" : "#b33c1e");
+      ctx.beginPath(); ctx.arc(fx, fy, s, 0, Math.PI*2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    /* body */
+    ctx.fillStyle = "#e8eeff";
+    ctx.beginPath();
+    ctx.moveTo(0,-64); ctx.lineTo(18,-20); ctx.lineTo(18,44); ctx.lineTo(-18,44); ctx.lineTo(-18,-20);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "#c9152f"; ctx.beginPath();
+    ctx.moveTo(0,-64); ctx.lineTo(18,-20); ctx.lineTo(6,-20); ctx.lineTo(0,-40); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "#132036"; ctx.fillRect(-18,44,10,16); ctx.fillRect(8,44,10,16);
+    ctx.beginPath(); ctx.arc(0,-8,7,0,Math.PI*2); ctx.fillStyle = "#7de2d1"; ctx.fill();
+    ctx.restore();
+  }
+  ctx.restore();
+
+  /* ---- 40–60s ORBIT & CREDITS: Earth curvature drifts past, a satellite, credits, seamless fade ---- */
+  if(t >= 40){
+    const o = (t-40)/20;                     /* 0→1 over the orbit beat */
+    const eY = H*1.15 - 0;                   /* earth disc sliding down-left */
+    ctx.save();
+    ctx.fillStyle = "#123a5c"; ctx.beginPath();
+    ctx.arc(W*0.28 - o*80, H*0.75 + o*260, 520, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = "#59b3d8"; ctx.lineWidth = 3; ctx.beginPath();
+    ctx.arc(W*0.28 - o*80, H*0.75 + o*260, 522, 0, Math.PI*2); ctx.stroke();
+    ctx.fillStyle = "rgba(140,200,235,0.35)";
+    for(let i=0;i<7;i++){ /* drifting cloud streaks on the limb */
+      const cx = (W*0.28 - o*80) % (W+200) + (i-3)*140;
+      ctx.beginPath(); ctx.ellipse(cx, H*0.75+o*260-500, 90, 22, 0.3, 0, Math.PI*2); ctx.fill();
+    }
+    /* satellite crossing */
+    const satx = W*0.15 + o*W*1.05, saty = H*0.42;
+    ctx.fillStyle = "#dfe7ff"; ctx.fillRect(satx-12, saty-6, 24, 12);
+    ctx.fillStyle = "#3b5bdb"; ctx.fillRect(satx-30, saty-3, 16, 6); ctx.fillRect(satx+14, saty-3, 16, 6);
+    ctx.restore();
+
+    /* credits */
+    ctx.textAlign = "center"; ctx.globalAlpha = sstep(46, 50, t) * (1 - sstep(58, 60, t));
+    ctx.fillStyle = "#e8eeff"; ctx.font = "34px 'Cascadia Mono', Consolas, monospace";
+    ctx.fillText("NKB-1 — FLIGHT COMPLETE", W/2, H*0.30);
+    ctx.font = "22px 'Cascadia Mono', Consolas, monospace"; ctx.fillStyle = "#7f8aa3";
+    ctx.fillText("guidance · telemetry · life — mission control", W/2, H*0.30+44);
+    ctx.fillText("loop resets at 60.000 s — see you at T-MINUS", W/2, H*0.30+78);
+    ctx.globalAlpha = 1;
+  }
+
+  /* global vignette */
+  const g = ctx.createRadialGradient(W/2, H/2, H*0.35, W/2, H/2, H*0.85);
+  g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, "rgba(0,0,0,0.45)");
+  ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+}
+
+if(reduce){
+  draw(27.5);  /* static poster keyframe: mid-countdown with telemetry */
+  document.title += " — reduced motion poster";
+}else{
+  const t0 = performance.now();
+  (function frame(now){ draw(((now - t0) % LOOP) / 1000); requestAnimationFrame(frame); })(t0);
+}
+</script>
+</body>
+</html>

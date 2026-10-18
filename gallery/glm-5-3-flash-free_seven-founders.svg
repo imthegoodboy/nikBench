@@ -1,0 +1,115 @@
+<svg viewBox="0 0 1200 700" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Seven founders of computing on a to-scale 1795-2005 timeline">
+  <!-- Palette: ink #16202b, paper #f6f4ee, indigo accent #3b5bdb (timeline+bars), muted steel #8b95a5. Facts pinned to birth-year scale. -->
+  <rect width="1200" height="700" fill="#f6f4ee"/>
+  <text x="60" y="42" font-family="Georgia,serif" font-size="30" font-weight="bold" fill="#16202b">Seven Founders of Computing</text>
+  <text x="60" y="64" font-family="Helvetica,Arial" font-size="13" fill="#8b95a5">Birth years pinned to scale on a 1795–2005 axis (20 years ≙ 102.86 px)</text>
+
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#3b5bdb"/>
+    </marker>
+  </defs>
+
+  <!-- Axis: 1795..2005 mapped x = 60 + (year-1795)*(1080/210) -->
+  <line x1="60" y1="470" x2="1140" y2="470" stroke="#16202b" stroke-width="3"/>
+  <g stroke="#16202b" stroke-width="2" font-family="Helvetica,Arial" font-size="12" fill="#16202b">
+    <line x1="85.7" y1="464" x2="85.7" y2="476"/><text x="74" y="494">1800</text>
+    <line x1="400" y1="464" x2="400" y2="476"/><text x="382" y="494">1850</text>
+    <line x1="714.3" y1="464" x2="714.3" y2="476"/><text x="694" y="494">1900</text>
+    <line x1="1028.6" y1="464" x2="1028.6" y2="476"/><text x="1008" y="494">1950</text>
+    <text x="1096" y="494">2000</text>
+  </g>
+  <text x="60" y="448" font-family="Helvetica,Arial" font-size="11" fill="#8b95a5">thick bars = lifespan (birth → death, same scale)</text>
+
+  <!-- Lifespan bars (rounded, indigo): y=455 h=10 -->
+  <rect x="162.9" y="452" width="190.3" height="10" rx="5" fill="#3b5bdb"/> <!-- Lovelace 1815–1852 -->
+  <rect x="674.3" y="452" width="215.7" height="10" rx="5" fill="#3b5bdb"/> <!-- Turing 1912–1954 -->
+  <rect x="628.0" y="452" width="277.7" height="10" rx="5" fill="#3b5bdb" opacity="0.7"/> <!-- von Neumann 1903–1957 -->
+  <rect x="693.4" y="452" width="446.6" height="10" rx="5" fill="#3b5bdb" opacity="0.55"/> <!-- Shannon 1916–2001 -->
+  <rect x="642.9" y="452" width="442.3" height="10" rx="5" fill="#3b5bdb" opacity="0.7"/> <!-- Hopper 1906–1992 -->
+  <rect x="766.3" y="452" width="371.1" height="10" rx="5" fill="#3b5bdb" opacity="0.55"/> <!-- Dijkstra 1930–2002 -->
+  <rect x="807.4" y="452" width="332.6" height="10" rx="5" fill="#3b5bdb" opacity="0.85"/> <!-- Knuth 1938– living -->
+
+  <!-- Tier 1 cards (y=84..184) -->
+  <g font-family="Helvetica,Arial">
+    <rect x="70" y="84" width="170" height="100" rx="10" fill="#ffffff" stroke="#16202b" stroke-width="1.5"/>
+    <rect x="70" y="84" width="8" height="100" rx="4" fill="#3b5bdb"/>
+    <text x="88" y="108" font-size="16" font-weight="bold" fill="#16202b">Ada Lovelace</text>
+    <text x="88" y="126" font-size="12" fill="#8b95a5">1815–1852</text>
+    <text x="88" y="146" font-size="11.5" fill="#16202b">First published algorithm</text>
+    <text x="88" y="162" font-size="11.5" fill="#16202b">(Note G, Analytical</text>
+    <text x="88" y="178" font-size="11.5" fill="#16202b">Engine)</text>
+    <line x1="162.9" y1="184" x2="162.9" y2="450" stroke="#8b95a5" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <circle cx="162.9" cy="452" r="4" fill="#3b5bdb"/>
+
+    <rect x="500" y="84" width="170" height="100" rx="10" fill="#ffffff" stroke="#16202b" stroke-width="1.5"/>
+    <rect x="500" y="84" width="8" height="100" rx="4" fill="#3b5bdb"/>
+    <text x="518" y="108" font-size="16" font-weight="bold" fill="#16202b">John von Neumann</text>
+    <text x="518" y="126" font-size="12" fill="#8b95a5">1903–1957</text>
+    <text x="518" y="146" font-size="11.5" fill="#16202b">Stored-program architecture</text>
+    <text x="518" y="162" font-size="11.5" fill="#16202b">(EDVAC report, 1945)</text>
+    <line x1="628" y1="184" x2="628" y2="450" stroke="#8b95a5" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <circle cx="628" cy="452" r="4" fill="#3b5bdb"/>
+
+    <rect x="690" y="84" width="170" height="100" rx="10" fill="#ffffff" stroke="#16202b" stroke-width="1.5"/>
+    <rect x="690" y="84" width="8" height="100" rx="4" fill="#3b5bdb"/>
+    <text x="708" y="108" font-size="16" font-weight="bold" fill="#16202b">Alan Turing</text>
+    <text x="708" y="126" font-size="12" fill="#8b95a5">1912–1954</text>
+    <text x="708" y="146" font-size="11.5" fill="#16202b">Universal machine (1936)</text>
+    <line x1="708" y1="200" x2="674.3" y2="450" stroke="#8b95a5" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <circle cx="674.3" cy="452" r="4" fill="#3b5bdb"/>
+  </g>
+
+  <!-- Tier 2 cards (y=200..300) -->
+  <g font-family="Helvetica,Arial">
+    <rect x="420" y="200" width="170" height="100" rx="10" fill="#ffffff" stroke="#16202b" stroke-width="1.5"/>
+    <rect x="420" y="200" width="8" height="100" rx="4" fill="#3b5bdb" opacity="0.75"/>
+    <text x="438" y="224" font-size="16" font-weight="bold" fill="#16202b">Grace Hopper</text>
+    <text x="438" y="242" font-size="12" fill="#8b95a5">1906–1992</text>
+    <text x="438" y="262" font-size="11.5" fill="#16202b">Compilers &amp; COBOL</text>
+    <line x1="520" y1="300" x2="642.9" y2="450" stroke="#8b95a5" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <circle cx="642.9" cy="452" r="4" fill="#3b5bdb" opacity="0.75"/>
+
+    <rect x="640" y="200" width="170" height="100" rx="10" fill="#ffffff" stroke="#16202b" stroke-width="1.5"/>
+    <rect x="640" y="200" width="8" height="100" rx="4" fill="#3b5bdb" opacity="0.65"/>
+    <text x="658" y="224" font-size="16" font-weight="bold" fill="#16202b">Claude Shannon</text>
+    <text x="658" y="242" font-size="12" fill="#8b95a5">1916–2001 (2001 past axis, clamp-marked →)</text>
+    <text x="658" y="262" font-size="11.5" fill="#16202b">Information theory (1948)</text>
+    <line x1="693.4" y1="300" x2="693.4" y2="450" stroke="#8b95a5" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <circle cx="693.4" cy="452" r="4" fill="#3b5bdb" opacity="0.65"/>
+    <line x1="1140" y1="452" x2="1156" y2="452" stroke="#8b95a5" stroke-width="2" stroke-dasharray="2 2"/>
+  </g>
+
+  <!-- Tier 3 cards (y=316..416) -->
+  <g font-family="Helvetica,Arial">
+    <rect x="606" y="316" width="170" height="100" rx="10" fill="#ffffff" stroke="#16202b" stroke-width="1.5"/>
+    <rect x="606" y="316" width="8" height="100" rx="4" fill="#3b5bdb" opacity="0.65"/>
+    <text x="624" y="340" font-size="16" font-weight="bold" fill="#16202b">Edsger Dijkstra</text>
+    <text x="624" y="358" font-size="12" fill="#8b95a5">1930–2002</text>
+    <text x="624" y="378" font-size="11.5" fill="#16202b">Shortest path;</text>
+    <text x="624" y="394" font-size="11.5" fill="#16202b">structured programming</text>
+    <line x1="740" y1="416" x2="766.3" y2="450" stroke="#8b95a5" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <circle cx="766.3" cy="452" r="4" fill="#3b5bdb" opacity="0.65"/>
+
+    <rect x="830" y="316" width="170" height="100" rx="10" fill="#ffffff" stroke="#16202b" stroke-width="1.5"/>
+    <rect x="830" y="316" width="8" height="100" rx="4" fill="#3b5bdb" opacity="0.85"/>
+    <text x="848" y="340" font-size="16" font-weight="bold" fill="#16202b">Donald Knuth</text>
+    <text x="848" y="358" font-size="12" fill="#8b95a5">1938–</text>
+    <text x="848" y="378" font-size="11.5" fill="#16202b">The Art of Computer</text>
+    <text x="848" y="394" font-size="11.5" fill="#16202b">Programming; algorithm analysis</text>
+    <line x1="862" y1="416" x2="807.4" y2="450" stroke="#8b95a5" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <circle cx="807.4" cy="452" r="4" fill="#3b5bdb" opacity="0.85"/>
+  </g>
+
+  <!-- Influence arrows -->
+  <g fill="none" stroke="#3b5bdb" stroke-width="2.5">
+    <path d="M240 130 Q480 26 500 128" marker-end="url(#arr)"/> <!-- Lovelace → von Neumann -->
+    <path d="M690 130 L672 130" marker-end="url(#arr)"/> <!-- Turing → von Neumann -->
+    <path d="M560 184 Q500 196 500 200" marker-end="url(#arr)"/> <!-- von Neumann → Hopper -->
+  </g>
+  <g font-family="Helvetica,Arial" font-size="10.5" fill="#3b5bdb">
+    <text x="330" y="34" text-anchor="middle">symbol manipulation → stored program</text>
+    <text x="676" y="118" text-anchor="middle">universal machine → EDVAC</text>
+    <text x="430" y="196">machine code → compilers</text>
+  </g>
+</svg>

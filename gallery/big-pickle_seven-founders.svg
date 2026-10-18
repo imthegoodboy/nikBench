@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700" role="img" aria-label="Seven founders of computing on a to-scale timeline, 1800 to 2000">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0f1720"/>
+      <stop offset="1" stop-color="#1b2733"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#22303f"/>
+      <stop offset="1" stop-color="#182430"/>
+    </linearGradient>
+    <style>
+      .t { font-family: "Segoe UI", Arial, sans-serif; fill: #e8eef4; }
+      .dim { font-family: "Segoe UI", Arial, sans-serif; fill: #8fa3b5; }
+      .nm { font-family: "Segoe UI", Arial, sans-serif; font-size: 15px; font-weight: 700; fill: #f3f7fb; }
+      .yr { font-family: "Segoe UI", Arial, sans-serif; font-size: 11px; fill: #6fd3c7; letter-spacing: 0.5px; }
+      .fc { font-family: "Segoe UI", Arial, sans-serif; font-size: 11px; fill: #c2ced9; }
+      .tick { font-family: "Segoe UI", Arial, sans-serif; font-size: 10px; fill: #7d8fa1; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="700" fill="url(#bg)"/>
+  <text class="t" x="60" y="34" font-size="20" font-weight="700" letter-spacing="1">SEVEN FOUNDERS OF COMPUTING</text>
+  <text class="dim" x="60" y="54" font-size="12">birth years mapped to scale on the 1800–2000 axis</text>
+
+  <!-- founder cards (facts verbatim from the brief) -->
+  <g>
+    <rect x="25" y="80" width="150" height="132" rx="8" fill="url(#card)" stroke="#33506a"/>
+    <text class="nm" x="37" y="104">Ada Lovelace</text>
+    <text class="yr" x="37" y="122">1815–1852</text>
+    <text class="fc" x="37" y="142">First published</text>
+    <text class="fc" x="37" y="157">algorithm</text>
+    <text class="fc" x="37" y="172">(Note G, Analytical</text>
+    <text class="fc" x="37" y="187">Engine)</text>
+    <circle cx="100" cy="205" r="3" fill="#6fd3c7"/>
+  </g>
+  <g>
+    <rect x="195" y="80" width="150" height="132" rx="8" fill="url(#card)" stroke="#33506a"/>
+    <text class="nm" x="207" y="104">John von Neumann</text>
+    <text class="yr" x="207" y="122">1903–1957</text>
+    <text class="fc" x="207" y="142">Stored-program</text>
+    <text class="fc" x="207" y="157">architecture (EDVAC</text>
+    <text class="fc" x="207" y="172">report, 1945)</text>
+    <circle cx="270" cy="205" r="3" fill="#6fd3c7"/>
+  </g>
+  <g>
+    <rect x="365" y="80" width="150" height="132" rx="8" fill="url(#card)" stroke="#33506a"/>
+    <text class="nm" x="377" y="104">Grace Hopper</text>
+    <text class="yr" x="377" y="122">1906–1992</text>
+    <text class="fc" x="377" y="142">Compilers &amp;</text>
+    <text class="fc" x="377" y="157">COBOL</text>
+    <circle cx="440" cy="205" r="3" fill="#6fd3c7"/>
+  </g>
+  <g>
+    <rect x="535" y="80" width="150" height="132" rx="8" fill="url(#card)" stroke="#33506a"/>
+    <text class="nm" x="547" y="104">Alan Turing</text>
+    <text class="yr" x="547" y="122">1912–1954</text>
+    <text class="fc" x="547" y="142">Universal machine</text>
+    <text class="fc" x="547" y="157">(1936)</text>
+    <circle cx="610" cy="205" r="3" fill="#6fd3c7"/>
+  </g>
+  <g>
+    <rect x="705" y="80" width="150" height="132" rx="8" fill="url(#card)" stroke="#33506a"/>
+    <text class="nm" x="717" y="104">Claude Shannon</text>
+    <text class="yr" x="717" y="122">1916–2001</text>
+    <text class="fc" x="717" y="142">Information theory</text>
+    <text class="fc" x="717" y="157">(1948)</text>
+    <circle cx="780" cy="205" r="3" fill="#6fd3c7"/>
+  </g>
+  <g>
+    <rect x="875" y="80" width="150" height="132" rx="8" fill="url(#card)" stroke="#33506a"/>
+    <text class="nm" x="887" y="104">Edsger Dijkstra</text>
+    <text class="yr" x="887" y="122">1930–2002</text>
+    <text class="fc" x="887" y="142">Shortest path;</text>
+    <text class="fc" x="887" y="157">structured</text>
+    <text class="fc" x="887" y="172">programming</text>
+    <circle cx="950" cy="205" r="3" fill="#6fd3c7"/>
+  </g>
+  <g>
+    <rect x="1045" y="80" width="150" height="132" rx="8" fill="url(#card)" stroke="#33506a"/>
+    <text class="nm" x="1057" y="104">Donald Knuth</text>
+    <text class="yr" x="1057" y="122">1938–</text>
+    <text class="fc" x="1057" y="142">The Art of Computer</text>
+    <text class="fc" x="1057" y="157">Programming;</text>
+    <text class="fc" x="1057" y="172">analysis of</text>
+    <text class="fc" x="1057" y="187">algorithms</text>
+    <circle cx="1120" cy="205" r="3" fill="#6fd3c7"/>
+  </g>
+
+  <!-- leader lines from each card to its true birth-year position -->
+  <g stroke="#3d5b76" stroke-width="1" fill="none">
+    <path d="M100,205 L175,596"/>
+    <path d="M270,205 L615,596"/>
+    <path d="M440,205 L630,596"/>
+    <path d="M610,205 L660,596"/>
+    <path d="M780,205 L680,596"/>
+    <path d="M950,205 L750,596"/>
+    <path d="M1120,205 L790,596"/>
+  </g>
+
+  <!-- influence arrows (both justified): Lovelace's Note G grounded Turing's framing;
+       Turing's universal machine underpins von Neumann's stored-program design -->
+  <g fill="none" stroke="#e0a458" stroke-width="2" stroke-dasharray="6 5">
+    <path d="M175,600 Q417,690 655,606" marker-end="url(#ah)"/>
+    <path d="M660,600 Q638,655 619,606" marker-end="url(#ah)"/>
+  </g>
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#e0a458"/>
+    </marker>
+  </defs>
+  <text class="dim" x="470" y="672" font-size="11" fill="#e0a458">Lovelace → Turing (Note G / the “Lovelace objection”)</text>
+  <text class="dim" x="700" y="660" font-size="11" fill="#e0a458">Turing → von Neumann (universal machine)</text>
+
+  <!-- to-scale timeline 1800–2000 -->
+  <line x1="100" y1="600" x2="1100" y2="600" stroke="#8fa3b5" stroke-width="2"/>
+  <g stroke="#4a627a" stroke-width="1">
+    <line x1="100" y1="596" x2="100" y2="610"/>
+    <line x1="200" y1="596" x2="200" y2="610"/>
+    <line x1="300" y1="596" x2="300" y2="610"/>
+    <line x1="400" y1="596" x2="400" y2="610"/>
+    <line x1="500" y1="596" x2="500" y2="610"/>
+    <line x1="600" y1="596" x2="600" y2="610"/>
+    <line x1="700" y1="596" x2="700" y2="610"/>
+    <line x1="800" y1="596" x2="800" y2="610"/>
+    <line x1="900" y1="596" x2="900" y2="610"/>
+    <line x1="1000" y1="596" x2="1000" y2="610"/>
+    <line x1="1100" y1="596" x2="1100" y2="610"/>
+  </g>
+  <g class="tick" text-anchor="middle">
+    <text x="100" y="628">1800</text>
+    <text x="300" y="628">1840</text>
+    <text x="500" y="628">1880</text>
+    <text x="700" y="628">1920</text>
+    <text x="900" y="628">1960</text>
+    <text x="1100" y="628">2000</text>
+  </g>
+
+  <!-- birth-year markers, x = 100 + (year-1800)*5 -->
+  <g>
+    <circle cx="175" cy="600" r="6" fill="#e8eef4"/>
+    <circle cx="615" cy="600" r="6" fill="#e8eef4"/>
+    <circle cx="630" cy="600" r="6" fill="#e8eef4"/>
+    <circle cx="660" cy="600" r="6" fill="#e8eef4"/>
+    <circle cx="680" cy="600" r="6" fill="#e8eef4"/>
+    <circle cx="750" cy="600" r="6" fill="#e8eef4"/>
+    <circle cx="790" cy="600" r="6" fill="#e8eef4"/>
+  </g>
+</svg>

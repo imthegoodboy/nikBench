@@ -1,0 +1,123 @@
+<svg viewBox="0 0 1200 700" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Seven founders of computing on a to-scale timeline 1800-2000">
+  <!-- PALETTE: ink navy field #10151f / card #171e2b, amber #e9b055 for lifespans,
+       teal #5ec8bd for milestones, slate #6d7d94 for influence arrows, text #eef2f7 / muted #93a0b4. -->
+  <defs>
+    <marker id="arw" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8fa3bb"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="700" fill="#10151f"/>
+
+  <text x="28" y="44" font-family="Georgia, 'Times New Roman', serif" font-size="30" fill="#eef2f7">Seven Founders of Computing</text>
+  <text x="28" y="70" font-family="Georgia, serif" font-size="14" fill="#93a0b4">Bars are life-spans drawn to scale, 1800&#8211;2000. Dots mark the contribution named in the card.</text>
+  <line x1="28" y1="84" x2="1172" y2="84" stroke="#26303f" stroke-width="1"/>
+
+  <!-- row bands -->
+  <g fill="#171e2b">
+    <rect x="20" y="100" width="1160" height="66" rx="7"/>
+    <rect x="20" y="176" width="1160" height="66" rx="7"/>
+    <rect x="20" y="252" width="1160" height="66" rx="7"/>
+    <rect x="20" y="328" width="1160" height="66" rx="7"/>
+    <rect x="20" y="404" width="1160" height="66" rx="7"/>
+    <rect x="20" y="480" width="1160" height="66" rx="7"/>
+    <rect x="20" y="556" width="1160" height="66" rx="7"/>
+  </g>
+
+  <!-- influence arrows, drawn UNDER the bars so overlaps read as depth -->
+  <g fill="none" stroke="#6d7d94" stroke-width="1.8" opacity="0.85" marker-end="url(#arw)">
+    <path d="M889 388 C940 350 926 250 930 232"/>
+    <path d="M889 388 C930 420 940 448 943 460"/>
+    <path d="M930 232 C990 330 1000 480 993 536"/>
+    <path d="M930 232 C950 258 958 296 962 308"/>
+  </g>
+  <g font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#8fa3bb">
+    <text x="944" y="296">stored-program lineage</text>
+    <text x="900" y="268">BINAC / A-0 lineage</text>
+    <text x="955" y="428">PhD, Manchester 1936&#8211;40</text>
+    <text x="1002" y="350">IAS machine, 1952&#8211;54</text>
+  </g>
+
+  <!-- lifespans (x = 270 + (year - 1800) * 4.55) -->
+  <g>
+    <rect x="338" y="152" width="169" height="9" rx="4.5" fill="#e9b055"/>
+    <rect x="739" y="228" width="245" height="9" rx="4.5" fill="#e9b055"/>
+    <rect x="752" y="304" width="392" height="9" rx="4.5" fill="#e9b055"/>
+    <rect x="780" y="380" width="191" height="9" rx="4.5" fill="#e9b055"/>
+    <rect x="798" y="456" width="382" height="9" rx="4.5" fill="#e9b055"/>
+    <rect x="862" y="532" width="318" height="9" rx="4.5" fill="#e9b055"/>
+    <rect x="898" y="608" width="282" height="9" rx="4.5" fill="#e9b055" stroke="#e9b055" stroke-dasharray="7 5" stroke-width="1.5"/>
+  </g>
+  <g fill="#5ec8bd">
+    <circle cx="466" cy="156" r="5.5"/>
+    <circle cx="930" cy="232" r="5.5"/>
+    <circle cx="962" cy="308" r="5.5"/>
+    <circle cx="889" cy="384" r="5.5"/>
+    <circle cx="943" cy="460" r="5.5"/>
+    <circle cx="993" cy="536" r="5.5"/>
+    <circle cx="1034" cy="612" r="5.5"/>
+  </g>
+
+  <!-- names, years, facts -->
+  <g font-family="Georgia, serif" fill="#eef2f7" font-size="18">
+    <text x="36" y="126">Ada Lovelace</text>
+    <text x="36" y="202">John von Neumann</text>
+    <text x="36" y="278">Grace Hopper</text>
+    <text x="36" y="354">Alan Turing</text>
+    <text x="36" y="430">Claude Shannon</text>
+    <text x="36" y="506">Edsger Dijkstra</text>
+    <text x="36" y="582">Donald Knuth</text>
+  </g>
+  <g font-family="Helvetica, Arial, sans-serif" font-size="11.5" fill="#93a0b4">
+    <text x="36" y="142">1815&#8211;1852</text>
+    <text x="36" y="218">1903&#8211;1957</text>
+    <text x="36" y="294">1906&#8211;1992</text>
+    <text x="36" y="370">1912&#8211;1954</text>
+    <text x="36" y="446">1916&#8211;2001</text>
+    <text x="36" y="522">1930&#8211;2002</text>
+    <text x="36" y="598">1938&#8211;</text>
+  </g>
+  <g font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#c8d2df">
+    <text x="36" y="149">first published algorithm (Note G,</text>
+    <text x="36" y="162">Analytical Engine)</text>
+
+    <text x="36" y="225">stored-program architecture</text>
+    <text x="36" y="238">(EDVAC report, 1945)</text>
+
+    <text x="36" y="308">compilers &amp; COBOL</text>
+
+    <text x="36" y="384">universal machine (1936)</text>
+
+    <text x="36" y="460">information theory (1948)</text>
+
+    <text x="36" y="529">shortest path; structured</text>
+    <text x="36" y="542">programming</text>
+
+    <text x="36" y="605">The Art of Computer Programming;</text>
+    <text x="36" y="618">analysis of algorithms</text>
+  </g>
+
+  <!-- timeline axis -->
+  <g font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#93a0b4">
+    <line x1="270" y1="644" x2="1180" y2="644" stroke="#3a4657" stroke-width="2"/>
+    <g stroke="#3a4657" stroke-width="1.5">
+      <line x1="270" y1="640" x2="270" y2="650"/><line x1="384" y1="640" x2="384" y2="650"/>
+      <line x1="498" y1="640" x2="498" y2="650"/><line x1="611" y1="640" x2="611" y2="650"/>
+      <line x1="725" y1="640" x2="725" y2="650"/><line x1="839" y1="640" x2="839" y2="650"/>
+      <line x1="953" y1="640" x2="953" y2="650"/><line x1="1066" y1="640" x2="1066" y2="650"/>
+      <line x1="1180" y1="640" x2="1180" y2="650"/>
+    </g>
+    <text x="270" y="666" text-anchor="middle">1800</text>
+    <text x="384" y="666" text-anchor="middle">1825</text>
+    <text x="498" y="666" text-anchor="middle">1850</text>
+    <text x="611" y="666" text-anchor="middle">1875</text>
+    <text x="725" y="666" text-anchor="middle">1900</text>
+    <text x="839" y="666" text-anchor="middle">1925</text>
+    <text x="953" y="666" text-anchor="middle">1950</text>
+    <text x="1066" y="666" text-anchor="middle">1975</text>
+    <text x="1180" y="666" text-anchor="middle">2000</text>
+  </g>
+  <g font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6f7e92">
+    <text x="28" y="690">Shannon (d. 2001) and Dijkstra (d. 2002) outlive the axis: bars are clipped at 2000. Knuth (b. 1938) is living: bar dashed to the edge.</text>
+    <text x="28" y="672">Milestone years shown: 1843 Note G &#183; 1945 EDVAC report &#183; 1952 A-0 &#183; 1936 On Computable Numbers &#183; 1948 A Mathematical Theory of Communication &#183; 1959 shortest-path algorithm &#183; 1968 TAOCP vol. 1.</text>
+  </g>
+</svg>

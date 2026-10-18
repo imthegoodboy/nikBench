@@ -132,6 +132,62 @@ Flags:
 
 <!-- NIKBENCH:LEADERBOARD:END -->
 
+## 🖼️ Visual showcase — what the models actually made
+
+The VIS pillar is scored on what a model *draws, animates, and charts* — not what it describes. GitHub renders SVG in color; round-1 curation is the three strongest VIS builds by peer vote (space-bunny-free **81.4**, big-pickle **80.7**, glm **78.6** /100 from the 7 non-self reviewers). Regenerate after any round: `python scripts/build_gallery.py`.
+
+### V1 — Mona Lisa in ≤300 SVG shapes
+
+Blind art fidelity: painters pose, folded hands, sfumato smile, from a text spec with no reference image. Peer-judged for recognizability and craft.
+
+| Model | Render (in color, straight from the submission) | Peer VIS /100 |
+|---|---|---:|
+| **space-bunny** | <img src="gallery/space-bunny-free_mona-lisa.svg" alt="space-bunny-free V1" width="210"> | 81.4 |
+| **big-pickle** | <img src="gallery/big-pickle_mona-lisa.svg" alt="big-pickle V1" width="210"> | 80.7 |
+| **glm-5.3-flash** | <img src="gallery/glm-5-3-flash-free_mona-lisa.svg" alt="glm-5.3-flash-free V1" width="210"> | 78.6 |
+
+### V2 — Seven Founders infographic (1200×700)
+
+Fixed roster — Lovelace · Turing · von Neumann · Shannon · Hopper · Dijkstra · Knuth — on a *to-scale* 1800–2000 timeline. Wrong facts or wrong spacing = lost points.
+
+| Model | Render (in color, straight from the submission) | Peer VIS /100 |
+|---|---|---:|
+| **space-bunny** | <img src="gallery/space-bunny-free_seven-founders.svg" alt="space-bunny-free V2" width="330"> | 81.4 |
+| **big-pickle** | <img src="gallery/big-pickle_seven-founders.svg" alt="big-pickle V2" width="330"> | 80.7 |
+| **glm-5.3-flash** | <img src="gallery/glm-5-3-flash-free_seven-founders.svg" alt="glm-5.3-flash-free V2" width="330"> | 78.6 |
+
+### V3 — LIFTOFF: 60-second motion loop (HTML/CSS)
+
+A 60-second animated web “video” with 4 timed beats. GitHub sandboxes scripts, so open these files in a browser to watch them loop — they are the real deliverables.
+
+| Model | Open in browser (GitHub won't run it) | Peer VIS /100 |
+|---|---|---:|
+| **space-bunny** | [`gallery/space-bunny-free_liftoff.html`](gallery/space-bunny-free_liftoff.html) | 81.4 |
+| **big-pickle** | [`gallery/big-pickle_liftoff.html`](gallery/big-pickle_liftoff.html) | 80.7 |
+| **glm-5.3-flash** | [`gallery/glm-5-3-flash-free_liftoff.html`](gallery/glm-5-3-flash-free_liftoff.html) | 78.6 |
+
+### V4 — Café revenue chart with an honesty trap (900×500)
+
+Same CSV for every model. The trap: noise invites a big “trend”, the truth is a renovation effect ≈ nil and a single festival outlier at month 19. Reward goes to models that decompose instead of dramatize.
+
+| Model | Render (in color, straight from the submission) | Peer VIS /100 |
+|---|---|---:|
+| **space-bunny** | <img src="gallery/space-bunny-free_cafe-chart.svg" alt="space-bunny-free V4" width="330"> | 81.4 |
+| **big-pickle** | <img src="gallery/big-pickle_cafe-chart.svg" alt="big-pickle V4" width="330"> | 80.7 |
+| **glm-5.3-flash** | <img src="gallery/glm-5-3-flash-free_cafe-chart.svg" alt="glm-5.3-flash-free V4" width="330"> | 78.6 |
+
+### Bonus — F1 Mission Control (single-file dashboard)
+
+The frontend task is visual too: a 10-requirement dashboard app. Open the real files.
+
+| Model | Open in browser (GitHub won't run it) | Peer VIS /100 |
+|---|---|---:|
+| **space-bunny** | [`gallery/space-bunny-free_mission-control.html`](gallery/space-bunny-free_mission-control.html) | 81.4 |
+| **big-pickle** | [`gallery/big-pickle_mission-control.html`](gallery/big-pickle_mission-control.html) | 80.7 |
+| **glm-5.3-flash** | [`gallery/glm-5-3-flash-free_mission-control.html`](gallery/glm-5-3-flash-free_mission-control.html) | 78.6 |
+
+_Full raw builds (all 8 models, all 4 visual tasks plus F1) live in `submissions/` between rounds; the renders above are extracted verbatim by `scripts/build_gallery.py` — no retouching._
+
 ## 🗂️ Repository map
 
 ```
@@ -147,6 +203,7 @@ nikBench/
 ├── scorecards/                 ← optional rubric judge JSON outputs
 ├── templates/scorecard.json    ← blank scorecard shape (6 pillars)
 ├── examples/                   ← worked example: 3 judges scoring a demo candidate → example board
+├── gallery/                    ← committed color renders from the latest round (README shows the VIS showcase)
 ├── scripts/aggregate.py        ← stdlib-only scorer → leaderboard.md (supports --selftest, peer-only boards)
 ├── leaderboard.md              ← canonical generated board
 └── .github/workflows/ci.yml    ← validates the scorer on every push
