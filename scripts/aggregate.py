@@ -109,6 +109,43 @@ GRADES = ((90.0, "S"), (80.0, "A"), (70.0, "B"), (60.0, "C"), (45.0, "D"))
 
 PILLARS = ("rat", "tho", "vis", "alg", "fe", "be")
 
+# published per-token prices (USD per 1M tokens) for cost tracking on the board.
+# free-tier opencode models report $0.00; unknown models report "—" rather than a guess.
+MODEL_PRICES: dict[str, tuple[float, float]] = {
+    # (input, output) USD / 1M tokens
+    "beam-free": (0.0, 0.0),
+    "big-pickle": (0.0, 0.0),
+    "deepseek-v4.1-flash-free": (0.0, 0.0),
+    "glm-5.3-flash-free": (0.0, 0.0),
+    "longcat-2.5-preview-free": (0.0, 0.0),
+    "mimo-v2.6-flash-free": (0.0, 0.0),
+    "nemotron-3.5-super-vl-free": (0.0, 0.0),
+    "space-bunny-free": (0.0, 0.0),
+    # paid judges / optional paid candidates (illustrative; used only if such a model is a candidate)
+    "gpt-4o": (2.50, 10.00),
+    "gpt-4o-mini": (0.15, 0.60),
+    "claude-3.5-sonnet": (3.00, 15.00),
+    "mistral-large": (2.00, 6.00),
+    "cohere-command-r-plus": (2.50, 10.00),
+}
+_INPUT_TOKENS_EST = None
+try:
+    _INPUT_TOKENS_EST = max(1, len(Path("test.md").read_bytes()) // 4)
+except Exception:  # noqa: BLE001
+    _INPUT_TOKENS_EST = 12000
+
+
+def cost_usd(model: str) -> float | None:
+    """Estimated USD to produce one submission: input (test.md) + output (submission)."""
+    prices = MODEL_PRICES.get(model)
+    if prices is None:
+        return None
+    in_price, out_price = prices
+    sub_path = Path("submissions") / f"{model}.md"
+    out_tokens = (len(sub_path.read_bytes()) // 4) if sub_path.exists() else 0
+    in_tokens = _INPUT_TOKENS_EST or 12000
+    return (in_tokens * in_price + out_tokens * out_price) / 1_000_000.0
+
 
 def grade(score: float) -> str:
     for floor, letter in GRADES:
@@ -423,8 +460,8 @@ def render_leaderboard(results, updated: str, peer: dict[str, dict] | None = Non
             "",
             f"_Last updated: {updated} · scorer: `scripts/aggregate.py` · protocol: `docs/methodology.md`_",
             "",
-            "| Rank | Model | Final | Grade | NBS | Peer | Self | RAT | THO | VIS | ALG | FE | BE | Judges | Spread |",
-            "|---:|---|---:|:--:|---:|---:|---:|---:|---:|---:|---:|---:|---:|:--:|---:|",
+            "| Rank | Model | Final | Grade | NBS | Peer | Self | RAT | THO | VIS | ALG | FE | BE | Judges | Spread | Cost (est.) |",
+            "|---:|---|---:|:--:|---:|---:|---:|---:|---:|---:|---:|---:|---:|:--:|---:|---:|",
         ]
         for i, (name, res, peer100, self100, final) in enumerate(ranked, 1):
             m = res["medians"]
@@ -437,17 +474,20 @@ def render_leaderboard(results, updated: str, peer: dict[str, dict] | None = Non
             key_score = final if final is not None else res["overall"]
             key_cell = f"{key_score:.2f}" if key_score is not None else "—"
             key_grade = grade(key_score) if key_score is not None else "—"
+            cost_cell = (f"${cost_usd(name):.4f}" if cost_usd(name) is not None else "—")
             lines.append(
                 f"| {i} | **{name}** | {key_cell} | {key_grade} "
                 f"| {nbs_cell} | {peer_cell} | {self_cell} "
                 f"| {pillar_cells} "
-                f"| {len(res['judges'])} | ±{res['spread']:.1f} |"
+                f"| {len(res['judges'])} | ±{res['spread']:.1f} | {cost_cell} |"
             )
         legend = (
             "**NBS** = rubric-judge score (weighted across the 6 pillar medians) · **Peer** = mean of the other models' ratings · "
             "**Self** = the model's own rating of itself (last, by design) · **Final** = `0.6·NBS + 0.2·Peer + 0.2·Self`. "
             "Pillars: **RAT** ratiocination · **THO** thought · **VIS** visual · **ALG** algorithms · **FE** frontend · **BE** backend. "
-            "Grades follow **Final** when peer data exists."
+            "Grades follow **Final** when peer data exists. "
+            "**Cost (est.)** = input (test.md) + output (submission) tokens × published per-token price; "
+            "free-tier models report $0.00, unknown models report `—`."
         )
     else:
         lines = [
@@ -455,8 +495,8 @@ def render_leaderboard(results, updated: str, peer: dict[str, dict] | None = Non
             "",
             f"_Last updated: {updated} · scoring: `scripts/aggregate.py` · protocol: `docs/methodology.md`_",
             "",
-            "| Rank | Model | NBS | Grade | RAT | THO | VIS | ALG | FE | BE | Judges | Spread |",
-            "|---:|---|---:|:--:|---:|---:|---:|---:|---:|---:|:--:|---:|",
+            "| Rank | Model | NBS | Grade | RAT | THO | VIS | ALG | FE | BE | Judges | Spread | Cost (est.) |",
+            "|---:|---|---:|:--:|---:|---:|---:|---:|---:|---:|:--:|---:|---:|",
         ]
         for i, (name, res, _p, _s, _f) in enumerate(ranked, 1):
             m = res["medians"]
@@ -464,7 +504,7 @@ def render_leaderboard(results, updated: str, peer: dict[str, dict] | None = Non
             lines.append(
                 f"| {i} | **{name}** | {res['overall']:.2f} | {grade(res['overall'])} "
                 f"| {pillar_cells} "
-                f"| {len(res['judges'])} | ±{res['spread']:.1f} |"
+                f"| {len(res['judges'])} | ±{res['spread']:.1f} | { (f'${cost_usd(name):.4f}' if cost_usd(name) is not None else '—') } |"
             )
         legend = (
             "**NBS** = NikBench Score, 0–100, the pillar-weighted mean of the six pillar medians. "

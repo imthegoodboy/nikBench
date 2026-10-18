@@ -44,18 +44,18 @@ Full protocol & provenance: [`docs/methodology.md`](docs/methodology.md).
 ## 📊 Live board (auto-updated by Phase 3 runs)
 
 <!-- NIKBENCH:LEADERBOARD:START -->
-_Last updated: 2026-10-18 01:40 UTC · scorer: `scripts/aggregate.py` · protocol: `docs/methodology.md`_
+_Last updated: 2026-10-18 06:06 UTC · scorer: `scripts/aggregate.py` · protocol: `docs/methodology.md`_
 
-| Rank | Model | Final | Grade | NBS | Peer | Self | RAT | THO | VIS | ALG | FE | BE | Judges | Spread |
-|---:|---|---:|:--:|---:|---:|---:|---:|---:|---:|---:|---:|---:|:--:|---:|
-| 1 | **beam-free** | 91.26 | S | 100.0 | 71.3 | 85.0 | 100 | 100 | 100 | 100 | 100 | 100 | 1 | ±0.0 |
-| 2 | **nemotron-3.5-super-vl-free** | 87.98 | A | 91.8 | 79.4 | 85.0 | 72 | 89 | 100 | 98 | 100 | 100 | 1 | ±0.0 |
-| 3 | **big-pickle** | 85.93 | A | — | 86.9 | 85.0 | — | — | — | — | — | — | 0 | ±0.0 |
-| 4 | **glm-5.3-flash-free** | 82.22 | A | — | 81.4 | 83.0 | — | — | — | — | — | — | 0 | ±0.0 |
-| 5 | **space-bunny-free** | 73.07 | B | — | 76.1 | 70.0 | — | — | — | — | — | — | 0 | ±0.0 |
-| 6 | **deepseek-v4.1-flash-free** | 71.36 | B | 62.5 | 84.1 | 85.0 | 36 | 50 | 76 | 68 | 82 | 77 | 1 | ±0.0 |
-| 7 | **longcat-2.5-preview-free** | 66.85 | C | — | 68.7 | 65.0 | — | — | — | — | — | — | 0 | ±0.0 |
-| 8 | **mimo-v2.6-flash-free** | 37.31 | F | 36.0 | 33.6 | 45.0 | 97 | 83 | 0 | 0 | 0 | 0 | 1 | ±0.0 |
+| Rank | Model | Final | Grade | NBS | Peer | Self | RAT | THO | VIS | ALG | FE | BE | Judges | Spread | Cost (est.) |
+|---:|---|---:|:--:|---:|---:|---:|---:|---:|---:|---:|---:|---:|:--:|---:|---:|
+| 1 | **beam-free** | 91.26 | S | 100.0 | 71.3 | 85.0 | 100 | 100 | 100 | 100 | 100 | 100 | 1 | ±0.0 | $0.0000 |
+| 2 | **nemotron-3.5-super-vl-free** | 87.98 | A | 91.8 | 79.4 | 85.0 | 72 | 89 | 100 | 98 | 100 | 100 | 1 | ±0.0 | $0.0000 |
+| 3 | **big-pickle** | 85.93 | A | — | 86.9 | 85.0 | — | — | — | — | — | — | 0 | ±0.0 | $0.0000 |
+| 4 | **glm-5.3-flash-free** | 82.22 | A | — | 81.4 | 83.0 | — | — | — | — | — | — | 0 | ±0.0 | $0.0000 |
+| 5 | **space-bunny-free** | 73.07 | B | — | 76.1 | 70.0 | — | — | — | — | — | — | 0 | ±0.0 | $0.0000 |
+| 6 | **deepseek-v4.1-flash-free** | 71.36 | B | 62.5 | 84.1 | 85.0 | 36 | 50 | 76 | 68 | 82 | 77 | 1 | ±0.0 | $0.0000 |
+| 7 | **longcat-2.5-preview-free** | 66.85 | C | — | 68.7 | 65.0 | — | — | — | — | — | — | 0 | ±0.0 | $0.0000 |
+| 8 | **mimo-v2.6-flash-free** | 37.31 | F | 36.0 | 33.6 | 45.0 | 97 | 83 | 0 | 0 | 0 | 0 | 1 | ±0.0 | $0.0000 |
 
 ## Grade scale
 
@@ -68,7 +68,7 @@ _Last updated: 2026-10-18 01:40 UTC · scorer: `scripts/aggregate.py` · protoco
 | D | ≥ 45 | incomplete work on at least one pillar |
 | F | < 45 | failed to produce usable submissions |
 
-**NBS** = rubric-judge score (weighted across the 6 pillar medians) · **Peer** = mean of the other models' ratings · **Self** = the model's own rating of itself (last, by design) · **Final** = `0.6·NBS + 0.2·Peer + 0.2·Self`. Pillars: **RAT** ratiocination · **THO** thought · **VIS** visual · **ALG** algorithms · **FE** frontend · **BE** backend. Grades follow **Final** when peer data exists.
+**NBS** = rubric-judge score (weighted across the 6 pillar medians) · **Peer** = mean of the other models' ratings · **Self** = the model's own rating of itself (last, by design) · **Final** = `0.6·NBS + 0.2·Peer + 0.2·Self`. Pillars: **RAT** ratiocination · **THO** thought · **VIS** visual · **ALG** algorithms · **FE** frontend · **BE** backend. Grades follow **Final** when peer data exists. **Cost (est.)** = input (test.md) + output (submission) tokens × published per-token price; free-tier models report $0.00, unknown models report `—`.
 
 <details>
 <summary><b>Peer-round notes</b></summary>
