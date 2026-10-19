@@ -1,16 +1,18 @@
-"""Insert the VIS showcase section into README.md from gallery/_book.json."""
+"""Insert or refresh the VIS showcase in README.md from gallery/_book.json.
+
+Run after `python scripts/build_gallery.py`.
+"""
 import ast
-import re
 import sys
 from pathlib import Path
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-book = ast.literal_eval((Path("gallery/_book.json")).read_text(encoding="utf-8"))
+book = ast.literal_eval(Path("gallery/_book.json").read_text(encoding="utf-8"))
 readme_path = Path("README.md")
 readme = readme_path.read_text(encoding="utf-8")
 
-WIDTHS = {"V1": 210, "V2": 330, "V3": 330, "V4": 330}
+WIDTHS = {"V1": 210, "V2": 330, "V3": 330, "V4": 330, "V5": 210, "V6": 330, "V7": 420}
 TASK_BLURB = {
     "V1": ("V1 — Mona Lisa in ≤300 SVG shapes",
            "Blind art fidelity: painters pose, folded hands, sfumato smile, from a text "
@@ -25,9 +27,26 @@ TASK_BLURB = {
            "Same CSV for every model. The trap: noise invites a big “trend”, the truth is a "
            "renovation effect ≈ nil and a single festival outlier at month 19. Reward goes to "
            "models that decompose instead of dramatize."),
+    "V5": ("V5 — Eiffel Tower architectural elevation (hard tier, 600×900)",
+           "To-scale engineering: platforms pinned at 57 / 115 / 276 m on a linear height map, "
+           "≥40 visible lattice elements, and an in-SVG annotation block. Judges measure the "
+           "y-coordinates — a pretty silhouette with wrong decks loses."),
+    "V6": ("V6 — Taj Mahal bilateral symmetry (hard tier, 900×600)",
+           "One mirrored `<g>` half, true about x = 450 within 1 px, four separate minarets, "
+           "dome taller than the towers, pool reflection. The round's sharpest failure mode: "
+           "mirrored groups that land on the same side and leave the façade one-sided."),
+    "V7": ("V7 — Earth colour system (hard tier, 1200×800)",
+           "A design-system board, not a poster: an Earth disc built only from eight fixed "
+           "tokens, eight swatch cards, a WCAG 2.1 contrast block with ratios to two decimals, "
+           "a 60-30-10 bar, and a type hierarchy. Judges recompute every contrast ratio."),
     "F1": ("Bonus — F1 Mission Control (single-file dashboard)",
            "The frontend task is visual too: a 10-requirement dashboard app. Open the real files."),
 }
+
+
+def top_three() -> str:
+    rows = book.get("V1") or []
+    return ", ".join(f"{model.replace('-free', '')} **{score:.1f}**" for model, _path, score in rows[:3])
 
 
 def build_section() -> str:
@@ -35,39 +54,36 @@ def build_section() -> str:
         "## 🖼️ Visual showcase — what the models actually made",
         "",
         "The VIS pillar is scored on what a model *draws, animates, and charts* — not what it "
-        "describes. GitHub renders SVG in color; round-1 curation is the three strongest VIS "
-        "builds by peer vote (space-bunny-free **81.4**, big-pickle **80.7**, glm "
-        "**78.6** /100 from the 7 non-self reviewers). Regenerate after any round: "
-        "`python scripts/build_gallery.py`.",
+        f"describes. GitHub renders SVG in color; the curation below is the three strongest VIS "
+        f"builds of the round by peer vote ({top_three()} /100 from the non-self reviewers). "
+        "Regenerate with `python scripts/build_gallery.py` then `python scripts/insert_showcase.py`.",
         "",
     ]
-    for task in ("V1", "V2", "V3", "V4", "F1"):
+    for task in ("V1", "V2", "V3", "V4", "V5", "V6", "V7", "F1"):
         title, blurb = TASK_BLURB[task]
         lines += [f"### {title}", "", blurb, ""]
         rows = book.get(task, [])
         if not rows:
             lines += ["_(no render — missing section in every submission)_", ""]
             continue
-        if task in ("V1", "V2", "V4"):
-            lines += ["| Model | Render (in color, straight from the submission) | Peer VIS /100 |",
-                      "|---|---|---:|"]
-            w = WIDTHS[task]
-            for model, path, score in rows:
-                alt = f"{model} {task}"
-                lines.append(f"| **{model.replace('-free', '')}** "
-                             f"| <img src=\"{path}\" alt=\"{alt}\" width=\"{w}\"> | {score} |")
-            lines.append("")
-        else:
+        if task in ("V3", "F1"):
             lines += ["| Model | Open in browser (GitHub won't run it) | Peer VIS /100 |",
                       "|---|---|---:|"]
             for model, path, score in rows:
+                lines.append(f"| **{model.replace('-free', '')}** | [`{path}`]({path}) | {score} |")
+        else:
+            lines += ["| Model | Render (in color, straight from the submission) | Peer VIS /100 |",
+                      "|---|---|---:|"]
+            width = WIDTHS[task]
+            for model, path, score in rows:
+                alt = f"{model} {task}"
                 lines.append(f"| **{model.replace('-free', '')}** "
-                             f"| [`{path}`]({path}) | {score} |")
-            lines.append("")
+                             f"| <img src=\"{path}\" alt=\"{alt}\" width=\"{width}\"> | {score} |")
+        lines.append("")
     lines += [
-        "_Full raw builds (all 8 models, all 4 visual tasks plus F1) live in `submissions/` "
-        "between rounds; the renders above are extracted verbatim by "
-        "`scripts/build_gallery.py` — no retouching._",
+        "_Full raw builds live in `submissions/` between rounds; the renders above are extracted "
+        "verbatim by `scripts/build_gallery.py` — no retouching. Per-model live BE/FE numbers are "
+        "in the live column of the board above._",
         "",
     ]
     return "\n".join(lines).rstrip() + "\n"
@@ -75,15 +91,22 @@ def build_section() -> str:
 
 section = build_section()
 anchor = "## 🗂️ Repository map"
-idx = readme.index(anchor)
-readme = readme[:idx] + section + "\n" + readme[idx:]
+header = "## 🖼️ Visual showcase"
+if header in readme:
+    start = readme.index(header)
+    end = readme.index(anchor, start)
+    readme = readme[:start] + section + "\n" + readme[end:]
+else:
+    idx = readme.index(anchor)
+    readme = readme[:idx] + section + "\n" + readme[idx:]
 
-# add gallery bullet to the repo map
-readme = readme.replace(
-    "- [`leaderboard.md`](leaderboard.md)",
-    "- [`gallery/`](gallery)\n- [`leaderboard.md`](leaderboard.md)",
-    1,
-)
+# add the gallery bullet to the repo map when it is missing
+if "[`gallery/`](gallery)" not in readme:
+    readme = readme.replace(
+        "- [`leaderboard.md`](leaderboard.md)",
+        "- [`gallery/`](gallery)\n- [`leaderboard.md`](leaderboard.md)",
+        1,
+    )
 
 readme_path.write_text(readme, encoding="utf-8")
-print("showcase inserted before the repository map; gallery bullet added")
+print("showcase refreshed — README now matches gallery/_book.json")

@@ -122,6 +122,9 @@ MODEL_PRICES: dict[str, tuple[float, float]] = {
     "longcat-2.5-preview-free": (0.0, 0.0),
     "mimo-v2.6-flash-free": (0.0, 0.0),
     "nemotron-3.5-super-vl-free": (0.0, 0.0),
+    "nemotron-3.5-lightning-free": (0.0, 0.0),
+    "nemotron-3-ultra-free": (0.0, 0.0),
+    "minimax-m3.1-flash-free": (0.0, 0.0),
     "space-bunny-free": (0.0, 0.0),
     # paid judges / optional paid candidates (illustrative; used only if such a model is a candidate)
     "gpt-4o": (2.50, 10.00),
@@ -404,7 +407,14 @@ def parse_peer_file(path: Path) -> tuple[str, dict[str, dict]] | None:
         items = []
         for entry in raw:
             if isinstance(entry, dict):
-                name = str(entry.get("model") or entry.get("name") or "unknown")
+                name = str(
+                    entry.get("model")
+                    or entry.get("name")
+                    or entry.get("candidate")
+                    or entry.get("submission")
+                    or entry.get("candidate_id")
+                    or "unknown"
+                )
                 items.append((name, entry))
     else:
         items = []
@@ -412,14 +422,19 @@ def parse_peer_file(path: Path) -> tuple[str, dict[str, dict]] | None:
     for model, rating in items:
         if not isinstance(rating, dict):
             continue
+        # The packet's example uses lowercase keys, but some reviewers emit
+        # RAT/THO/... — normalise case so a valid card is never scored as zeros.
+        lowered = {str(key).strip().lower(): value for key, value in rating.items()}
         values = {}
         for key in ("rat", "tho", "vis", "alg", "fe", "be", "overall"):
             try:
-                values[key] = max(0.0, min(10.0, float(rating.get(key, 0))))
+                values[key] = max(0.0, min(10.0, float(lowered.get(key, 0))))
             except (TypeError, ValueError):
                 values[key] = 0.0
-        values["self"] = bool(rating.get("self", model == reviewer))
+        values["self"] = bool(lowered.get("self", model == reviewer))
         ratings[str(model)] = values
+    # Never invent an "unknown" competitor from an unnamed entry.
+    ratings.pop("unknown", None)
     if not ratings:
         return None
     return reviewer, ratings
@@ -709,6 +724,39 @@ def selftest(scores_dir: Path, peer_dir: Path | None = None) -> int:
         peer, _problems = collect_peer(tmp_path.parent)
     assert peer["good"]["peer100"] == 80.0 and peer["good"]["has_self"] is False
     assert peer["rev-x"]["self100"] == 90.0
+
+    # case-insensitive pillar keys (some models emit RAT/THO/.../Overall)
+    upper = json.dumps({
+        "schema": PEER_SCHEMA,
+        "reviewer": "rev-y",
+        "ratings": {
+            "good": {"RAT": 7, "THO": 7, "VIS": 7, "ALG": 7, "FE": 7, "BE": 7, "Overall": 7},
+            "rev-y": {"RAT": 8, "THO": 8, "VIS": 8, "ALG": 8, "FE": 8, "BE": 8, "Overall": 8, "Self": True},
+        },
+    })
+    with tempfile.TemporaryDirectory() as tmp_upper:
+        (Path(tmp_upper) / "rev-y.md").write_text(upper, encoding="utf-8")
+        peer_upper, _ = collect_peer(Path(tmp_upper))
+    assert peer_upper["good"]["peer100"] == 70.0, peer_upper["good"]
+    assert peer_upper["rev-y"]["self100"] == 80.0, peer_upper["rev-y"]
+
+    # list-form ratings keyed by `submission` (MiMo's actual format); unnamed rows dropped
+    listed = json.dumps({
+        "schema": PEER_SCHEMA,
+        "reviewer": "rev-z",
+        "ratings": [
+            {"submission": "good", "RAT": 6, "THO": 6, "VIS": 6, "ALG": 6, "FE": 6, "BE": 6, "Overall": 6},
+            {"submission": "rev-z", "RAT": 7, "THO": 7, "VIS": 7, "ALG": 7, "FE": 7, "BE": 7, "Overall": 7, "self": True},
+            {"RAT": 5, "THO": 5, "VIS": 5, "ALG": 5, "FE": 5, "BE": 5, "Overall": 5, "self": True},
+        ],
+    })
+    with tempfile.TemporaryDirectory() as tmp_list:
+        (Path(tmp_list) / "rev-z.md").write_text(listed, encoding="utf-8")
+        peer_list, _ = collect_peer(Path(tmp_list))
+    assert peer_list["good"]["peer100"] == 60.0, peer_list.get("good")
+    assert peer_list["rev-z"]["self100"] == 70.0, peer_list.get("rev-z")
+    assert "unknown" not in peer_list, peer_list
+
     board2 = render_leaderboard(results, "selftest", peer)
     assert "| Final |" in board2 and "| Peer |" in board2
 

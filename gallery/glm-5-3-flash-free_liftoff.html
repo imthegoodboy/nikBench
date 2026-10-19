@@ -2,176 +2,230 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>NKB-1 // LIFTOFF — 60.000s loop</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NKB-1 // LIFTOFF — 60s loop</title>
 <style>
-  html,body{height:100%;margin:0;background:#000;overflow:hidden}
-  canvas{width:100vw;height:100vh;display:block}
+  /* All visuals are a pure function of timeline t = (now − start) mod 60.000 s,
+     so the loop is exactly 60.000 s and the seam is continuous:
+     t=59.9 → black; t=0.0 → title fades up out of the same black. */
+  html, body { margin:0; height:100%; background:#05070D; overflow:hidden; }
+  #stage { position:fixed; inset:0; }
+  #fx { position:absolute; inset:0; width:100%; height:100%; display:block; }
+
+  /* --- 0–8s TITLE --- */
+  #title { position:absolute; left:50%; top:44%; transform:translate(-50%,-50%);
+           text-align:center; color:#F2F7FA; opacity:0; will-change:opacity,transform; }
+  #title h1 { font:700 clamp(28px,6.5vmin,84px)/1.05 "Arial Black", Arial, sans-serif;
+              letter-spacing:0.12em; margin:0 0 1.2vmin; }
+  #title p  { font:500 clamp(11px,2.1vmin,22px)/1.4 monospace; color:#7FD4FF;
+              letter-spacing:0.55em; margin:0; }
+  #title .rule { height:2px; width:0; margin:2.2vmin auto 0; background:#FFC857; }
+
+  /* --- 8–25s COUNTDOWN --- */
+  #count { position:absolute; left:50%; top:38%; transform:translate(-50%,-50%);
+           font:900 clamp(96px,26vmin,320px)/1 "Arial Black", Arial, sans-serif;
+           color:#F2F7FA; opacity:0; will-change:opacity,transform; }
+  #tele { position:absolute; left:50%; bottom:16%; transform:translateX(-50%);
+          display:flex; gap:2.4vmin; opacity:0; }
+  .bar  { width:14vmin; max-width:120px; height:3vmin; max-height:26px;
+          background:#0B1B33; border:1px solid #1E3A66; }
+  .bar i{ display:block; height:100%; width:0; background:linear-gradient(90deg,#0E7490,#7FD4FF); }
+
+  /* --- 25–40s IGNITION & ASCENT --- */
+  #ground { position:absolute; left:-10%; right:-10%; bottom:0; height:22%; min-height:120px;
+            background:linear-gradient(180deg,#17202A 0%,#0C1218 70%); will-change:transform; }
+  #pad { position:absolute; left:50%; bottom:100%; transform:translateX(-50%);
+         width:26vmin; height:1.6vmin; background:#33424F; }
+  #tower { position:absolute; left:50%; bottom:100%; margin-left:12vmin; width:1.4vmin;
+           height:34vmin; background:repeating-linear-gradient(180deg,#405061 0 1.2vmin,
+           #1B242E 1.2vmin 2.2vmin); will-change:transform; }
+  #rocket { position:absolute; left:50%; bottom:9%; width:9vmin; margin-left:-4.5vmin;
+            will-change:transform; }
+  #rocket .body    { height:34vmin; background:linear-gradient(90deg,#B9C5CF 0%,#F2F7FA 45%,#8FA0AE 100%);
+                     border-radius:4.5vmin 4.5vmin 1vmin 1vmin; position:relative; }
+  #rocket .nose    { position:absolute; top:-6vmin; left:0; width:9vmin; height:7vmin;
+                     background:#C1440E; border-radius:50% 50% 0 0; }
+  #rocket .window  { position:absolute; top:8vmin; left:50%; transform:translateX(-50%);
+                     width:3.2vmin; height:3.2vmin; border-radius:50%;
+                     background:radial-gradient(circle at 35% 35%, #7FD4FF, #0B3D91 70%); }
+  #rocket .finL, #rocket .finR { position:absolute; bottom:0; width:3.4vmin; height:9vmin;
+                     background:#C1440E; }
+  #rocket .finL { left:-3vmin; border-radius:100% 0 0 0; }
+  #rocket .finR { right:-3vmin; border-radius:0 100% 0 0; }
+  #rocket .nozzle { position:absolute; bottom:-1.6vmin; left:50%; transform:translateX(-50%);
+                    width:3.6vmin; height:1.8vmin; background:#3B4754; border-radius:0 0 60% 60%; }
+  #flash { position:absolute; inset:0; background:#FFF3D6; opacity:0; pointer-events:none; }
+
+  /* --- 40–60s ORBIT & CREDITS --- */
+  #terra { position:absolute; left:50%; top:105%; width:230vmin; height:230vmin; margin-left:-115vmin;
+           border-radius:50%; opacity:0;
+           background:
+             radial-gradient(circle at 30% 12%, rgba(31,111,67,.9) 0 18%, rgba(31,111,67,0) 40%),
+             radial-gradient(circle at 62% 8%,  rgba(31,111,67,.75) 0 14%, rgba(31,111,67,0) 34%),
+             radial-gradient(circle at 47% 6%,  rgba(31,111,67,.6)  0 10%, rgba(31,111,67,0) 26%),
+             radial-gradient(circle at 50% 50%, #0B3D91 0 62%, #06224F 78%, #02101F 100%);
+           box-shadow:0 -1.2vmin 6vmin rgba(127,212,255,.5), inset 0 3vmin 12vmin rgba(127,212,255,.28);
+           will-change:opacity,transform; }
+  #sat { position:absolute; width:4.6vmin; height:2vmin; background:#D9DEE6; margin:-1vmin 0 0 -2.3vmin;
+         box-shadow:0 0 1.4vmin rgba(255,200,87,.8); opacity:0; }
+  #sat i { position:absolute; top:0.25vmin; width:1.1vmin; height:1.5vmin; background:#1E3A66; }
+  #sat i:nth-child(1){ left:-1.6vmin; } #sat i:nth-child(2){ right:-1.6vmin; }
+  #sat2 { position:absolute; width:1.1vmin; height:1.1vmin; border-radius:50%; background:#FFC857; opacity:0; }
+  #credits { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+             text-align:center; color:#F2F7FA; opacity:0; }
+  #credits h2 { font:700 clamp(18px,3.4vmin,44px)/1.3 "Arial Black",Arial,sans-serif;
+                letter-spacing:.3em; margin:0 0 2vmin; }
+  #credits p  { font:500 clamp(10px,1.8vmin,20px)/1.9 monospace; color:#7FD4FF;
+                letter-spacing:.28em; margin:0; }
+
+  #hud { position:absolute; right:2.4vmin; top:2vmin; font:600 clamp(10px,1.8vmin,18px) monospace;
+         color:#FFC857; opacity:.85; letter-spacing:.15em; }
+  #poster-cap { position:absolute; left:50%; bottom:5%; transform:translateX(-50%);
+                color:#9AA6B2; font:500 clamp(10px,1.9vmin,18px) monospace; display:none;
+                letter-spacing:.2em; text-align:center; }
+  @media (prefers-reduced-motion: reduce){ #fx{ display:none; } }
 </style>
 </head>
 <body>
-<canvas id="c" width="1280" height="720"></canvas>
+<div id="stage" role="img" aria-label="60-second looping motion graphic of a rocket launch: title, countdown, ignition and ascent, then orbit with credits">
+  <canvas id="fx" aria-hidden="true"></canvas>          <!-- stars + flame particles -->
+  <div id="ground"><div id="pad"></div></div>
+  <div id="tower"></div>
+  <div id="rocket" aria-hidden="true"><div class="body"><div class="nose"></div><div class="window"></div></div><div class="finL"></div><div class="finR"></div><div class="nozzle"></div></div>
+  <div id="tele" aria-hidden="true"><div class="bar"><i></i></div><div class="bar"><i></i></div><div class="bar"><i></i></div><div class="bar"><i></i></div><div class="bar"><i></i></div></div>
+  <div id="count" aria-hidden="true">10</div>
+  <div id="title" aria-hidden="true"><h1>NKB-1 // T-MINUS</h1><p>LIFTOFF · 60.000 s</p><div class="rule"></div></div>
+  <div id="terra" aria-hidden="true"></div>
+  <div id="sat" aria-hidden="true"><i></i><i></i></div>
+  <div id="sat2" aria-hidden="true"></div>
+  <div id="credits" aria-hidden="true"><h2>NKB-1 · MISSION CREDITS</h2><p>TIMELINE · TELEMETRY · IGNITION</p><p>ASCENT · ORBIT · RETURN TO T-MINUS</p><p>NIKBENCH v3.0 — HAND-CODED · NO ASSETS</p></div>
+  <div id="flash"></div>
+  <div id="hud">T−00.0</div>
+  <div id="poster-cap">60.000 s LOOP · REDUCED-MOTION POSTER FRAME</div>
+</div>
+
 <script>
-"use strict";
-/* LIFTOFF — single master timeline: t = (now % 60000); every drawn value is a pure
-   function of t seconds in [0,60), so the 60.000s loop is seamless at the seam.
-   BEATS: 0–8s TITLE | 8–25s COUNTDOWN | 25–40s IGNITION & ASCENT | 40–60s ORBIT & CREDITS */
-const LOOP = 60000, W = 1280, H = 720;
-const cv = document.getElementById("c"), ctx = cv.getContext("2d");
-const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-function fit(){ const s = Math.min(innerWidth/W, innerHeight/H);
-  cv.style.width = (W*s)+"px"; cv.style.height = (H*s)+"px"; }
-addEventListener("resize", fit); fit();
+'use strict';
+/* Timeline beats (seconds):
+   0–8   TITLE     title card builds up from black
+   8–25  COUNTDOWN readout 10 → 0 + live telemetry bars
+   25–40 IGNITION  flash, flame particles on canvas, camera shake, receding ground
+   40–60 ORBIT     earth curvature drifts by, two satellites, credits, fade to black
+   Everything below is computed from t only — restart-safe and seamless at 60 → 0. */
+const start = Date.now();                       // wall-clock anchor, UTC-independent
+const rnd = i => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+const clamp = (v,a,b) => Math.min(b, Math.max(a, v));
+const $ = id => document.getElementById(id);
+const els = { fx:$('fx'), title:$('title'), count:$('count'), tele:$('tele'), ground:$('ground'),
+  tower:$('tower'), rocket:$('rocket'), flash:$('flash'), terra:$('terra'), sat:$('sat'),
+  sat2:$('sat2'), credits:$('credits'), hud:$('hud'), cap:$('poster-cap') };
+const bars = els.tele.querySelectorAll('.bar i');
+const ctx = els.fx.getContext('2d');
 
-/* deterministic helpers: no external assets, no randomness that could desync the loop */
-function hic(n){ n = (n^0x9e3779b9)>>>0; n = Math.imul(n, 0x85ebca6b)>>>0;
-  n ^= n>>>13; n = Math.imul(n, 0xc2b2ae35)>>>0; return ((n ^ (n>>>16))>>>0)/4294967296; }
-function sstep(a,b,x){ const t = Math.min(1, Math.max(0,(x-a)/(b-a))); return t*t*(3-2*t); }
-function ease(x){ x = Math.min(1, Math.max(0,x)); return 1 - Math.pow(1-x, 3); }
-
-function draw(t){                       /* t in [0,60) seconds */
-  ctx.setTransform(1,0,0,1,0,0);
-  ctx.fillStyle = "#02030a"; ctx.fillRect(0,0,W,H);
-
-  /* starfield (always on, slow drift so the seam matches: drift is periodic in 60s via sin) */
-  ctx.fillStyle = "#cfd6ea";
-  for(let i=0;i<90;i++){
-    const bx = hic(i)*W, drift = Math.sin((t/60)*2*Math.PI + hic(i+300)*6.28)*14;
-    const by = hic(i+77)*H*0.9, s = 0.7 + hic(i+13)*1.8;
-    ctx.globalAlpha = 0.25 + hic(i+5)*0.6;
-    ctx.fillRect((bx+drift+W)%W, by, s, s);
+function stars(c, W, H, t, a) {
+  if (a <= 0) return;
+  for (let i = 0; i < 110; i++) {                       // deterministic starfield
+    const sx = rnd(i) * W, sy = rnd(i + 50) * H * 0.85;
+    const tw = 0.55 + 0.45 * Math.sin(t * 2.2 + i);     // twinkle in time
+    c.globalAlpha = a * tw * (0.35 + 0.65 * rnd(i + 99));
+    c.fillStyle = '#F2F7FA';
+    c.beginPath(); c.arc(sx, sy, 0.6 + rnd(i + 200) * 1.5, 0, 7); c.fill();
   }
-  ctx.globalAlpha = 1;
-
-  /* ---- 0–8s TITLE: "NKB-1 // T-MINUS" with subtle build-up ---- */
-  if(t < 8){
-    const a  = sstep(0.4, 2.6, t) * (1 - sstep(6.6, 8.0, t));
-    const sc = 0.96 + 0.04*sstep(0.4, 3.2, t);
-    ctx.save(); ctx.translate(W/2, H/2-40); ctx.scale(sc,sc);
-    ctx.globalAlpha = a; ctx.fillStyle = "#e8eeff";
-    ctx.font = "700 64px 'Cascadia Mono', Consolas, monospace";
-    ctx.textAlign = "center"; ctx.fillText("NKB-1 // T-MINUS", 0, 0);
-    ctx.fillRect(-170, 34, 340*sstep(0.8, 4.2, t), 3);
-    ctx.font = "24px 'Cascadia Mono', Consolas, monospace";
-    ctx.globalAlpha = a*0.7; ctx.fillText("flight loop — 60.000 s", 0, 78);
-    ctx.restore();
+  c.globalAlpha = 1;
+}
+function flame(c, W, H, baseX, baseY, t, e) {           // seeded particle jet, 25–40 s
+  if (e <= 0) return;
+  const L = H * 0.5 * (0.55 + 0.45 * e);
+  for (let i = 0; i < 90; i++) {
+    const rel = ((t - 25) * (1.3 + rnd(i) * 2.4) + rnd(i + 7)) % 1;   // travel fraction
+    const jx = (rnd(i + 31) - 0.5) * (W * 0.03 + rel * W * 0.05);
+    const px = baseX + jx, py = baseY + rel * L;
+    c.globalAlpha = e * (1 - rel) * 0.8;
+    c.fillStyle = rel < 0.3 ? '#FFF3D6' : (rel < 0.6 ? '#FFC857' : '#C1440E');
+    c.beginPath(); c.arc(px, py, (W*0.008) * (1 - rel * 0.7) * (0.7 + rnd(i+3)*0.6), 0, 7); c.fill();
   }
+  c.globalAlpha = 1;
+}
+function frame() {
+  const t = ((Date.now() - start) / 1000) % 60;         // exact 60.000 s loop
+  const W = els.fx.width  = innerWidth  * Math.min(devicePixelRatio||1, 2);
+  const H = els.fx.height = innerHeight * Math.min(devicePixelRatio||1, 2);
+  const vw = innerWidth / 100, vh = innerHeight / 100;   // 1vmin in px
+  ctx.clearRect(0, 0, W, H);
 
-  /* ---- 8–25s COUNTDOWN: 10 → 0 with animated telemetry bars ---- */
-  if(t >= 8 && t < 25){
-    const rem = 25 - t;                       /* 17 s → count 10..0 */
-    const n = Math.max(0, Math.ceil(rem / 1.7));
-    const frac = (rem/1.7) % 1;               /* fraction inside current count */
-    ctx.fillStyle = "#e8eeff"; ctx.textAlign = "center";
-    ctx.font = "700 220px 'Cascadia Mono', Consolas, monospace";
-    ctx.globalAlpha = 0.25 + 0.75*(1 - frac*0.6);
-    ctx.fillText(String(n), W/2, H/2 + 60);
-    ctx.globalAlpha = 1;
-    ctx.font = "26px 'Cascadia Mono', Consolas, monospace"; ctx.fillStyle = "#7f8aa3";
-    ctx.fillText("T-00:00:" + String(Math.ceil(rem)).padStart(2,"0"), W/2, H/2 + 130);
-    /* telemetry bars: 5 bars, deterministic heights */
-    for(let i=0;i<5;i++){
-      const bx = W/2 - 160 + i*70;
-      const h = 30 + 90*(0.5 + 0.5*Math.sin(t*3.1 + i*1.9));
-      ctx.fillStyle = i===n%5 ? "#7de2d1" : "#2c3a55";
-      ctx.fillRect(bx, H-120-h, 44, h);
-      ctx.fillStyle = "#4c5c78"; ctx.fillRect(bx, H-120, 44, 2);
-      ctx.font = "14px 'Cascadia Mono', Consolas, monospace"; ctx.fillStyle = "#7f8aa3";
-      ctx.fillText(["LOX","RP-1","HE-1","PWR","GUID"][i], bx+22, H-98);
-    }
-  }
+  /* ---- phase envelopes ---- */
+  const titleA  = clamp(t/2.2,0,1) * (1 - clamp((t-6)/2,0,1));               // 0–8
+  const countA  = t < 8 ? 0 : (1 - clamp((t-24.2)/0.8,0,1));                 // 8–25
+  const orbitA  = (1 - clamp((t-57.6)/2.4,0,1)) * clamp((t-39.6)/1.2,0,1);   // 40–60
+  const starA   = clamp((t-7.5)/2,0,1) * (t < 40 ? 0.5 : orbitA);            // dim mid, full orbit
+  const shakeA  = t >= 25 && t < 33 ? Math.max(0, 1 - (t-25)/8) : 0;         // camera shake
+  const flashA  = t >= 25 ? Math.exp(-(t-25) * 5) * (t < 26.5 ? 1 : 0) : 0;  // ignition flash
+  const flameE  = t >= 25 && t < 40 ? clamp((t-25)/0.9,0,1) * (1 - clamp((t-37.5)/2,0,1)) : 0;
 
-  /* ---- 25–40s IGNITION & ASCENT: flame particles, camera shake, receding ground ---- */
-  const asc  = ease((t-25)/15);                            /* 0→1 over the beat */
-  const shake = t<25 ? 0 : Math.max(0, 1-(t-25)/7);        /* big early, dying off */
-  const sx = shake ? (hic(Math.floor(t*40))*2-1)*10*shake : 0;
-  const sy = shake ? (hic(Math.floor(t*40)+9)*2-1)*8*shake  : 0;
-  ctx.save(); ctx.translate(sx, sy);
+  stars(ctx, W, H, t, starA);
 
-  if(t >= 25 && t < 40){
-    /* ground: a horizon plane receding as we rise */
-    const gy = H*0.78 + asc*H*0.55;
-    ctx.fillStyle = "#141b2c"; ctx.fillRect(-40, gy, W+80, H);
-    ctx.strokeStyle = "#2c3a55"; ctx.lineWidth = 2; ctx.beginPath();
-    ctx.moveTo(-40, gy); ctx.lineTo(W+40, gy); ctx.stroke();
-    ctx.globalAlpha = 0.5; ctx.fillStyle = "#2c3a55";
-    for(let i=0;i<10;i++){ /* receding pad details */
-      const px = 120 + i*110 - (t*40)%110;
-      ctx.fillRect(px, gy+6, 60, 4);
-    }
-    ctx.globalAlpha = 1;
-  }
+  /* ---- 0–8s TITLE ---- */
+  els.title.style.opacity = titleA;
+  els.title.style.transform = 'translate(-50%,-50%) scale(' + (0.95 + 0.05*titleA) + ')';
+  els.title.querySelector('.rule').style.width = (titleA * 26) + 'vmin';
 
-  /* rocket (visible 25–36s, then it exits top) */
-  if(t >= 25 && t < 36){
-    const ry = H*0.55 + asc*(-H*0.9);
-    const rx = W/2;
-    ctx.save(); ctx.translate(rx, ry);
-    /* flame particles: 60 deterministic sparks cycling */
-    for(let i=0;i<60;i++){
-      const p = ((t*0.85) + hic(i*7)) % 1;
-      const fx = (hic(i+31)*2-1)*(10 + p*38);
-      const fy = 52 + p*(90 + 60*asc);
-      const s  = (1-p)*11;
-      ctx.globalAlpha = (1-p)*0.9;
-      ctx.fillStyle = p < 0.35 ? "#ffd27d" : (p < 0.7 ? "#ff8c42" : "#b33c1e");
-      ctx.beginPath(); ctx.arc(fx, fy, s, 0, Math.PI*2); ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-    /* body */
-    ctx.fillStyle = "#e8eeff";
-    ctx.beginPath();
-    ctx.moveTo(0,-64); ctx.lineTo(18,-20); ctx.lineTo(18,44); ctx.lineTo(-18,44); ctx.lineTo(-18,-20);
-    ctx.closePath(); ctx.fill();
-    ctx.fillStyle = "#c9152f"; ctx.beginPath();
-    ctx.moveTo(0,-64); ctx.lineTo(18,-20); ctx.lineTo(6,-20); ctx.lineTo(0,-40); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = "#132036"; ctx.fillRect(-18,44,10,16); ctx.fillRect(8,44,10,16);
-    ctx.beginPath(); ctx.arc(0,-8,7,0,Math.PI*2); ctx.fillStyle = "#7de2d1"; ctx.fill();
-    ctx.restore();
-  }
-  ctx.restore();
+  /* ---- 8–25s COUNTDOWN ---- */
+  if (t >= 8 && t < 25) {
+    const seg = (t - 8) / (17/11);                       // 11 ticks, 10..0, 1.545 s each
+    const n = Math.max(0, 10 - Math.floor(seg));         // readout number
+    els.count.textContent = String(n);
+    els.count.style.opacity = countA;
+    const f = seg % 1;                                   // per-tick pop-in
+    els.count.style.transform = 'translate(-50%,-50%) scale(' + (1.18 - 0.18*Math.min(1,f*3)) + ')';
+    els.tele.style.opacity = countA;
+    for (let i = 0; i < bars.length; i++)                // telemetry sweep bars
+      bars[i].style.width = (28 + 62 * Math.abs(Math.sin(t*(0.7+i*0.23) + i*1.9))) + '%';
+  } else { els.count.style.opacity = 0; els.tele.style.opacity = 0; }
 
-  /* ---- 40–60s ORBIT & CREDITS: Earth curvature drifts past, a satellite, credits, seamless fade ---- */
-  if(t >= 40){
-    const o = (t-40)/20;                     /* 0→1 over the orbit beat */
-    const eY = H*1.15 - 0;                   /* earth disc sliding down-left */
-    ctx.save();
-    ctx.fillStyle = "#123a5c"; ctx.beginPath();
-    ctx.arc(W*0.28 - o*80, H*0.75 + o*260, 520, 0, Math.PI*2); ctx.fill();
-    ctx.strokeStyle = "#59b3d8"; ctx.lineWidth = 3; ctx.beginPath();
-    ctx.arc(W*0.28 - o*80, H*0.75 + o*260, 522, 0, Math.PI*2); ctx.stroke();
-    ctx.fillStyle = "rgba(140,200,235,0.35)";
-    for(let i=0;i<7;i++){ /* drifting cloud streaks on the limb */
-      const cx = (W*0.28 - o*80) % (W+200) + (i-3)*140;
-      ctx.beginPath(); ctx.ellipse(cx, H*0.75+o*260-500, 90, 22, 0.3, 0, Math.PI*2); ctx.fill();
-    }
-    /* satellite crossing */
-    const satx = W*0.15 + o*W*1.05, saty = H*0.42;
-    ctx.fillStyle = "#dfe7ff"; ctx.fillRect(satx-12, saty-6, 24, 12);
-    ctx.fillStyle = "#3b5bdb"; ctx.fillRect(satx-30, saty-3, 16, 6); ctx.fillRect(satx+14, saty-3, 16, 6);
-    ctx.restore();
+  /* ---- 25–40s IGNITION & ASCENT ---- */
+  const p = t < 25 ? 0 : clamp((t - 25) / 15, 0, 1);     // ascent progress
+  const rise = Math.pow(p, 1.8) * 150;                   // rocket rise in vh
+  els.ground.style.transform = 'translateY(' + (rise * 1.15 * vh) + 'px)';   // receding ground
+  els.tower.style.transform = 'translateY(' + (rise * 1.15 * 0.9 * vh) + 'px)';
+  els.rocket.style.transform = 'translateY(' + (-rise * vh) + 'px)';
+  els.flash.style.opacity = flashA;
+  const flameY = (innerHeight - (0.09 + 0.34 + rise) * vh);
+  if (flameE > 0) flame(ctx, W, H, W/2, Math.min(flameY, H*0.99), t, flameE);
 
-    /* credits */
-    ctx.textAlign = "center"; ctx.globalAlpha = sstep(46, 50, t) * (1 - sstep(58, 60, t));
-    ctx.fillStyle = "#e8eeff"; ctx.font = "34px 'Cascadia Mono', Consolas, monospace";
-    ctx.fillText("NKB-1 — FLIGHT COMPLETE", W/2, H*0.30);
-    ctx.font = "22px 'Cascadia Mono', Consolas, monospace"; ctx.fillStyle = "#7f8aa3";
-    ctx.fillText("guidance · telemetry · life — mission control", W/2, H*0.30+44);
-    ctx.fillText("loop resets at 60.000 s — see you at T-MINUS", W/2, H*0.30+78);
-    ctx.globalAlpha = 1;
-  }
+  /* ---- 40–60s ORBIT ---- */
+  els.terra.style.opacity = orbitA;
+  const drift = (t < 40 ? 0 : (t - 40) / 20 * 130);      // curvature drifts past
+  els.terra.style.transform = 'translateX(' + (drift * -vw) + 'px)';
+  els.sat.style.opacity = orbitA * clamp((t-43)/1.5,0,1);
+  els.sat.style.left  = (50 + 34 * Math.sin((t-40)*0.42 + 0.8)) + 'vmin';
+  els.sat.style.top   = (26 + (t-40)*1.15 + 5 * Math.cos((t-40)*0.42 + 0.8)) + 'vmin';
+  els.sat2.style.opacity = orbitA * clamp((t-46)/1.5,0,1);
+  els.sat2.style.left = (50 + 46 * Math.sin((t-40)*0.3 + 2.4)) + 'vmin';
+  els.sat2.style.top  = (18 + (t-40)*0.75) + 'vmin';
+  els.credits.style.opacity = orbitA * clamp((t-45.5)/2.5,0,1) * (1 - clamp((t-56.5)/3,0,1));
 
-  /* global vignette */
-  const g = ctx.createRadialGradient(W/2, H/2, H*0.35, W/2, H/2, H*0.85);
-  g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, "rgba(0,0,0,0.45)");
-  ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+  els.hud.textContent = t < 25 ? 'T−' + (25 - t).toFixed(1).padStart(4,'0')
+                               : 'T+' + (t - 25).toFixed(1).padStart(4,'0') + ' · PHASE ' +
+                                 (t < 8 ? 'T-MINUS' : t < 25 ? 'COUNTDOWN' : t < 40 ? 'ASCENT' : 'ORBIT');
+
+  const stage = document.getElementById('stage');
+  /* camera shake — applies to everything on the stage */
+  stage.style.transform =
+    'translate(' + ((rnd(Math.floor(t*60)) - .5) * 12 * shakeA).toFixed(2) + 'px,' +
+                   ((rnd(Math.floor(t*60)+1) - .5) * 10 * shakeA).toFixed(2) + 'px)';
+  requestAnimationFrame(frame);
 }
 
-if(reduce){
-  draw(27.5);  /* static poster keyframe: mid-countdown with telemetry */
-  document.title += " — reduced motion poster";
-}else{
-  const t0 = performance.now();
-  (function frame(now){ draw(((now - t0) % LOOP) / 1000); requestAnimationFrame(frame); })(t0);
+/* --- prefers-reduced-motion: static poster keyframe, no animation loop --- */
+if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  els.title.style.opacity = 1;
+  els.title.querySelector('.rule').style.width = '26vmin';
+  els.terra.style.opacity = 1; els.terra.style.transform = 'translateX(-30vmin)';
+  els.sat.style.opacity = 0.9; els.sat.style.left = '62vmin'; els.sat.style.top = '30vmin';
+  els.cap.style.display = 'block';
+  els.hud.textContent = 'POSTER · MOTION REDUCED';
+} else {
+  requestAnimationFrame(frame);
 }
 </script>
 </body>

@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="900" height="600" role="img" aria-label="The Taj Mahal garden façade at sunrise, drawn with exact bilateral symmetry about x=450: raised plinth, central onion dome with finial, four minarets, central iwan, side arches, cypresses and a reflecting pool.">
+  <!-- palette: skyTop #3F5C86, skyLow #EDAE6E, sun #FFE9C0, marble #F6F1E7, marbleShade #D8C8B0, sandstone #A97C4C, water #5A83A3, green #3D5A3A -->
+  <!-- symmetry contract: every repeated element is drawn once on the left half inside the single
+       group <g transform="translate(900,0) scale(-1,1)">, so the composition mirrors about x = 450 exactly (0 px error).
+       Axis elements - plinth, steps, dome, finial, central iwan, pool, sky - are drawn once and are symmetric by construction. -->
+  <defs>
+    <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3F5C86"/>
+      <stop offset="0.58" stop-color="#EDAE6E"/>
+      <stop offset="1" stop-color="#F6F1E7"/>
+    </linearGradient>
+    <radialGradient id="glowG" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFE9C0" stop-opacity="0.85"/>
+      <stop offset="0.55" stop-color="#EDAE6E" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#EDAE6E" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="domeG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F6F1E7"/>
+      <stop offset="0.62" stop-color="#F6F1E7"/>
+      <stop offset="1" stop-color="#D8C8B0"/>
+    </linearGradient>
+    <linearGradient id="waterG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5A83A3"/>
+      <stop offset="1" stop-color="#3F5C86"/>
+    </linearGradient>
+    <clipPath id="poolClip"><rect x="350" y="470" width="200" height="130"/></clipPath>
+  </defs>
+
+  <rect width="900" height="600" fill="url(#skyG)"/>
+  <circle cx="450" cy="212" r="132" fill="url(#glowG)"/>
+  <circle cx="450" cy="212" r="58" fill="#FFE9C0"/>
+
+  <!-- ============ the mausoleum: one symmetric group ============ -->
+  <g id="taj">
+    <!-- raised plinth (axis centred) -->
+    <rect x="210" y="386" width="480" height="8" fill="#F6F1E7"/>
+    <rect x="210" y="394" width="480" height="36" fill="#A97C4C"/>
+    <rect x="210" y="394" width="480" height="5" fill="#D8C8B0"/>
+    <!-- steps -->
+    <rect x="392" y="430" width="116" height="6" fill="#F6F1E7"/>
+    <rect x="404" y="436" width="92" height="6" fill="#D8C8B0"/>
+    <rect x="416" y="442" width="68" height="6" fill="#F6F1E7"/>
+
+    <!-- left half, mirrored to the right half -->
+    <g transform="translate(900,0) scale(-1,1)">
+      <!-- rear (behind) minaret -->
+      <rect x="284" y="246" width="16" height="150" fill="#D8C8B0"/>
+      <rect x="281" y="272" width="22" height="5" fill="#A97C4C"/>
+      <rect x="281" y="308" width="22" height="5" fill="#A97C4C"/>
+      <rect x="281" y="344" width="22" height="5" fill="#A97C4C"/>
+      <path d="M285 250 Q292 230 299 250 Z" fill="#D8C8B0"/>
+      <line x1="292" y1="230" x2="292" y2="220" stroke="#A97C4C" stroke-width="1.6"/>
+      <circle cx="292" cy="218" r="2" fill="#A97C4C"/>
+
+      <!-- side wing wall -->
+      <rect x="318" y="250" width="132" height="140" fill="#F6F1E7"/>
+      <rect x="318" y="376" width="132" height="14" fill="#D8C8B0"/>
+      <rect x="318" y="250" width="132" height="5" fill="#D8C8B0"/>
+      <!-- side arch -->
+      <rect x="344" y="286" width="52" height="104" fill="#F6F1E7" stroke="#D8C8B0" stroke-width="1.2"/>
+      <path d="M356 390 V330 C356 318 362 310 370 306 C378 310 384 318 384 330 V390 Z" fill="#A97C4C" opacity="0.85"/>
+      <!-- small chhatri on the roofline -->
+      <rect x="344" y="236" width="36" height="14" fill="#F6F1E7"/>
+      <rect x="342" y="234" width="40" height="4" fill="#D8C8B0"/>
+      <path d="M344 238 Q362 212 380 238 Z" fill="url(#domeG)"/>
+      <line x1="362" y1="212" x2="362" y2="202" stroke="#A97C4C" stroke-width="1.4"/>
+      <circle cx="362" cy="200" r="2" fill="#A97C4C"/>
+
+      <!-- front (nearer) minaret -->
+      <rect x="233" y="250" width="26" height="170" fill="#F6F1E7"/>
+      <rect x="228" y="280" width="36" height="6" fill="#A97C4C"/>
+      <rect x="228" y="326" width="36" height="6" fill="#A97C4C"/>
+      <rect x="228" y="372" width="36" height="6" fill="#A97C4C"/>
+      <rect x="228" y="420" width="36" height="8" fill="#A97C4C"/>
+      <path d="M232 254 Q246 226 260 254 Z" fill="url(#domeG)"/>
+      <line x1="246" y1="226" x2="246" y2="214" stroke="#A97C4C" stroke-width="1.8"/>
+      <circle cx="246" cy="212" r="2.6" fill="#A97C4C"/>
+
+      <!-- cypresses -->
+      <path d="M110 470 C102 430 104 355 110 322 C116 355 118 430 110 470 Z" fill="#3D5A3A"/>
+      <path d="M145 470 C138 434 140 372 145 344 C150 372 152 434 145 470 Z" fill="#3D5A3A"/>
+      <path d="M180 470 C173 432 175 368 180 336 C185 368 187 432 180 470 Z" fill="#3D5A3A"/>
+      <path d="M215 470 C209 436 210 386 215 358 C220 386 221 436 215 470 Z" fill="#3D5A3A"/>
+    </g>
+
+    <!-- central body along the axis: drum, onion dome, finial (drawn once, symmetric) -->
+    <rect x="408" y="252" width="84" height="10" fill="#D8C8B0"/>
+    <path d="M400 252 C398 224 402 206 416 192 C428 180 434 168 438 156 C442 146 446 142 450 138 C454 142 458 146 462 156 C466 168 472 180 484 192 C498 206 502 224 500 252 Z" fill="url(#domeG)"/>
+    <path d="M420 184 C430 174 442 166 450 138 C458 166 470 174 480 184" fill="none" stroke="#D8C8B0" stroke-width="1.4"/>
+    <line x1="450" y1="138" x2="450" y2="108" stroke="#A97C4C" stroke-width="2"/>
+    <ellipse cx="450" cy="128" rx="4" ry="6" fill="#A97C4C"/>
+    <circle cx="450" cy="118" r="3" fill="#A97C4C"/>
+    <path d="M441 106 Q450 118 459 106 Q450 111 441 106 Z" fill="#A97C4C"/>
+
+    <!-- central iwan, the large arch on the axis -->
+    <rect x="405" y="272" width="90" height="118" fill="#F6F1E7" stroke="#D8C8B0" stroke-width="1.2"/>
+    <path d="M425 390 V318 C425 300 436 288 450 282 C464 288 475 300 475 318 V390 Z" fill="#A97C4C" opacity="0.85"/>
+  </g>
+
+  <!-- garden, reflecting pool and its reflection -->
+  <rect x="0" y="430" width="900" height="40" fill="#3D5A3A"/>
+  <rect x="0" y="462" width="900" height="8" fill="#D8C8B0" opacity="0.55"/>
+  <rect x="350" y="470" width="200" height="130" fill="url(#waterG)"/>
+  <g clip-path="url(#poolClip)">
+    <use href="#taj" transform="translate(0,634.5) scale(1,-0.35)" opacity="0.32"/>
+  </g>
+  <g stroke="#F6F1E7" stroke-width="1" opacity="0.35">
+    <line x1="352" y1="492" x2="548" y2="492"/>
+    <line x1="352" y1="512" x2="548" y2="512"/>
+    <line x1="352" y1="534" x2="548" y2="534"/>
+    <line x1="352" y1="558" x2="548" y2="558"/>
+    <line x1="352" y1="580" x2="548" y2="580"/>
+  </g>
+  <rect x="346" y="466" width="208" height="4" fill="#F6F1E7"/>
+  <rect x="344" y="466" width="6" height="134" fill="#F6F1E7"/>
+  <rect x="550" y="466" width="6" height="134" fill="#F6F1E7"/>
+
+  <!-- annotations -->
+  <line x1="450" y1="92" x2="450" y2="560" stroke="#FFE9C0" stroke-width="0.9" stroke-dasharray="6 6" opacity="0.55"/>
+  <text x="30" y="40" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#F6F1E7">TAJ MAHAL &#183; GARDEN FA&#199;ADE</text>
+  <text x="30" y="58" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="700" fill="#FFE9C0">1632&#8211;1653 &#183; dome &#8776; 73 m &#183; minarets &#8776; 40 m</text>
+  <text x="30" y="76" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#F6F1E7">bilateral: right half = left half mirrored about x = 450</text>
+  <text x="30" y="92" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#F6F1E7">four minarets: 2 near (x 246 / 654), 2 far (x 292 / 608)</text>
+  <text x="558" y="516" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#F6F1E7">reflecting pool</text>
+  <text x="558" y="530" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#F6F1E7">reflection &#215;0.35</text>
+  <text x="450" y="590" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#F6F1E7" text-anchor="middle">axis of symmetry &#183; x = 450 (dashed)</text>
+</svg>

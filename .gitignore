@@ -16,6 +16,9 @@ scorecards/*
 peer/*
 !peer/README.md
 
+# archived rounds (kept locally, never published)
+archive/
+
 # transient runtime-test artifacts
 _smoke/
 live_results.json

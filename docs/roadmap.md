@@ -72,6 +72,6 @@
 ## 6. Open questions for the user
 
 1. Budget for paid judges? (Paid models unlock stronger rubric panels and dispute re-runs.)
-2. Rerun v3.0 on the current 8-model roster, or add the two new opencode models (`nemotron-3.5-lightning-free`, `nemotron-3-ultra-free`) as candidates?
+2. ~~Rerun v3.0 on the current 8-model roster, or add the two new opencode models as candidates?~~ **Resolved:** the v3.0 round ran with **7 scored models** — `space-bunny-free` had been removed by the provider, and the two Nemotron challengers were attempted but excluded as partial builds (`nemotron-3-ultra-free` lost F1/B1 to repeated `504` timeouts; `nemotron-3.5-lightning-free` was truncated by the harness, not the tasks). See [`round-v3.0.md`](round-v3.0.md).
 3. Should the hard tier be mandatory (current: yes, all 33 tasks) or scored as a separate "Hard" column alongside core?
 4. Priority among §3 ideas — which pillar do you want expanded first?

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>NKB-1 // T-MINUS — 60s loop</title>
+<style>
+  html,body{margin:0;height:100%;background:#05070D;overflow:hidden}
+  body{display:flex;align-items:center;justify-content:center}
+  canvas{display:block;width:min(100vw,calc(100vh*16/9));height:auto;max-height:100vh}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<canvas id="c" width="1280" height="720" role="img"
+        aria-label="Sixty second looping motion graphic: NKB-1 title, countdown, ignition and ascent, orbit and credits."></canvas>
+<p class="sr">NKB-1 // T-MINUS. A sixty second looping launch sequence: countdown from ten, ignition, ascent, orbit, credits.</p>
+<script>
+(function () {
+  "use strict";
+  const W = 1280, H = 720, LOOP = 60;
+  const cv = document.getElementById("c");
+  const ctx = cv.getContext("2d");
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  cv.width = W * dpr; cv.height = H * dpr;
+  cv.style.width = "1280px";
+  ctx.scale(dpr, dpr);
+
+  /* deterministic PRNG for starfield / debris (seed 42) */
+  let seed = 42;
+  function rnd() { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
+  const stars = [];
+  for (let i = 0; i < 280; i++) {
+    stars.push({ x: rnd() * W, y: rnd() * H, r: 0.4 + rnd() * 1.5, p: rnd() * Math.PI * 2, s: 0.5 + rnd() * 1.5 });
+  }
+  const tele = [];
+  for (let i = 0; i < 10; i++) tele.push({ p: rnd() * Math.PI * 2, f: 0.6 + rnd() * 1.6 });
+
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const smooth = (a, b, t) => { const x = clamp((t - a) / (b - a), 0, 1); return x * x * (3 - 2 * x); };
+  /* fade window: 0 before a, 1 in [b,c], 0 after d */
+  const win = (t, a, b, c, d) => smooth(a, b, t) * (1 - smooth(c, d, t));
+
+  function bg() {
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#05070D"); g.addColorStop(1, "#080C16");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  }
+
+  function drawStars(t, alpha) {
+    if (alpha <= 0) return;
+    for (const s of stars) {
+      const tw = 0.45 + 0.55 * Math.sin(s.p + t * s.s);
+      ctx.globalAlpha = alpha * tw * 0.85;
+      ctx.fillStyle = "#E8EEF6";
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 7); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function drawGrid(alpha, t) {
+    if (alpha <= 0) return;
+    ctx.save();
+    ctx.globalAlpha = alpha * 0.18;
+    ctx.strokeStyle = "#7FD4FF"; ctx.lineWidth = 1;
+    for (let x = -240; x <= W + 240; x += 80) {
+      ctx.beginPath(); ctx.moveTo(W / 2, 620); ctx.lineTo(x, H); ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawTitle(t) {
+    const a = win(t, 0.4, 1.6, 6.6, 8.0);
+    if (a <= 0) return;
+    const rise = (1 - smooth(0.2, 2.4, t)) * 18;
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#F2F7FA";
+    ctx.font = "700 74px 'Segoe UI', system-ui, sans-serif";
+    ctx.fillText("NKB-1", W / 2, 300 + rise);
+    ctx.fillStyle = "#7FD4FF";
+    ctx.font = "400 26px 'Consolas', ui-monospace, monospace";
+    ctx.letterSpacing = "10px";
+    ctx.fillText("//  T-MINUS", W / 2, 344 + rise);
+    ctx.letterSpacing = "0px";
+    ctx.strokeStyle = "#7FD4FF"; ctx.globalAlpha = a * 0.5;
+    ctx.beginPath(); ctx.moveTo(W / 2 - 190, 372); ctx.lineTo(W / 2 + 190, 372); ctx.stroke();
+    ctx.globalAlpha = a * 0.75;
+    ctx.fillStyle = "#8FA3B0";
+    ctx.font = "400 14px 'Segoe UI', system-ui, sans-serif";
+    ctx.fillText("LOW EARTH ORBIT · PAD 39-N · 2026", W / 2, 402);
+    ctx.restore();
+  }
+
+  function drawCountdown(t) {
+    const a = win(t, 7.2, 8.4, 23.6, 25.0);
+    if (a <= 0) return;
+    const k = clamp((t - 8) / 17, 0, 1);
+    const n = Math.max(0, Math.ceil(10 - k * 10));
+    const frac = clamp((10 - k * 10) - n, 0, 1); /* 0..1 within a number */
+    const pop = 1 + 0.10 * (1 - frac) * (1 - frac);
+
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.textAlign = "center";
+    ctx.strokeStyle = "rgba(127,212,255,0.30)";
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(W / 2, 330, 176, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * k); ctx.stroke();
+
+    ctx.fillStyle = "#F2F7FA";
+    ctx.font = "700 168px 'Consolas', ui-monospace, monospace";
+    ctx.save(); ctx.translate(W / 2, 388); ctx.scale(pop, pop);
+    ctx.fillText(String(n), 0, 0);
+    ctx.restore();
+
+    ctx.fillStyle = "#7FD4FF";
+    ctx.font = "400 16px 'Consolas', ui-monospace, monospace";
+    ctx.letterSpacing = "6px";
+    ctx.fillText(n > 0 ? "T-MINUS" : "IGNITION", W / 2, 132);
+    ctx.letterSpacing = "0px";
+
+    /* telemetry bars */
+    const bx = 340, bw = 600, by = 500;
+    for (let i = 0; i < tele.length; i++) {
+      const h = 6 + 34 * (0.5 + 0.5 * Math.sin(tele[i].p + t * tele[i].f * 2.4));
+      const x = bx + i * (bw / 10);
+      ctx.globalAlpha = a * 0.85;
+      ctx.fillStyle = i < 4 ? "#1F6F43" : (i < 8 ? "#7FD4FF" : "#FFC857");
+      ctx.fillRect(x, by - h, 44, h);
+      ctx.globalAlpha = a * 0.22;
+      ctx.fillStyle = "#F2F7FA";
+      ctx.fillRect(x, by - 40, 44, 40);
+      ctx.globalAlpha = a * 0.55;
+      ctx.font = "400 9px 'Consolas', ui-monospace, monospace";
+      ctx.fillStyle = "#8FA3B0";
+      ctx.fillText("CH" + String(i + 1).padStart(2, "0"), x + 22, by + 16);
+    }
+    ctx.restore();
+  }
+
+  function rocket(x, y, s, flame) {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+    /* flame */
+    const fl = 0.7 + 0.3 * Math.sin(performance.now() / 40);
+    ctx.globalAlpha = 0.85;
+    const g = ctx.createLinearGradient(0, 60, 0, 60 + 150 * fl);
+    g.addColorStop(0, "#FFF2C4"); g.addColorStop(0.4, "#FFC857"); g.addColorStop(1, "rgba(193,68,14,0)");
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.moveTo(-16, 58); ctx.quadraticCurveTo(0, 58 + 180 * fl, 16, 58); ctx.closePath(); ctx.fill();
+    /* body */
+    ctx.globalAlpha = 1;
+    const bgd = ctx.createLinearGradient(-24, 0, 24, 0);
+    bgd.addColorStop(0, "#B9C3CC"); bgd.addColorStop(0.5, "#F2F7FA"); bgd.addColorStop(1, "#8A97A3");
+    ctx.fillStyle = bgd;
+    ctx.beginPath();
+    ctx.moveTo(0, -120);
+    ctx.bezierCurveTo(20, -90, 24, -20, 22, 50);
+    ctx.lineTo(-22, 50);
+    ctx.bezierCurveTo(-24, -20, -20, -90, 0, -120);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "#C1440E";
+    ctx.beginPath(); ctx.moveTo(0, -120); ctx.bezierCurveTo(9, -104, 14, -84, 16, -62); ctx.lineTo(-16, -62);
+    ctx.bezierCurveTo(-14, -84, -9, -104, 0, -120); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "#0B3D91";
+    ctx.beginPath(); ctx.arc(0, -20, 11, 0, 7); ctx.fill();
+    ctx.fillStyle = "#7FD4FF"; ctx.globalAlpha = 0.6;
+    ctx.beginPath(); ctx.arc(-3, -23, 5, 0, 7); ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "#8A97A3";
+    ctx.beginPath(); ctx.moveTo(-22, 20); ctx.lineTo(-44, 62); ctx.lineTo(-22, 54); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(22, 20); ctx.lineTo(44, 62); ctx.lineTo(22, 54); ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+
+  /* 25–40s IGNITION & ASCENT */
+  function drawAscent(t) {
+    const a = win(t, 24.5, 25.5, 39.0, 40.2);
+    if (a <= 0) return;
+    const p = clamp((t - 25) / 12, 0, 1);      /* ascent progress */
+    const shake = 7 * win(t, 25, 25.4, 31, 34);
+    const sx = Math.sin(t * 41) * shake, sy = Math.cos(t * 37) * shake;
+
+    ctx.save();
+    ctx.translate(sx, sy);
+    ctx.globalAlpha = a;
+
+    /* receding ground: perspective lines accelerating downward */
+    const gr = ctx.createLinearGradient(0, 540, 0, H);
+    gr.addColorStop(0, "rgba(11,61,145,0)");
+    gr.addColorStop(1, "rgba(11,61,145,0.55)");
+    ctx.fillStyle = gr; ctx.fillRect(0, 540, W, H - 540);
+    ctx.strokeStyle = "rgba(127,212,255,0.35)"; ctx.lineWidth = 1;
+    for (let i = 0; i < 14; i++) {
+      const y = 540 + ((i * 46 + p * 900) % (H - 520));
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+    for (let x = -300; x <= W + 300; x += 160) {
+      ctx.beginPath(); ctx.moveTo(W / 2 + (x - W / 2) * 0.25, 540); ctx.lineTo(x, H); ctx.stroke();
+    }
+
+    /* analytic flame particles (period 1s, loop-safe) */
+    for (let i = 0; i < 70; i++) {
+      const ph = ((t * 1.6 + i * 0.137) % 1);
+      const spread = (i % 2 ? 1 : -1) * (10 + (i * 37 % 40));
+      const px = W / 2 + spread * (0.6 + ph) + Math.sin(i + t * 5) * 6;
+      const py = 470 + ph * 260;
+      ctx.globalAlpha = a * (1 - ph) * 0.8;
+      ctx.fillStyle = ph < 0.3 ? "#FFF2C4" : (ph < 0.65 ? "#FFC857" : "#C1440E");
+      ctx.beginPath(); ctx.arc(px, py, 4 + ph * 14, 0, 7); ctx.fill();
+    }
+    ctx.globalAlpha = a;
+
+    /* rocket climbs out of frame, slight tilt */
+    const ry = 470 - smooth(0, 1, p) * 430;
+    ctx.save(); ctx.translate(W / 2, ry); ctx.rotate(0.02 * Math.sin(t * 1.3)); ctx.translate(-W / 2, -ry);
+    rocket(W / 2, ry, 1.0 + p * 0.25, 1);
+    ctx.restore();
+
+    /* telemetry ticker */
+    ctx.globalAlpha = a * 0.8;
+    ctx.fillStyle = "#7FD4FF";
+    ctx.font = "400 13px 'Consolas', ui-monospace, monospace";
+    ctx.textAlign = "left";
+    const lines = [
+      "ALT " + (p * 82).toFixed(1) + " km",
+      "VEL " + (0.4 + p * 7.4).toFixed(2) + " km/s",
+      "MACH " + (1 + p * 22).toFixed(1),
+      "T+ 00:" + String(Math.floor(p * 60)).padStart(2, "0")
+    ];
+    lines.forEach((s, i) => ctx.fillText(s, 56, 620 + i * 20));
+    ctx.textAlign = "right";
+    ctx.fillText("STAGE 1 · NOMINAL", W - 56, 620);
+    ctx.restore();
+  }
+
+  /* 40–60s ORBIT & CREDITS */
+  function drawOrbit(t) {
+    const a = win(t, 39.5, 41.0, 58.6, 59.6);
+    if (a <= 0) return;
+    const u = (t - 40) / 20;               /* 0..1 over the orbit beat */
+    ctx.save();
+    ctx.globalAlpha = a;
+
+    /* earth limb drifts slowly and periodically */
+    const cx = W / 2 + 26 * Math.sin(u * Math.PI * 2);
+    const cy = 1190;
+    const R = 660;
+    const eg = ctx.createRadialGradient(cx, cy - R + 120, 40, cx, cy - R + 120, R);
+    eg.addColorStop(0, "#0B3D91"); eg.addColorStop(0.55, "#082E6E"); eg.addColorStop(1, "#05070D");
+    ctx.fillStyle = eg;
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill();
+    /* atmosphere rim */
+    ctx.strokeStyle = "rgba(127,212,255,0.85)"; ctx.lineWidth = 5;
+    ctx.beginPath(); ctx.arc(cx, cy, R, Math.PI * 0.98, Math.PI * 2.02); ctx.stroke();
+    ctx.strokeStyle = "rgba(127,212,255,0.18)"; ctx.lineWidth = 22;
+    ctx.beginPath(); ctx.arc(cx, cy, R + 12, Math.PI * 1.02, Math.PI * 1.98); ctx.stroke();
+
+    /* land masses + city lights on the limb */
+    ctx.fillStyle = "rgba(31,111,67,0.75)";
+    ctx.beginPath(); ctx.ellipse(cx - 260, cy - R + 34, 150, 16, 0.18, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx + 130, cy - R + 18, 90, 11, -0.12, 0, 7); ctx.fill();
+    ctx.fillStyle = "rgba(217,178,106,0.55)";
+    ctx.beginPath(); ctx.ellipse(cx - 40, cy - R + 26, 62, 8, 0.05, 0, 7); ctx.fill();
+    ctx.fillStyle = "#FFC857";
+    for (let i = 0; i < 18; i++) {
+      const px = cx - 300 + ((i * 37) % 560);
+      const py = cy - R + 30 + Math.sin(i * 1.7) * 8;
+      ctx.globalAlpha = a * (0.4 + 0.4 * Math.sin(t * 3 + i));
+      ctx.fillRect(px, py, 1.6, 1.6);
+    }
+    ctx.globalAlpha = a;
+
+    /* satellite crossing */
+    const sxp = -80 + ((t - 40) / 18) * (W + 160);
+    if (sxp > -90 && sxp < W + 90) {
+      const syp = 210 + 26 * Math.sin((t - 40) * 0.8);
+      ctx.save(); ctx.translate(sxp, syp);
+      ctx.fillStyle = "#C9D3DC"; ctx.fillRect(-14, -6, 28, 12);
+      ctx.fillStyle = "#0B3D91"; ctx.fillRect(-40, -11, 24, 22); ctx.fillRect(16, -11, 24, 22);
+      ctx.strokeStyle = "#7FD4FF"; ctx.lineWidth = 1;
+      ctx.strokeRect(-40, -11, 24, 22); ctx.strokeRect(16, -11, 24, 22);
+      ctx.fillStyle = "#FFC857"; ctx.beginPath(); ctx.arc(14, -4, 1.5, 0, 7); ctx.fill();
+      ctx.restore();
+    }
+
+    /* credits */
+    const ca = win(t, 44, 47, 55.5, 58.4);
+    if (ca > 0) {
+      ctx.globalAlpha = ca; ctx.textAlign = "center";
+      ctx.fillStyle = "#F2F7FA";
+      ctx.font = "700 40px 'Segoe UI', system-ui, sans-serif";
+      ctx.fillText("NKB-1", W / 2, 150);
+      ctx.fillStyle = "#7FD4FF";
+      ctx.font = "400 15px 'Consolas', ui-monospace, monospace";
+      ctx.letterSpacing = "8px";
+      ctx.fillText("MISSION DIRECTORATE", W / 2, 184);
+      ctx.letterSpacing = "0px";
+      ctx.fillStyle = "#B9C3CC";
+      ctx.font = "400 17px 'Segoe UI', system-ui, sans-serif";
+      const crew = ["FLIGHT DYNAMICS", "PROPULSION", "TELEMETRY", "IMAGERY"];
+      crew.forEach((s, i) => ctx.fillText(s, W / 2, 244 + i * 30));
+      ctx.fillStyle = "#5F6B73";
+      ctx.font = "400 13px 'Segoe UI', system-ui, sans-serif";
+      ctx.fillText("A 60-SECOND LOOP · NO EXTERNAL ASSETS", W / 2, 400);
+    }
+    ctx.restore();
+  }
+
+  function drawHud(t) {
+    const a = win(t, 0.5, 1.5, 58.0, 59.0);
+    if (a <= 0) return;
+    ctx.save();
+    ctx.globalAlpha = a * 0.7;
+    ctx.fillStyle = "#5F6B73";
+    ctx.font = "400 11px 'Consolas', ui-monospace, monospace";
+    ctx.textAlign = "left";
+    ctx.fillText("NKB-1 // 60.000s", 40, 40);
+    ctx.textAlign = "right";
+    ctx.fillText("T+" + t.toFixed(3), W - 40, 40);
+    /* loop bar */
+    ctx.globalAlpha = a * 0.3;
+    ctx.fillRect(40, H - 34, W - 80, 2);
+    ctx.globalAlpha = a * 0.9;
+    ctx.fillStyle = "#7FD4FF";
+    ctx.fillRect(40, H - 34, (W - 80) * (t / LOOP), 2);
+    ctx.globalAlpha = a * 0.85;
+    const beat = t < 8 ? "TITLE" : t < 25 ? "COUNTDOWN" : t < 40 ? "ASCENT" : "ORBIT";
+    ctx.fillStyle = "#5F6B73";
+    ctx.textAlign = "left";
+    ctx.fillText(beat, 40, H - 46);
+    ctx.restore();
+  }
+
+  function vignette() {
+    const g = ctx.createRadialGradient(W / 2, H / 2, 260, W / 2, H / 2, 820);
+    g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, "rgba(0,0,0,0.55)");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  }
+
+  function frame(t) {
+    bg();
+    drawStars(t, 0.85);
+    drawGrid(win(t, 8, 10, 23.5, 25), t);
+    drawTitle(t);
+    drawCountdown(t);
+    drawAscent(t);
+    drawOrbit(t);
+    drawHud(t);
+    vignette();
+  }
+
+  /* reduced motion: single static poster frame, no rAF loop */
+  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  function poster() {
+    bg();
+    drawStars(0, 0.9);
+    ctx.save();
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#F2F7FA";
+    ctx.font = "700 74px 'Segoe UI', system-ui, sans-serif";
+    ctx.fillText("NKB-1", W / 2, 270);
+    ctx.fillStyle = "#7FD4FF";
+    ctx.font = "400 26px 'Consolas', ui-monospace, monospace";
+    ctx.letterSpacing = "10px";
+    ctx.fillText("//  T-MINUS", W / 2, 314);
+    ctx.letterSpacing = "0px";
+    rocket(W / 2, 560, 1.1, 1);
+    ctx.fillStyle = "#5F6B73";
+    ctx.font = "400 14px 'Segoe UI', system-ui, sans-serif";
+    ctx.fillText("POSTER FRAME · MOTION DISABLED · 60s LOOP", W / 2, 660);
+    ctx.restore();
+    vignette();
+  }
+
+  let raf = 0, start = 0;
+  function loop(now) {
+    if (!start) start = now;
+    const t = ((now - start) / 1000) % LOOP;
+    frame(t);
+    raf = requestAnimationFrame(loop);
+  }
+  function applyMotionPref() {
+    cancelAnimationFrame(raf);
+    if (mq.matches) { poster(); }
+    else { start = 0; raf = requestAnimationFrame(loop); }
+  }
+  if (mq.addEventListener) mq.addEventListener("change", applyMotionPref);
+  applyMotionPref();
+})();
+</script>
+</body>
+</html>

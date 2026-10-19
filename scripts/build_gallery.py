@@ -1,9 +1,9 @@
-"""Extract the visual-task blocks from round-1 submissions into gallery/ files.
+"""Extract the visual-task blocks from a round's submissions into gallery/ files.
 
 Curation: the three highest peer-VIS-rated models of the round feed each
-visual task. SVG tasks (V1/V2/V4) become <img>-able .svg files; V3 (the
-60-second CSS motion loop) and F1 (Mission Control) become .html files the
-visitor opens in a browser (GitHub sandboxes HTML on purpose).
+visual task. SVG tasks (V1/V2/V4/V5/V6/V7) become <img>-able .svg files; V3
+(the 60-second CSS motion loop) and F1 (Mission Control) become .html files
+the visitor opens in a browser (GitHub sandboxes HTML on purpose).
 """
 import re
 import sys
@@ -71,8 +71,6 @@ def main() -> None:
     for task, (lang, slugname) in TASKS.items():
         rows = []
         for model in ranked:
-            if task in ("V1", "V2", "V3", "V4", "V5", "V6", "V7") and model == "mimo-v2.6-flash-free":
-                continue  # mimo's partial build has no visual sections
             sub = ROOT / "submissions" / f"{model}.md"
             if not sub.exists():
                 continue

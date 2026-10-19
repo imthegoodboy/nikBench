@@ -1,0 +1,87 @@
+<svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sunrise elevation of the Taj Mahal garden façade, mirror-symmetric about x = 450: dome with finial, four minarets, central iwan, reflecting pool, cypress trees">
+  <!-- palette: sky #F3D7B6→#E8B98F / marble #F2EAD9 / marble-shade #D9CDBB / sandstone #D8B98A /
+       garden-green #3D5C3A / shadow #8A7B6C / finial-gold #C9A227 -->
+  <!-- symmetry contract: every non-axis element lives in <g id="tajhalf"> (x &lt; 450) and is
+       mirrored EXACTLY by <use transform="translate(900,0) scale(-1,1)"> ⇒ 0 px error.
+       The dome, finial, central iwan and pool reflections sit on the axis and are drawn once. -->
+  <defs>
+    <linearGradient id="v6sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F3D7B6"/>
+      <stop offset="1" stop-color="#E8B98F"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="600" fill="url(#v6sky)"/>
+
+  <!-- ============ left half: façade flank, minarets, garden ============ -->
+  <g id="tajhalf">
+    <!-- rear minaret (drawn first, hazed and slightly set back) at cx=282 -->
+    <g opacity="0.72">
+      <rect x="272" y="452" width="20" height="18" fill="#D9CDBB"/>
+      <rect x="275" y="316" width="14" height="138" fill="#F2EAD9" stroke="#D9CDBB" stroke-width="0.8"/>
+      <rect x="271" y="310" width="22" height="7" fill="#D8B98A"/>
+      <path d="M275 310 Q 282 288 289 310 Z" fill="#D8B98A"/>
+      <line x1="282" y1="288" x2="282" y2="280" stroke="#C9A227" stroke-width="1.6"/>
+    </g>
+    <!-- mausoleum body: left flank marble (mirror completes the right flank) -->
+    <rect x="300" y="352" width="150" height="118" fill="#F2EAD9" stroke="#D9CDBB" stroke-width="1"/>
+    <rect x="300" y="346" width="150" height="8" fill="#D8B98A"/>
+    <line x1="304" y1="349" x2="446" y2="349" stroke="#F2EAD9" stroke-width="3" stroke-dasharray="7 6"/>
+    <!-- side iwan niche (one per flank; mirror supplies the pair) -->
+    <path d="M330 470 L330 414 Q352 390 374 414 L374 470 Z" fill="#8A7B6C"/>
+    <path d="M326 470 L326 411 Q352 385 378 411 L378 470 Z" fill="none" stroke="#D9CDBB" stroke-width="3"/>
+    <path d="M338 470 L338 420 Q352 404 366 420 L366 470 Z" fill="#D9CDBB" opacity="0.55"/>
+    <!-- plinth (shoulder step of the raised terrace) -->
+    <rect x="120" y="470" width="330" height="30" fill="#D8B98A"/>
+    <rect x="120" y="470" width="330" height="4" fill="#F2EAD9"/>
+    <!-- front minaret at cx=160 (nearer viewer: taller drawing) -->
+    <rect x="143" y="446" width="34" height="24" fill="#D9CDBB"/>
+    <rect x="147" y="306" width="26" height="140" fill="#F2EAD9" stroke="#D9CDBB" stroke-width="1"/>
+    <line x1="152" y1="330" x2="168" y2="330" stroke="#D9CDBB" stroke-width="1"/>
+    <line x1="152" y1="356" x2="168" y2="356" stroke="#D9CDBB" stroke-width="1"/>
+    <line x1="152" y1="382" x2="168" y2="382" stroke="#D9CDBB" stroke-width="1"/>
+    <line x1="152" y1="408" x2="168" y2="408" stroke="#D9CDBB" stroke-width="1"/>
+    <line x1="152" y1="434" x2="168" y2="434" stroke="#D9CDBB" stroke-width="1"/>
+    <rect x="141" y="298" width="38" height="9" fill="#D8B98A"/>
+    <path d="M145 298 Q 160 268 175 298 Z" fill="#F2EAD9" stroke="#D9CDBB" stroke-width="0.8"/>
+    <path d="M152 292 Q 160 272 168 292 Z" fill="#D9CDBB"/>
+    <line x1="160" y1="272" x2="160" y2="262" stroke="#C9A227" stroke-width="2"/>
+    <circle cx="160" cy="260" r="2.6" fill="#C9A227"/>
+    <!-- garden terrace, path and cypress trees -->
+    <rect x="60" y="500" width="390" height="8" fill="#D9CDBB"/>
+    <rect x="60" y="508" width="390" height="60" fill="#3D5C3A"/>
+    <path d="M60 568 L450 568 L450 576 L52 576 Z" fill="#D8B98A"/>
+    <path d="M95 506 C 90 480 90 440 96 416 C 102 440 102 480 97 506 Z" fill="#3D5C3A"/>
+    <path d="M226 506 C 222 486 222 458 227 440 C 232 458 232 486 228 506 Z" fill="#3D5C3A" opacity="0.8"/>
+    <path d="M386 506 C 383 490 383 470 387 456 C 391 470 391 490 388 506 Z" fill="#3D5C3A"/>
+    <line x1="120" y1="500" x2="120" y2="568" stroke="#3D5C3A" stroke-opacity="0.35" stroke-width="2"/>
+    <line x1="255" y1="500" x2="255" y2="568" stroke="#3D5C3A" stroke-opacity="0.35" stroke-width="2"/>
+  </g>
+  <use href="#tajhalf" transform="translate(900,0) scale(-1,1)"/>
+
+  <!-- ============ axis elements (drawn once, symmetric by construction) ============ -->
+  <!-- central pishtaq (great iwan frame) -->
+  <rect x="385" y="332" width="130" height="138" fill="#F2EAD9" stroke="#D9CDBB" stroke-width="1"/>
+  <rect x="379" y="326" width="142" height="9" fill="#D8B98A"/>
+  <line x1="384" y1="329" x2="516" y2="329" stroke="#F2EAD9" stroke-width="3" stroke-dasharray="7 6"/>
+  <path d="M406 470 L406 404 Q450 356 494 404 L494 470 Z" fill="#8A7B6C"/>
+  <path d="M399 470 L399 399 Q450 350 501 399 L501 470 Z" fill="none" stroke="#D9CDBB" stroke-width="4"/>
+  <path d="M418 470 L418 412 Q450 378 482 412 L482 470 Z" fill="#D9CDBB" opacity="0.5"/>
+  <path d="M436 470 L436 424 Q450 410 464 424 L464 470 Z" fill="#F2EAD9" opacity="0.75"/>
+  <!-- drum and onion dome (apex finial ≈ 73 m; minaret tops ≈ 40 m, clearly lower) -->
+  <rect x="404" y="312" width="92" height="20" fill="#F2EAD9" stroke="#D9CDBB" stroke-width="1"/>
+  <line x1="404" y1="320" x2="496" y2="320" stroke="#D9CDBB" stroke-width="0.8"/>
+  <path d="M404 312 C 404 282 376 256 400 224 C 418 200 436 188 450 168
+           C 464 188 482 200 500 224 C 524 256 496 282 496 312 Z"
+        fill="#F2EAD9" stroke="#D9CDBB" stroke-width="1.2"/>
+  <line x1="450" y1="168" x2="450" y2="140" stroke="#C9A227" stroke-width="3"/>
+  <circle cx="450" cy="137" r="3.4" fill="#C9A227"/>
+  <!-- reflecting pool on the garden axis with a symmetric reflection -->
+  <path d="M440 508 L460 508 L470 576 L430 576 Z" fill="#8A7B6C" opacity="0.45"/>
+  <path d="M440 512 C 440 534 446 550 450 562 C 454 550 460 534 460 512 Z" fill="#F2EAD9" opacity="0.4"/>
+  <line x1="450" y1="512" x2="450" y2="574" stroke="#F2EAD9" opacity="0.35" stroke-width="1.4"/>
+  <line x1="430" y1="540" x2="470" y2="540" stroke="#F2EAD9" opacity="0.25" stroke-width="0.8"/>
+
+  <!-- anchor annotation -->
+  <text x="450" y="594" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8A7B6C" text-anchor="middle" font-weight="700">1632–1653 · dome ≈ 73 m · minarets ≈ 40 m</text>
+</svg>

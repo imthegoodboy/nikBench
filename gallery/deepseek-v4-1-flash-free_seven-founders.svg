@@ -1,0 +1,171 @@
+<svg viewBox="0 0 1200 700" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Seven founders of computing on a to-scale 1800 to 2000 timeline">
+  <defs>
+    <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#B5482E"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="700" fill="#F7F2E8"/>
+
+  <text x="100" y="54" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="700" fill="#14202B" letter-spacing="0.5">SEVEN FOUNDERS OF COMPUTING</text>
+  <text x="100" y="80" font-family="Georgia, serif" font-size="13" fill="#5F6B73" letter-spacing="2.2">BIRTH YEARS MAPPED TO SCALE · 1800 – 2000</text>
+  <line x1="100" y1="96" x2="1140" y2="96" stroke="#CFC5B4" stroke-width="1"/>
+
+  <g stroke="#CFC5B4" stroke-width="0.6" opacity="0.55">
+    <line x1="100" y1="104" x2="100" y2="600"/>
+    <line x1="204" y1="104" x2="204" y2="600"/>
+    <line x1="308" y1="104" x2="308" y2="600"/>
+    <line x1="412" y1="104" x2="412" y2="600"/>
+    <line x1="516" y1="104" x2="516" y2="600"/>
+    <line x1="620" y1="104" x2="620" y2="600"/>
+    <line x1="724" y1="104" x2="724" y2="600"/>
+    <line x1="828" y1="104" x2="828" y2="600"/>
+    <line x1="932" y1="104" x2="932" y2="600"/>
+    <line x1="1036" y1="104" x2="1036" y2="600"/>
+    <line x1="1140" y1="104" x2="1140" y2="600"/>
+  </g>
+
+  <line x1="100" y1="360" x2="1140" y2="360" stroke="#14202B" stroke-width="1.6"/>
+  <g stroke="#14202B" stroke-width="1">
+    <line x1="152" y1="356" x2="152" y2="364"/>
+    <line x1="204" y1="354" x2="204" y2="366"/>
+    <line x1="256" y1="356" x2="256" y2="364"/>
+    <line x1="308" y1="354" x2="308" y2="366"/>
+    <line x1="360" y1="356" x2="360" y2="364"/>
+    <line x1="412" y1="354" x2="412" y2="366"/>
+    <line x1="464" y1="356" x2="464" y2="364"/>
+    <line x1="516" y1="354" x2="516" y2="366"/>
+    <line x1="568" y1="356" x2="568" y2="364"/>
+    <line x1="620" y1="354" x2="620" y2="366"/>
+    <line x1="672" y1="356" x2="672" y2="364"/>
+    <line x1="724" y1="354" x2="724" y2="366"/>
+    <line x1="776" y1="356" x2="776" y2="364"/>
+    <line x1="828" y1="354" x2="828" y2="366"/>
+    <line x1="880" y1="356" x2="880" y2="364"/>
+    <line x1="932" y1="354" x2="932" y2="366"/>
+    <line x1="984" y1="356" x2="984" y2="364"/>
+    <line x1="1036" y1="354" x2="1036" y2="366"/>
+    <line x1="1088" y1="356" x2="1088" y2="364"/>
+    <line x1="1140" y1="354" x2="1140" y2="366"/>
+  </g>
+  <g font-family="'Segoe UI', system-ui, sans-serif" font-size="10.5" fill="#5F6B73" text-anchor="middle">
+    <text x="100" y="382">1800</text>
+    <text x="204" y="382">1820</text>
+    <text x="308" y="382">1840</text>
+    <text x="412" y="382">1860</text>
+    <text x="516" y="382">1880</text>
+    <text x="620" y="382">1900</text>
+    <text x="724" y="382">1920</text>
+    <text x="828" y="382">1940</text>
+    <text x="932" y="382">1960</text>
+    <text x="1036" y="382">1980</text>
+    <text x="1140" y="382">2000</text>
+  </g>
+
+  <g stroke-linecap="round">
+    <line x1="178" y1="326" x2="370" y2="326" stroke="#B5482E" stroke-width="3" opacity="0.85"/>
+    <line x1="651" y1="332" x2="1098" y2="332" stroke="#B5482E" stroke-width="3" opacity="0.85"/>
+    <line x1="636" y1="338" x2="916" y2="338" stroke="#B5482E" stroke-width="3" opacity="0.85"/>
+    <line x1="682" y1="344" x2="901" y2="344" stroke="#B5482E" stroke-width="3" opacity="0.85"/>
+    <line x1="703" y1="350" x2="1140" y2="350" stroke="#B5482E" stroke-width="3" opacity="0.85" stroke-dasharray="2 3"/>
+    <line x1="776" y1="318" x2="1140" y2="318" stroke="#B8892B" stroke-width="3" opacity="0.85" stroke-dasharray="2 3"/>
+    <line x1="818" y1="312" x2="1140" y2="312" stroke="#B8892B" stroke-width="3" opacity="0.85" stroke-dasharray="2 3"/>
+  </g>
+
+  <g stroke="#8A8172" stroke-width="0.9" fill="none" opacity="0.8">
+    <path d="M178,360 L178,290 L160,290 L160,222"/>
+    <path d="M636,360 L636,286 L400,286 L400,222"/>
+    <path d="M682,360 L682,282 L650,282 L650,222"/>
+    <path d="M776,360 L776,278 L890,278 L890,222"/>
+    <path d="M651,360 L651,398 L520,398 L520,430"/>
+    <path d="M703,360 L703,402 L760,402 L760,430"/>
+    <path d="M818,360 L818,406 L1010,406 L1010,430"/>
+  </g>
+
+  <g fill="#14202B">
+    <circle cx="178" cy="360" r="3.2"/><circle cx="636" cy="360" r="3.2"/>
+    <circle cx="682" cy="360" r="3.2"/><circle cx="703" cy="360" r="3.2"/>
+    <circle cx="776" cy="360" r="3.2"/><circle cx="818" cy="360" r="3.2"/>
+    <circle cx="651" cy="360" r="3.2"/>
+  </g>
+
+  <g stroke="#B5482E" stroke-width="1.4" stroke-dasharray="4 4" fill="none" opacity="0.7">
+    <path d="M650,222 C600,262 452,262 402,224" marker-end="url(#arw)"/>
+    <path d="M160,222 C186,300 410,368 498,424" marker-end="url(#arw)"/>
+    <path d="M890,222 C930,292 976,356 1004,424" marker-end="url(#arw)"/>
+  </g>
+  <g font-family="'Segoe UI', system-ui, sans-serif" font-size="8.5" fill="#8C3A26" text-anchor="middle" paint-order="stroke" stroke="#F7F2E8" stroke-width="3">
+    <text x="528" y="252">universal machine → stored program</text>
+    <text x="268" y="336">first algorithm → compilers</text>
+    <text x="972" y="330">algorithms → analysis of algorithms</text>
+  </g>
+
+  <g>
+    <rect x="80" y="110" width="160" height="112" rx="4" fill="#FFFCF5" stroke="#D8CFBF"/>
+    <rect x="80" y="110" width="160" height="4" rx="2" fill="#B5482E"/>
+    <text x="92" y="136" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#14202B">Ada Lovelace</text>
+    <text x="92" y="151" font-family="'Segoe UI', system-ui, sans-serif" font-size="10" fill="#5F6B73">1815 – 1852</text>
+    <text x="92" y="172" font-family="'Segoe UI', system-ui, sans-serif" font-size="9.5" fill="#26333D">First published algorithm</text>
+    <text x="92" y="185" font-family="'Segoe UI', system-ui, sans-serif" font-size="9.5" fill="#26333D">(Note G, Analytical Engine)</text>
+  </g>
+
+  <g>
+    <rect x="320" y="110" width="160" height="112" rx="4" fill="#FFFCF5" stroke="#D8CFBF"/>
+    <rect x="320" y="110" width="160" height="4" rx="2" fill="#B5482E"/>
+    <text x="332" y="136" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#14202B">John von Neumann</text>
+    <text x="332" y="151" font-family="'Segoe UI', system-ui, sans-serif" font-size="10" fill="#5F6B73">1903 – 1957</text>
+    <text x="332" y="172" font-family="'Segoe UI', system-ui, sans-serif" font-size="9.5" fill="#26333D">Stored-program architecture</text>
+    <text x="332" y="185" font-family="'Segoe UI', system-ui, sans-serif" font-size="9.5" fill="#26333D">(EDVAC report, 1945)</text>
+  </g>
+
+  <g>
+    <rect x="570" y="110" width="160" height="112" rx="4" fill="#FFFCF5" stroke="#D8CFBF"/>
+    <rect x="570" y="110" width="160" height="4" rx="2" fill="#B5482E"/>
+    <text x="582" y="136" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#14202B">Alan Turing</text>
+    <text x="582" y="151" font-family="'Segoe UI', system-ui, sans-serif" font-size="10" fill="#5F6B73">1912 – 1954</text>
+    <text x="582" y="172" font-family="'Segoe UI', system-ui, sans-serif" font-size="9.5" fill="#26333D">Universal machine (1936)</text>
+  </g>
+
+  <g>
+    <rect x="810" y="110" width="160" height="112" rx="4" fill="#FFFCF5" stroke="#D8CFBF"/>
+    <rect x="810" y="110" width="160" height="4" rx="2" fill="#B8892B"/>
+    <text x="822" y="136" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#14202B">Edsger Dijkstra</text>
+    <text x="822" y="151" font-family="'Segoe UI', system-ui, sans-serif" font-size="10" fill="#5F6B73">1930 – 2002</text>
+    <text x="822" y="172" font-family="'Segoe UI', system-ui, sans-serif" font-size="9.5" fill="#26333D">Shortest path;</text>
+    <text x="822" y="185" font-family="'Segoe UI', system-ui, sans-serif" font-size="9.5" fill="#26333D">structured programming</text>
+  </g>
+
+  <g>
+    <rect x="440" y="430" width="160" height="112" rx="4" fill="#FFFCF5" stroke="#D8CFBF"/>
+    <rect x="440" y="430" width="160" height="4" rx="2" fill="#B5482E"/>
+    <text x="452" y="456" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#14202B">Grace Hopper</text>
+    <text x="452" y="471" font-family="'Segoe UI', system-ui, sans-serif" font-size="10" fill="#5F6B73">1906 – 1992</text>
+    <text x="452" y="492" font-family="'Segoe UI', system-ui, sans-serif" font-size="9.5" fill="#26333D">Compilers &amp; COBOL</text>
+  </g>
+
+  <g>
+    <rect x="680" y="430" width="160" height="112" rx="4" fill="#FFFCF5" stroke="#D8CFBF"/>
+    <rect x="680" y="430" width="160" height="4" rx="2" fill="#B5482E"/>
+    <text x="692" y="456" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#14202B">Claude Shannon</text>
+    <text x="692" y="471" font-family="'Segoe UI', system-ui, sans-serif" font-size="10" fill="#5F6B73">1916 – 2001</text>
+    <text x="692" y="492" font-family="'Segoe UI', system-ui, sans-serif" font-size="9.5" fill="#26333D">Information theory (1948)</text>
+  </g>
+
+  <g>
+    <rect x="930" y="430" width="160" height="112" rx="4" fill="#FFFCF5" stroke="#D8CFBF"/>
+    <rect x="930" y="430" width="160" height="4" rx="2" fill="#B8892B"/>
+    <text x="942" y="456" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#14202B">Donald Knuth</text>
+    <text x="942" y="471" font-family="'Segoe UI', system-ui, sans-serif" font-size="10" fill="#5F6B73">1938 –</text>
+    <text x="942" y="492" font-family="'Segoe UI', system-ui, sans-serif" font-size="9.5" fill="#26333D">The Art of Computer</text>
+    <text x="942" y="504" font-family="'Segoe UI', system-ui, sans-serif" font-size="9.5" fill="#26333D">Programming; analysis</text>
+    <text x="942" y="516" font-family="'Segoe UI', system-ui, sans-serif" font-size="9.5" fill="#26333D">of algorithms</text>
+  </g>
+
+  <line x1="100" y1="600" x2="1140" y2="600" stroke="#CFC5B4" stroke-width="1"/>
+  <text x="100" y="622" font-family="'Segoe UI', system-ui, sans-serif" font-size="10" fill="#5F6B73">Scale: 1 decade = 52 px · birth year = x100 + (year − 1800) × 5.2 · bars show lifespan (dashed where it passes 2000)</text>
+  <text x="100" y="640" font-family="'Segoe UI', system-ui, sans-serif" font-size="10" fill="#8C3A26">Dashed arrows mark documented intellectual influence, drawn card-to-card; they are not part of the time scale.</text>
+  <g font-family="'Segoe UI', system-ui, sans-serif" font-size="9" fill="#8A8172">
+    <text x="100" y="672">Sources of facts: Note G (1843); Turing, “On Computable Numbers” (1936); von Neumann, First Draft of a Report on the EDVAC (1945);</text>
+    <text x="100" y="686">Shannon, “A Mathematical Theory of Communication” (1948); Hopper’s compiler work and COBOL (1950s–60s); Dijkstra (1959, 1968); Knuth, TAOCP (1968–).</text>
+  </g>
+</svg>

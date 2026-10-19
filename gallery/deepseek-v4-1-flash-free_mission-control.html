@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NIKBENCH-1 · Mission Control</title>
+<style>
+  :root[data-theme="dark"]{
+    --bg:#0b0f14; --panel:#121821; --panel2:#0e141c; --text:#e6edf3; --muted:#93a1af;
+    --border:#232c37; --accent:#7fd4ff; --accent2:#ffc857; --ok:#3fb950; --warn:#d29922; --bad:#f85149;
+    --chart-signal:#7fd4ff; --chart-fuel:#ffc857; --shadow:0 1px 2px rgba(0,0,0,.5);
+  }
+  :root[data-theme="light"]{
+    --bg:#f6f8fa; --panel:#ffffff; --panel2:#eef2f6; --text:#10202c; --muted:#57606a;
+    --border:#d0d7de; --accent:#0b62d6; --accent2:#8a5a00; --ok:#1a7f37; --warn:#9a6700; --bad:#cf222e;
+    --chart-signal:#0b62d6; --chart-fuel:#9a6700; --shadow:0 1px 2px rgba(16,32,44,.12);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;max-width:100%;overflow-x:hidden}
+  body{background:var(--bg);color:var(--text);font:14px/1.45 system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
+  h1,h2,h3{margin:0;font-weight:650}
+  h1{font-size:18px;letter-spacing:.5px}
+  h2{font-size:12px;text-transform:uppercase;letter-spacing:1.6px;color:var(--muted);margin:0 0 8px}
+  .wrap{max-width:1500px;margin:0 auto;padding:12px}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow)}
+  header.app{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:12px 14px;margin-bottom:12px}
+  .brand{display:flex;flex-direction:column;gap:2px}
+  .brand .tag{font-size:11px;letter-spacing:2px;color:var(--accent);text-transform:uppercase}
+  .clockbox{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .clock{font-variant-numeric:tabular-nums;font-size:22px;font-weight:650}
+  .clocksub{font-size:11px;color:var(--muted)}
+  select,input,button{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--border);border-radius:7px;padding:6px 8px}
+  button{cursor:pointer}
+  button:hover{border-color:var(--accent)}
+  :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  main{display:grid;gap:12px}
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .card{padding:12px 14px}
+  .card .k{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)}
+  .card .v{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:4px}
+  .card .sub{font-size:11px;color:var(--muted)}
+  .bar{height:6px;background:var(--panel2);border-radius:99px;margin-top:8px;overflow:hidden;border:1px solid var(--border)}
+  .bar > i{display:block;height:100%;background:var(--accent)}
+  .row2{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:12px}
+  .countdown{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between}
+  .cd-num{font-size:34px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:1px}
+  .grid-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border)}
+  .grid-head,.grow{display:grid;grid-template-columns:110px minmax(120px,1.5fr) 90px 110px 110px;gap:0}
+  .grid-head > button{background:none;border:0;border-radius:0;text-align:left;padding:8px 10px;color:var(--muted);font-size:11px;letter-spacing:1.2px;text-transform:uppercase;width:100%}
+  .grid-head > button:hover{color:var(--text)}
+  .grid-head > button .ar{color:var(--accent)}
+  .grid-body{height:min(56vh,460px);overflow:auto;position:relative;contain:strict}
+  .grow{border-top:1px solid var(--border);font-variant-numeric:tabular-nums}
+  .grow > div{padding:7px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .grow[aria-selected="true"]{background:color-mix(in srgb,var(--accent) 16%,transparent)}
+  .pill{display:inline-block;padding:1px 7px;border-radius:99px;font-size:11px;border:1px solid var(--border)}
+  .pill.ACTIVE{color:var(--ok);border-color:var(--ok)}
+  .pill.DEGRADED{color:var(--warn);border-color:var(--warn)}
+  .pill.OFFLINE{color:var(--bad);border-color:var(--bad)}
+  .empty{padding:24px;text-align:center;color:var(--muted)}
+  canvas{width:100%;height:230px;display:block}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);padding:0 14px 8px}
+  .legend button{background:none;border:0;padding:2px 6px;color:inherit;display:inline-flex;gap:6px;align-items:center}
+  .legend button[aria-pressed="false"]{opacity:.45;text-decoration:line-through}
+  .legend i{width:12px;height:3px;display:inline-block;border-radius:2px}
+  .feed{list-style:none;margin:0;padding:0;max-height:300px;overflow:auto}
+  .feed li{display:flex;gap:10px;align-items:flex-start;padding:9px 14px;border-top:1px solid var(--border)}
+  .feed .sev{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;min-width:64px}
+  .sev.info{color:var(--accent)} .sev.warn{color:var(--warn)} .sev.critical{color:var(--bad)}
+  .feed .msg{flex:1;min-width:0}
+  .feed .ts{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .feed .x{background:none;border:0;color:var(--muted);padding:2px 6px}
+  .feed .x:hover{color:var(--bad)}
+  .history{font-size:11px;color:var(--muted);padding:8px 14px;border-top:1px solid var(--border);display:flex;gap:12px;justify-content:space-between;flex-wrap:wrap}
+  .hint{font-size:11px;color:var(--muted)}
+  .palette-back{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;z-index:40;align-items:flex-start;justify-content:center;padding-top:9vh}
+  .palette-back[data-open="true"]{display:flex}
+  .palette{width:min(660px,94vw);max-height:70vh;display:flex;flex-direction:column;overflow:hidden}
+  .palette input{margin:12px;padding:10px 12px;font-size:16px}
+  .palette ul{list-style:none;margin:0;padding:0 0 8px;overflow:auto}
+  .palette li{padding:9px 14px;display:flex;gap:10px;justify-content:space-between;cursor:pointer}
+  .palette li[aria-selected="true"]{background:color-mix(in srgb,var(--accent) 20%,transparent)}
+  .palette .kind{font-size:10px;text-transform:uppercase;letter-spacing:1.4px;color:var(--muted)}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .chartwrap{position:relative}
+  .tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--border);border-radius:7px;padding:6px 8px;font-size:11px;white-space:nowrap;display:none;z-index:5}
+  @media (max-width:900px){ .row2{grid-template-columns:1fr} .metrics{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:640px){
+    .metrics{grid-template-columns:1fr}
+    .grid-head{display:none}
+    .grow{grid-template-columns:1fr;padding:8px 10px;border-top:1px solid var(--border)}
+    .grow > div{padding:2px 0;white-space:normal}
+    .grid-body{height:64vh}
+  }
+  @media (max-width:480px){ .palette-back{padding-top:0} .palette{width:100vw;max-height:100vh;height:100vh;border-radius:0} }
+  @media (prefers-reduced-motion:reduce){ *{transition:none!important;animation:none!important;scroll-behavior:auto!important} }
+</style>
+</head>
+<body>
+<header class="app panel">
+  <div class="brand">
+    <span class="tag">Mission Control</span>
+    <h1>NIKBENCH-1</h1>
+  </div>
+  <div class="clockbox">
+    <div>
+      <div class="clock" id="utcClock" aria-live="off">--:--:--</div>
+      <div class="clocksub">UTC</div>
+    </div>
+    <div>
+      <div class="clock" id="zoneClock">--:--:--</div>
+      <div class="clocksub"><label for="tzSelect">Zone <select id="tzSelect" aria-label="Mission time UTC offset"></select></label> · <span id="zoneLabel">UTC+00</span></div>
+    </div>
+    <button id="themeBtn" aria-label="Toggle colour theme" aria-pressed="false">◐ Theme</button>
+    <button id="paletteBtn" aria-label="Open command palette">⌘K Palette</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="metrics" aria-label="Mission metrics">
+    <div class="card panel"><div class="k">Fuel</div><div class="v" id="mFuel">–</div><div class="bar"><i id="bFuel"></i></div></div>
+    <div class="card panel"><div class="k">Battery</div><div class="v" id="mBattery">–</div><div class="bar"><i id="bBattery"></i></div></div>
+    <div class="card panel"><div class="k">Signal</div><div class="v" id="mSignal">–</div><div class="bar"><i id="bSignal"></i></div><div class="sub">dB · range 0–99</div></div>
+    <div class="card panel"><div class="k">Crew</div><div class="v" id="mCrew">–</div><div class="sub">aboard (max 6)</div></div>
+  </section>
+
+  <section class="panel card" aria-label="Launch countdown">
+    <div class="countdown">
+      <div>
+        <h2>Launch countdown</h2>
+        <div class="cd-num" id="cdNum">--:--:--:--</div>
+      </div>
+      <div class="hint" id="cdStatus">target 2026-12-01T09:00:00Z</div>
+    </div>
+  </section>
+
+  <div class="row2">
+    <section class="panel" aria-label="Satellite grid">
+      <div class="grid-toolbar">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <label class="sr" for="filter">Filter satellites by ID or name</label>
+          <input id="filter" type="search" placeholder="Filter by ID or name…" style="min-width:220px" autocomplete="off">
+          <button id="clearFilter" aria-label="Clear filter">Clear</button>
+        </div>
+        <div class="hint"><span id="rowCount">0</span> of 10000 rows · <span id="sortNote">sorted by ID ▲</span></div>
+      </div>
+      <div class="grid-head" role="row" id="gridHead">
+        <button data-col="id" aria-label="Sort by satellite ID">ID <span class="ar"></span></button>
+        <button data-col="name" aria-label="Sort by name">Name <span class="ar"></span></button>
+        <button data-col="orbit" aria-label="Sort by orbit type">Orbit <span class="ar"></span></button>
+        <button data-col="status" aria-label="Sort by status">Status <span class="ar"></span></button>
+        <button data-col="last" aria-label="Sort by last contact">Last contact <span class="ar"></span></button>
+      </div>
+      <div class="grid-body" id="gridBody" tabindex="0" role="grid" aria-label="Satellite list, 10000 rows, virtualised" aria-rowcount="10000" aria-colcount="5">
+        <div id="gridTop" style="height:0"></div>
+        <div id="gridRows" role="rowgroup"></div>
+        <div id="gridBottom" style="height:0"></div>
+      </div>
+    </section>
+
+    <aside style="display:grid;gap:12px;align-content:start">
+      <section class="panel" aria-label="Telemetry chart">
+        <div style="padding:12px 14px 0"><h2>Telemetry · last 60 samples</h2></div>
+        <div class="chartwrap">
+          <canvas id="chart" aria-label="Line chart of signal and fuel over the last 60 seconds" role="img"></canvas>
+          <div class="tip" id="tip"></div>
+        </div>
+        <div class="legend">
+          <button id="lgSignal" data-series="signal" aria-pressed="true"><i style="background:var(--chart-signal)"></i>Signal (0–99)</button>
+          <button id="lgFuel" data-series="fuel" aria-pressed="true"><i style="background:var(--chart-fuel)"></i>Fuel (0–100 %)</button>
+        </div>
+      </section>
+
+      <section class="panel" aria-label="Anomaly feed">
+        <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+          <h2 style="margin:0">Anomalies</h2>
+          <button id="diagBtn" aria-label="Run diagnostic and append an anomaly event">Run diagnostic</button>
+        </div>
+        <ul class="feed" id="feed" aria-live="polite" aria-relevant="additions removals" aria-label="Anomaly events"></ul>
+        <div class="history">
+          <span id="histNote">history 0 · undo Ctrl+Z · redo Ctrl+Shift+Z / Ctrl+Y</span>
+          <span><button id="clearFeed" aria-label="Clear all anomalies">Clear anomalies</button></span>
+        </div>
+      </section>
+    </aside>
+  </div>
+</main>
+
+<div class="palette-back" id="paletteBack" data-open="false">
+  <div class="palette panel" role="dialog" aria-modal="true" aria-label="Command palette" id="palette">
+    <label class="sr" for="paletteInput">Command palette search</label>
+    <input id="paletteInput" type="text" role="combobox" aria-expanded="true" aria-controls="paletteList" aria-autocomplete="list" placeholder="Search satellites and actions…" autocomplete="off">
+    <ul id="paletteList" role="listbox" aria-label="Commands and satellites"></ul>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- storage + prng ---------- */
+var PREFIX = "nikbench.f1.";
+function sget(k, d){ try{ var v = localStorage.getItem(PREFIX+k); return v===null? d : JSON.parse(v); }catch(e){ return d; } }
+function sset(k, v){ try{ localStorage.setItem(PREFIX+k, JSON.stringify(v)); }catch(e){} }
+function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a>>>15, 1 | a); t = t + Math.imul(t ^ t>>>7, 61 | t) ^ t; return ((t ^ t>>>14) >>> 0) / 4294967296; }; }
+function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
+function pad(n,w){ var s = String(n); while(s.length<w) s = "0"+s; return s; }
+
+/* ---------- deterministic satellite rows (seed 42) ---------- */
+var PRE = ["ORION","VEGA","AURORA","NOVA","ZENITH","HELIOS","ATLAS","LYRA","SIRIUS","PHOENIX","TITAN","ARGUS","KEPLER","GALILEO","CASSINI","PROTEUS","HYDRA","NIMBUS","CENTAUR","DELTA"];
+var SUF = ["ALPHA","BETA","GAMMA","DELTA","EPSILON","ZETA","ETA","THETA","IOTA","KAPPA"];
+var ORB = ["LEO","LEO","LEO","MEO","MEO","GEO"];
+var ST  = ["ACTIVE","ACTIVE","ACTIVE","ACTIVE","DEGRADED","DEGRADED","OFFLINE"];
+var ROWS = (function(){
+  var r = mulberry32(42), out = [], i;
+  for(i=0;i<10000;i++){
+    var id = "SAT-" + pad(i+1,5);
+    var name = PRE[i%20] + "-" + pad(1000 + ((i*37) % 8999), 4) + "-" + SUF[(i*7)%10];
+    out.push({ id:id, name:name, orbit:ORB[Math.floor(r()*6)], status:ST[Math.floor(r()*7)], last:Math.floor(r()*345600) });
+  }
+  return out;
+})();
+
+/* ---------- metrics (seeded, persisted, bounded random walk) ---------- */
+var mseed = mulberry32(42);
+var metrics = sget("metrics", { fuel: Math.round((40+mseed()*40)*100)/100, battery: Math.round((50+mseed()*35)*100)/100, signal: 50+Math.floor(mseed()*40), crew: 3+Math.floor(mseed()*4) });
+var walk = mulberry32(99);
+function renderMetrics(){
+  document.getElementById("mFuel").textContent = metrics.fuel.toFixed(2) + " %";
+  document.getElementById("mBattery").textContent = metrics.battery.toFixed(2) + " %";
+  document.getElementById("mSignal").textContent = metrics.signal + " dB";
+  document.getElementById("mCrew").textContent = metrics.crew;
+  document.getElementById("bFuel").style.width = metrics.fuel + "%";
+  document.getElementById("bBattery").style.width = metrics.battery + "%";
+  document.getElementById("bSignal").style.width = (metrics.signal/99*100) + "%";
+}
+function stepMetrics(){
+  metrics.fuel = Math.round(clamp(metrics.fuel + (walk()*2-1)*0.45, 0, 100)*100)/100;
+  metrics.battery = Math.round(clamp(metrics.battery + (walk()*2-1)*0.35, 0, 100)*100)/100;
+  metrics.signal = clamp(metrics.signal + Math.round(walk()*5-2), 0, 99);
+  if(walk() < 0.15) metrics.crew = clamp(metrics.crew + (walk()<0.5?-1:1), 1, 6);
+  renderMetrics(); sset("metrics", metrics);
+}
+
+/* ---------- clocks ---------- */
+var ZONE = sget("tz", 0);
+var tzSel = document.getElementById("tzSelect");
+(function(){
+  var i, o;
+  for(i=-12;i<=14;i++){ o = document.createElement("option"); o.value = String(i); o.textContent = "UTC" + (i>=0?"+":"") + i; tzSel.appendChild(o); }
+  tzSel.value = String(ZONE);
+})();
+tzSel.addEventListener("change", function(){ ZONE = parseInt(tzSel.value,10)||0; sset("tz", ZONE); tickClocks(); });
+function fmtZone(offset){
+  var now = new Date(); var t = new Date(now.getTime() + offset*3600000);
+  return pad(t.getUTCHours(),2)+":"+pad(t.getUTCMinutes(),2)+":"+pad(t.getUTCSeconds(),2);
+}
+function tickClocks(){
+  var now = new Date();
+  document.getElementById("utcClock").textContent = pad(now.getUTCHours(),2)+":"+pad(now.getUTCMinutes(),2)+":"+pad(now.getUTCSeconds(),2);
+  document.getElementById("zoneClock").textContent = fmtZone(ZONE);
+  document.getElementById("zoneLabel").textContent = "UTC" + (ZONE>=0?"+":"") + ZONE;
+  tickCountdown();
+}
+var TARGET = Date.parse("2026-12-01T09:00:00Z");
+function tickCountdown(){
+  var now = Date.now(), el = document.getElementById("cdNum"), st = document.getElementById("cdStatus");
+  var diff = TARGET - now;
+  if(diff > 0){
+    var s = Math.floor(diff/1000);
+    el.textContent = pad(Math.floor(s/86400),2)+":"+pad(Math.floor(s%86400/3600),2)+":"+pad(Math.floor(s%3600/60),2)+":"+pad(s%60,2);
+    st.textContent = "status: COUNTING · target 2026-12-01T09:00:00Z";
+  } else {
+    var e = Math.floor(-diff/1000);
+    el.textContent = "T+"+pad(Math.floor(e/86400),2)+":"+pad(Math.floor(e%86400/3600),2)+":"+pad(Math.floor(e%3600/60),2)+":"+pad(e%60,2);
+    st.textContent = "status: LANDED · elapsed since touchdown";
+  }
+}
+
+/* ---------- theme ---------- */
+var theme = sget("theme", "dark");
+function applyTheme(t){ theme = t; document.documentElement.setAttribute("data-theme", t); document.getElementById("themeBtn").setAttribute("aria-pressed", String(t==="light")); sset("theme", t); drawChart(); }
+document.getElementById("themeBtn").addEventListener("click", function(){ applyTheme(theme==="dark"?"light":"dark"); });
+
+/* ---------- grid: filter + sort + virtualisation ---------- */
+var sortState = sget("sort", { col:"id", dir:"asc" });
+var filterQ = sget("filter", "");
+var elapsedBase = Date.now();
+var filtered = ROWS.slice();
+function ROW_H(){ return window.matchMedia("(max-width:640px)").matches ? 118 : 36; }
+function elapsedSec(){ return Math.floor((Date.now()-elapsedBase)/1000); }
+function ago(sec){ if(sec<60) return sec+"s ago"; if(sec<3600) return Math.floor(sec/60)+"m ago"; if(sec<86400) return Math.floor(sec/3600)+"h ago"; return Math.floor(sec/86400)+"d ago"; }
+function sortRows(){
+  var col = sortState.col, dir = sortState.dir === "asc" ? 1 : -1;
+  filtered.sort(function(a,b){
+    var r;
+    if(col === "last") r = a.last - b.last;
+    else r = a[col] < b[col] ? -1 : (a[col] > b[col] ? 1 : 0);
+    if(r === 0) r = a.id < b.id ? -1 : (a.id > b.id ? 1 : 0);
+    return r * dir;
+  });
+}
+function refilter(){
+  var q = filterQ.trim().toLowerCase();
+  filtered = q ? ROWS.filter(function(r){ return r.id.toLowerCase().indexOf(q) !== -1 || r.name.toLowerCase().indexOf(q) !== -1; }) : ROWS.slice();
+  sortRows();
+}
+function rowHTML(r, idx){
+  var rh = ROW_H();
+  return '<div class="grow" role="row" data-idx="'+idx+'" style="height:'+rh+'px">'
+    + '<div role="gridcell">'+r.id+'</div>'
+    + '<div role="gridcell">'+r.name+'</div>'
+    + '<div role="gridcell">'+r.orbit+'</div>'
+    + '<div role="gridcell"><span class="pill '+r.status+'">'+r.status+'</span></div>'
+    + '<div role="gridcell">'+ago(r.last + elapsedSec())+'</div></div>';
+}
+function renderGrid(){
+  var body = document.getElementById("gridBody"), rh = ROW_H(), OVER = 6;
+  var total = filtered.length, top = body.scrollTop;
+  var first = Math.max(0, Math.floor(top/rh) - OVER);
+  var count = Math.ceil(body.clientHeight/rh) + 2*OVER;
+  var last = Math.min(total, first + count);
+  var parts = [], i;
+  for(i=first;i<last;i++) parts.push(rowHTML(filtered[i], i));
+  document.getElementById("gridTop").style.height = (first*rh) + "px";
+  document.getElementById("gridBottom").style.height = Math.max(0, (total-last)*rh) + "px";
+  document.getElementById("gridRows").innerHTML = parts.length ? parts.join("") : '<div class="empty">No satellites match “'+filterQ.replace(/[<>&]/g,"")+'”.</div>';
+  document.getElementById("rowCount").textContent = String(total);
+  document.getElementById("sortNote").textContent = "sorted by " + sortState.col.toUpperCase() + " " + (sortState.dir==="asc"?"▲":"▼");
+  var btns = document.querySelectorAll("#gridHead button");
+  for(i=0;i<btns.length;i++){
+    var ar = btns[i].querySelector(".ar");
+    ar.textContent = (btns[i].dataset.col === sortState.col) ? (sortState.dir==="asc"?"▲":"▼") : "";
+  }
+}
+var gridScrollScheduled = false;
+document.getElementById("gridBody").addEventListener("scroll", function(){
+  if(gridScrollScheduled) return;
+  gridScrollScheduled = true;
+  requestAnimationFrame(function(){ gridScrollScheduled = false; renderGrid(); });
+});
+document.getElementById("gridHead").addEventListener("click", function(e){
+  var b = e.target.closest("button[data-col]"); if(!b) return;
+  var col = b.dataset.col;
+  if(sortState.col === col) sortState.dir = sortState.dir === "asc" ? "desc" : "asc";
+  else { sortState.col = col; sortState.dir = "asc"; }
+  sset("sort", sortState); sortRows(); renderGrid();
+});
+var filterEl = document.getElementById("filter");
+filterEl.value = filterQ;
+filterEl.addEventListener("input", function(){ filterQ = filterEl.value; sset("filter", filterQ); refilter(); document.getElementById("gridBody").scrollTop = 0; renderGrid(); });
+document.getElementById("clearFilter").addEventListener("click", function(){ filterEl.value = ""; filterQ = ""; sset("filter", filterQ); refilter(); renderGrid(); filterEl.focus(); });
+document.getElementById("gridBody").addEventListener("keydown", function(e){
+  var body = e.currentTarget, rh = ROW_H();
+  if(e.key === "ArrowDown"){ body.scrollTop += rh; e.preventDefault(); }
+  else if(e.key === "ArrowUp"){ body.scrollTop -= rh; e.preventDefault(); }
+  else if(e.key === "PageDown"){ body.scrollTop += body.clientHeight - rh; e.preventDefault(); }
+  else if(e.key === "PageUp"){ body.scrollTop -= body.clientHeight - rh; e.preventDefault(); }
+  else if(e.key === "Home"){ body.scrollTop = 0; e.preventDefault(); }
+  else if(e.key === "End"){ body.scrollTop = body.scrollHeight; e.preventDefault(); }
+  var rows = body.querySelectorAll(".grow");
+  for(var i=0;i<rows.length;i++) rows[i].setAttribute("aria-selected", "false");
+});
+
+/* ---------- telemetry chart ---------- */
+var cv = document.getElementById("chart"), cx = cv.getContext("2d");
+var samples = [];
+var seriesVis = sget("seriesVis", { signal:true, fuel:true });
+var tooltip = document.getElementById("tip"), hoverIdx = -1;
+function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+(function backfill(){
+  var r = mulberry32(7), s = metrics.signal, f = metrics.fuel, i, arr = [];
+  for(i=0;i<60;i++){ s = clamp(s + Math.round(r()*4-2), 0, 99); f = clamp(f + r()*2-1, 0, 100); arr.push({ signal:s, fuel:f, t:Date.now()-(60-i)*1000 }); }
+  samples = arr;
+})();
+function chartBox(){
+  var r = cv.getBoundingClientRect();
+  return { w: Math.max(80, r.width), h: Math.max(80, r.height || 230), padL: 38, padR: 10, padT: 12, padB: 22 };
+}
+function sizeCanvas(){
+  var dpr = Math.min(window.devicePixelRatio || 1, 2), r = cv.getBoundingClientRect();
+  cv.width = Math.max(1, Math.round(r.width*dpr));
+  cv.height = Math.max(1, Math.round((r.height || 230)*dpr));
+  cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+function drawChart(){
+  if(!cv.width) sizeCanvas();
+  var b = chartBox(), W = b.w, H = b.h;
+  var x0 = b.padL, x1 = W - b.padR, y0 = H - b.padB, y1 = b.padT;
+  cx.clearRect(0, 0, W, H);
+  cx.font = "10px system-ui, sans-serif";
+  cx.strokeStyle = cssVar("--border"); cx.fillStyle = cssVar("--muted"); cx.lineWidth = 1;
+  var ticks = [0, 25, 50, 75, 100], i;
+  for(i=0;i<ticks.length;i++){
+    var y = y0 - (ticks[i]/100)*(y0-y1);
+    cx.beginPath(); cx.moveTo(x0, y); cx.lineTo(x1, y); cx.globalAlpha = (ticks[i]===0||ticks[i]===100)?0.9:0.35; cx.stroke(); cx.globalAlpha = 1;
+    cx.fillText(String(ticks[i]), 6, y+3);
+  }
+  cx.strokeStyle = cssVar("--muted"); cx.beginPath(); cx.moveTo(x0, y0); cx.lineTo(x1, y0); cx.stroke();
+  cx.strokeStyle = cssVar("--border"); cx.beginPath(); cx.moveTo(x0, y1); cx.lineTo(x0, y0); cx.stroke();
+  cx.fillText("samples −60 … 0", x0, H-6);
+  cx.save(); cx.translate(11, (y0+y1)/2); cx.rotate(-Math.PI/2); cx.fillText("0–100", -16, 0); cx.restore();
+  var n = samples.length; if(n < 2) return;
+  function path(key){
+    cx.beginPath();
+    for(var k=0;k<n;k++){
+      var px = x0 + (k/(n-1))*(x1-x0), py = y0 - (samples[k][key]/100)*(y0-y1);
+      if(k===0) cx.moveTo(px, py); else cx.lineTo(px, py);
+    }
+    cx.stroke();
+  }
+  cx.lineWidth = 2;
+  if(seriesVis.signal){ cx.strokeStyle = cssVar("--chart-signal"); path("signal"); }
+  if(seriesVis.fuel){ cx.strokeStyle = cssVar("--chart-fuel"); path("fuel"); }
+  if(hoverIdx >= 0 && hoverIdx < n){
+    var hx = x0 + (hoverIdx/(n-1))*(x1-x0);
+    cx.strokeStyle = cssVar("--muted"); cx.lineWidth = 1;
+    cx.beginPath(); cx.moveTo(hx, y1); cx.lineTo(hx, y0); cx.stroke();
+    if(seriesVis.signal){ cx.fillStyle = cssVar("--chart-signal"); cx.beginPath(); cx.arc(hx, y0 - (samples[hoverIdx].signal/100)*(y0-y1), 3, 0, 7); cx.fill(); }
+    if(seriesVis.fuel){ cx.fillStyle = cssVar("--chart-fuel"); cx.beginPath(); cx.arc(hx, y0 - (samples[hoverIdx].fuel/100)*(y0-y1), 3, 0, 7); cx.fill(); }
+  }
+}
+cv.addEventListener("pointermove", function(e){
+  var b = chartBox(), r = cv.getBoundingClientRect();
+  var x = e.clientX - r.left, x0 = b.padL, x1 = b.w - b.padR, n = samples.length;
+  if(n < 2 || x < x0 || x > x1){ hoverIdx = -1; tooltip.style.display = "none"; drawChart(); return; }
+  hoverIdx = clamp(Math.round(((x-x0)/(x1-x0))*(n-1)), 0, n-1);
+  var s = samples[hoverIdx];
+  tooltip.textContent = "signal " + s.signal + " dB · fuel " + s.fuel.toFixed(2) + " % · " + ago(Math.floor((Date.now()-s.t)/1000));
+  tooltip.style.display = "block";
+  tooltip.style.left = Math.min(x+10, b.w-190) + "px";
+  tooltip.style.top = "16px";
+  drawChart();
+});
+cv.addEventListener("pointerleave", function(){ hoverIdx = -1; tooltip.style.display = "none"; drawChart(); });
+function pushSample(){ samples.push({ signal: metrics.signal, fuel: metrics.fuel, t: Date.now() }); if(samples.length > 60) samples.shift(); drawChart(); }
+["signal","fuel"].forEach(function(k){
+  var btn = document.getElementById(k === "signal" ? "lgSignal" : "lgFuel");
+  btn.setAttribute("aria-pressed", String(!!seriesVis[k]));
+  btn.addEventListener("click", function(){ seriesVis[k] = !seriesVis[k]; btn.setAttribute("aria-pressed", String(seriesVis[k])); sset("seriesVis", seriesVis); drawChart(); });
+});
+
+/* ---------- anomaly feed + undo/redo ---------- */
+var MSGS = [
+  { s:"critical", m:"Reaction wheel 3 vibration above limit" },
+  { s:"critical", m:"Thermal loop B outlet temperature high" },
+  { s:"warn", m:"Downlink SNR degraded 6 dB below plan" },
+  { s:"warn", m:"Battery cell 4 imbalance 40 mV" },
+  { s:"warn", m:"Star tracker re-acquisition took 2.1 s" },
+  { s:"warn", m:"Solar array current ripple 3.2 %" },
+  { s:"info", m:"Gyro drift 0.03°/h, within budget" },
+  { s:"info", m:"Data recorder sector remap completed" },
+  { s:"info", m:"Attitude error spike 0.4° re-converged" },
+  { s:"critical", m:"Camera focus actuator lag on payload A" }
+];
+var feedItems = sget("anomalies", []);
+var hActions = [], hPtr = 0, idSeq = Date.now() % 100000;
+function newId(){ idSeq++; return "an_" + idSeq; }
+function sevOrder(s){ return s === "critical" ? 0 : (s === "warn" ? 1 : 2); }
+function renderFeed(){
+  var ul = document.getElementById("feed"), html = "", i;
+  if(!feedItems.length) html = '<li class="empty" style="border:0">No anomalies. Run a diagnostic.</li>';
+  for(i=0;i<feedItems.length;i++){
+    var it = feedItems[i], d = new Date(it.ts);
+    html += '<li data-id="'+it.id+'"><span class="sev '+it.s+'">'+it.s+'</span>'
+      + '<span class="msg">'+it.m+'</span>'
+      + '<span class="ts">'+pad(d.getUTCHours(),2)+':'+pad(d.getUTCMinutes(),2)+':'+pad(d.getUTCSeconds(),2)+'Z</span>'
+      + '<button class="x" data-dismiss="'+it.id+'" aria-label="Dismiss anomaly: '+it.m.replace(/"/g,"")+'">✕</button></li>';
+  }
+  ul.innerHTML = html;
+  document.getElementById("histNote").textContent = "history " + hActions.length + " · pointer " + hPtr + " · undo Ctrl+Z · redo Ctrl+Shift+Z / Ctrl+Y";
+  sset("anomalies", feedItems);
+}
+function pushAction(a){ hActions = hActions.slice(0, hPtr); hActions.push(a); if(hActions.length > 50) hActions.shift(); hPtr = hActions.length; }
+function applyAction(a, forward){
+  var i;
+  if(a.t === "add"){
+    if(forward){ feedItems.push(a.item); }
+    else { for(i=feedItems.length-1;i>=0;i--) if(feedItems[i].id === a.item.id) feedItems.splice(i,1); }
+  } else {
+    if(forward){ for(i=feedItems.length-1;i>=0;i--) if(feedItems[i].id === a.item.id) feedItems.splice(i,1); }
+    else { feedItems.push(a.item); }
+  }
+  renderFeed();
+}
+function runDiagnostic(){
+  var r = Math.random(), pick = MSGS[Math.floor(r*MSGS.length)];
+  var item = { id: newId(), ts: Date.now(), s: pick.s, m: pick.m };
+  pushAction({ t:"add", item:item }); applyAction(hActions[hPtr-1], true);
+  return item;
+}
+document.getElementById("diagBtn").addEventListener("click", runDiagnostic);
+document.getElementById("feed").addEventListener("click", function(e){
+  var b = e.target.closest("button[data-dismiss]"); if(!b) return;
+  var id = b.dataset.dismiss, i;
+  for(i=0;i<feedItems.length;i++){
+    if(feedItems[i].id === id){ var item = feedItems[i]; pushAction({ t:"remove", item:item }); applyAction(hActions[hPtr-1], true); break; }
+  }
+});
+function undo(){ if(hPtr <= 0) return; hPtr--; applyAction(hActions[hPtr], false); }
+function redo(){ if(hPtr >= hActions.length) return; applyAction(hActions[hPtr], true); hPtr++; }
+document.getElementById("clearFeed").addEventListener("click", function(){
+  var i, copy = feedItems.slice();
+  for(i=0;i<copy.length;i++){ pushAction({ t:"remove", item:copy[i] }); applyAction({ t:"remove", item:copy[i] }, true); }
+});
+
+/* ---------- command palette ---------- */
+var paletteBack = document.getElementById("paletteBack"), paletteInput = document.getElementById("paletteInput"), paletteList = document.getElementById("paletteList");
+var pSel = 0, pItems = [];
+function fuzzy(q, s){
+  q = q.toLowerCase(); s = s.toLowerCase();
+  if(!q) return 1;
+  var qi = 0, score = 0, last = -1;
+  for(var i=0;i<s.length && qi<q.length;i++){
+    if(s[i] === q[qi]){ score += (last === i-1) ? 3 : 1; last = i; qi++; }
+  }
+  return qi === q.length ? score : 0;
+}
+function setSort(col, dir){ sortState.col = col; sortState.dir = dir || (sortState.col===col && sortState.dir==="asc" ? "desc" : "asc"); sset("sort", sortState); sortRows(); renderGrid(); }
+var ACTION_DEFS = [
+  { label:"Toggle theme (dark / light)", run:function(){ applyTheme(theme==="dark"?"light":"dark"); } },
+  { label:"Run diagnostic", run:function(){ runDiagnostic(); } },
+  { label:"Clear anomalies", run:function(){ document.getElementById("clearFeed").click(); } },
+  { label:"Jump to grid", run:function(){ document.getElementById("gridBody").focus(); } },
+  { label:"Sort by ID", run:function(){ setSort("id"); } },
+  { label:"Sort by name", run:function(){ setSort("name"); } },
+  { label:"Sort by orbit", run:function(){ setSort("orbit"); } },
+  { label:"Sort by status", run:function(){ setSort("status"); } },
+  { label:"Sort by last contact", run:function(){ setSort("last"); } }
+];
+function buildPalette(q){
+  var items = [], i;
+  for(i=0;i<ACTION_DEFS.length;i++){
+    var sc = fuzzy(q, ACTION_DEFS[i].label);
+    if(sc) items.push({ kind:"action", label:ACTION_DEFS[i].label, run:ACTION_DEFS[i].run, score:sc + 50 });
+  }
+  if(q){
+    var hits = [];
+    for(i=0;i<ROWS.length;i++){
+      var sc2 = Math.max(fuzzy(q, ROWS[i].id), fuzzy(q, ROWS[i].name));
+      if(sc2) hits.push({ r:ROWS[i], score:sc2 });
+    }
+    hits.sort(function(a,b){ return b.score - a.score; });
+    for(i=0;i<Math.min(8, hits.length);i++){
+      (function(r){ items.push({ kind:"satellite", label:r.id + " · " + r.name + " · " + r.status, run:function(){ filterEl.value = r.id; filterQ = r.id; sset("filter", filterQ); refilter(); renderGrid(); document.getElementById("gridBody").focus(); } }); })(hits[i].r);
+    }
+  }
+  return items;
+}
+function renderPalette(){
+  var q = paletteInput.value, html = "", i;
+  pItems = buildPalette(q);
+  if(pSel >= pItems.length) pSel = Math.max(0, pItems.length-1);
+  for(i=0;i<pItems.length;i++){
+    html += '<li id="popt_'+i+'" role="option" aria-selected="'+(i===pSel)+'" data-i="'+i+'"><span>'+pItems[i].label+'</span><span class="kind">'+pItems[i].kind+'</span></li>';
+  }
+  paletteList.innerHTML = html || '<li role="option" aria-selected="false" class="empty" style="border:0">No matches</li>';
+  paletteInput.setAttribute("aria-activedescendant", pItems.length ? "popt_"+pSel : "");
+}
+function openPalette(){ paletteBack.setAttribute("data-open","true"); paletteInput.value = ""; pSel = 0; renderPalette(); paletteInput.focus(); }
+function closePalette(){ paletteBack.setAttribute("data-open","false"); document.getElementById("paletteBtn").focus(); }
+document.getElementById("paletteBtn").addEventListener("click", openPalette);
+paletteBack.addEventListener("mousedown", function(e){ if(e.target === paletteBack) closePalette(); });
+paletteInput.addEventListener("input", function(){ pSel = 0; renderPalette(); });
+paletteList.addEventListener("click", function(e){
+  var li = e.target.closest("li[data-i]"); if(!li) return;
+  var it = pItems[parseInt(li.dataset.i,10)]; if(it){ closePalette(); it.run(); }
+});
+paletteList.addEventListener("mousemove", function(e){
+  var li = e.target.closest("li[data-i]"); if(!li) return;
+  pSel = parseInt(li.dataset.i,10); renderPalette();
+});
+document.addEventListener("keydown", function(e){
+  var open = paletteBack.getAttribute("data-open") === "true";
+  var typing = /^(INPUT|SELECT|TEXTAREA)$/.test((e.target.tagName||""));
+  if((e.ctrlKey || e.metaKey) && (e.key === "k" || e.key === "K")){ e.preventDefault(); open ? closePalette() : openPalette(); return; }
+  if(open){
+    if(e.key === "Escape"){ e.preventDefault(); closePalette(); return; }
+    if(e.key === "ArrowDown"){ e.preventDefault(); pSel = Math.min(pItems.length-1, pSel+1); renderPalette(); return; }
+    if(e.key === "ArrowUp"){ e.preventDefault(); pSel = Math.max(0, pSel-1); renderPalette(); return; }
+    if(e.key === "Enter"){ e.preventDefault(); var it = pItems[pSel]; if(it){ closePalette(); it.run(); } return; }
+    if(e.key === "Tab"){ e.preventDefault(); paletteInput.focus(); return; }
+    return;
+  }
+  if((e.ctrlKey || e.metaKey) && (e.key === "z" || e.key === "Z")){ e.preventDefault(); if(e.shiftKey) redo(); else undo(); return; }
+  if((e.ctrlKey || e.metaKey) && (e.key === "y" || e.key === "Y")){ e.preventDefault(); redo(); return; }
+  if(!typing && (e.key === "d" || e.key === "D")){ e.preventDefault(); applyTheme(theme === "dark" ? "light" : "dark"); return; }
+});
+
+/* ---------- boot ---------- */
+function boot(){
+  applyTheme(theme);
+  renderMetrics();
+  refilter();
+  renderGrid();
+  sizeCanvas();
+  drawChart();
+  renderFeed();
+  tickClocks();
+  setInterval(tickClocks, 1000);
+  setInterval(pushSample, 1000);
+  setInterval(stepMetrics, 5000);
+  setInterval(function(){ renderGrid(); }, 1000);
+  window.addEventListener("resize", function(){ sizeCanvas(); renderGrid(); drawChart(); });
+  if(filterQ) filterEl.value = filterQ;
+}
+boot();
+
+})();
+</script>
+</body>
+</html>

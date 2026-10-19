@@ -1,148 +1,138 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700" role="img" aria-label="Seven founders of computing on a to-scale timeline, 1800 to 2000">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700" role="img" aria-label="Infographic: seven founders of computing, birth years pinned to a to-scale timeline from 1800 to 2000, with lifespan bars and three influence arrows">
+  <!-- palette: paper #F5F2EA, ink #141C2B, muted #6B7484, grid #D8D2C4, blue #2A5CAA (machines & computability), amber #D98A2B (languages & programming), teal #2E7D6F (information & analysis) -->
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#0f1720"/>
-      <stop offset="1" stop-color="#1b2733"/>
-    </linearGradient>
-    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#22303f"/>
-      <stop offset="1" stop-color="#182430"/>
-    </linearGradient>
-    <style>
-      .t { font-family: "Segoe UI", Arial, sans-serif; fill: #e8eef4; }
-      .dim { font-family: "Segoe UI", Arial, sans-serif; fill: #8fa3b5; }
-      .nm { font-family: "Segoe UI", Arial, sans-serif; font-size: 15px; font-weight: 700; fill: #f3f7fb; }
-      .yr { font-family: "Segoe UI", Arial, sans-serif; font-size: 11px; fill: #6fd3c7; letter-spacing: 0.5px; }
-      .fc { font-family: "Segoe UI", Arial, sans-serif; font-size: 11px; fill: #c2ced9; }
-      .tick { font-family: "Segoe UI", Arial, sans-serif; font-size: 10px; fill: #7d8fa1; }
-    </style>
-  </defs>
-
-  <rect x="0" y="0" width="1200" height="700" fill="url(#bg)"/>
-  <text class="t" x="60" y="34" font-size="20" font-weight="700" letter-spacing="1">SEVEN FOUNDERS OF COMPUTING</text>
-  <text class="dim" x="60" y="54" font-size="12">birth years mapped to scale on the 1800–2000 axis</text>
-
-  <!-- founder cards (facts verbatim from the brief) -->
-  <g>
-    <rect x="25" y="80" width="150" height="132" rx="8" fill="url(#card)" stroke="#33506a"/>
-    <text class="nm" x="37" y="104">Ada Lovelace</text>
-    <text class="yr" x="37" y="122">1815–1852</text>
-    <text class="fc" x="37" y="142">First published</text>
-    <text class="fc" x="37" y="157">algorithm</text>
-    <text class="fc" x="37" y="172">(Note G, Analytical</text>
-    <text class="fc" x="37" y="187">Engine)</text>
-    <circle cx="100" cy="205" r="3" fill="#6fd3c7"/>
-  </g>
-  <g>
-    <rect x="195" y="80" width="150" height="132" rx="8" fill="url(#card)" stroke="#33506a"/>
-    <text class="nm" x="207" y="104">John von Neumann</text>
-    <text class="yr" x="207" y="122">1903–1957</text>
-    <text class="fc" x="207" y="142">Stored-program</text>
-    <text class="fc" x="207" y="157">architecture (EDVAC</text>
-    <text class="fc" x="207" y="172">report, 1945)</text>
-    <circle cx="270" cy="205" r="3" fill="#6fd3c7"/>
-  </g>
-  <g>
-    <rect x="365" y="80" width="150" height="132" rx="8" fill="url(#card)" stroke="#33506a"/>
-    <text class="nm" x="377" y="104">Grace Hopper</text>
-    <text class="yr" x="377" y="122">1906–1992</text>
-    <text class="fc" x="377" y="142">Compilers &amp;</text>
-    <text class="fc" x="377" y="157">COBOL</text>
-    <circle cx="440" cy="205" r="3" fill="#6fd3c7"/>
-  </g>
-  <g>
-    <rect x="535" y="80" width="150" height="132" rx="8" fill="url(#card)" stroke="#33506a"/>
-    <text class="nm" x="547" y="104">Alan Turing</text>
-    <text class="yr" x="547" y="122">1912–1954</text>
-    <text class="fc" x="547" y="142">Universal machine</text>
-    <text class="fc" x="547" y="157">(1936)</text>
-    <circle cx="610" cy="205" r="3" fill="#6fd3c7"/>
-  </g>
-  <g>
-    <rect x="705" y="80" width="150" height="132" rx="8" fill="url(#card)" stroke="#33506a"/>
-    <text class="nm" x="717" y="104">Claude Shannon</text>
-    <text class="yr" x="717" y="122">1916–2001</text>
-    <text class="fc" x="717" y="142">Information theory</text>
-    <text class="fc" x="717" y="157">(1948)</text>
-    <circle cx="780" cy="205" r="3" fill="#6fd3c7"/>
-  </g>
-  <g>
-    <rect x="875" y="80" width="150" height="132" rx="8" fill="url(#card)" stroke="#33506a"/>
-    <text class="nm" x="887" y="104">Edsger Dijkstra</text>
-    <text class="yr" x="887" y="122">1930–2002</text>
-    <text class="fc" x="887" y="142">Shortest path;</text>
-    <text class="fc" x="887" y="157">structured</text>
-    <text class="fc" x="887" y="172">programming</text>
-    <circle cx="950" cy="205" r="3" fill="#6fd3c7"/>
-  </g>
-  <g>
-    <rect x="1045" y="80" width="150" height="132" rx="8" fill="url(#card)" stroke="#33506a"/>
-    <text class="nm" x="1057" y="104">Donald Knuth</text>
-    <text class="yr" x="1057" y="122">1938–</text>
-    <text class="fc" x="1057" y="142">The Art of Computer</text>
-    <text class="fc" x="1057" y="157">Programming;</text>
-    <text class="fc" x="1057" y="172">analysis of</text>
-    <text class="fc" x="1057" y="187">algorithms</text>
-    <circle cx="1120" cy="205" r="3" fill="#6fd3c7"/>
-  </g>
-
-  <!-- leader lines from each card to its true birth-year position -->
-  <g stroke="#3d5b76" stroke-width="1" fill="none">
-    <path d="M100,205 L175,596"/>
-    <path d="M270,205 L615,596"/>
-    <path d="M440,205 L630,596"/>
-    <path d="M610,205 L660,596"/>
-    <path d="M780,205 L680,596"/>
-    <path d="M950,205 L750,596"/>
-    <path d="M1120,205 L790,596"/>
-  </g>
-
-  <!-- influence arrows (both justified): Lovelace's Note G grounded Turing's framing;
-       Turing's universal machine underpins von Neumann's stored-program design -->
-  <g fill="none" stroke="#e0a458" stroke-width="2" stroke-dasharray="6 5">
-    <path d="M175,600 Q417,690 655,606" marker-end="url(#ah)"/>
-    <path d="M660,600 Q638,655 619,606" marker-end="url(#ah)"/>
-  </g>
-  <defs>
-    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-      <path d="M0,0 L10,5 L0,10 Z" fill="#e0a458"/>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#6B7484"/>
     </marker>
   </defs>
-  <text class="dim" x="470" y="672" font-size="11" fill="#e0a458">Lovelace → Turing (Note G / the “Lovelace objection”)</text>
-  <text class="dim" x="700" y="660" font-size="11" fill="#e0a458">Turing → von Neumann (universal machine)</text>
 
-  <!-- to-scale timeline 1800–2000 -->
-  <line x1="100" y1="600" x2="1100" y2="600" stroke="#8fa3b5" stroke-width="2"/>
-  <g stroke="#4a627a" stroke-width="1">
-    <line x1="100" y1="596" x2="100" y2="610"/>
-    <line x1="200" y1="596" x2="200" y2="610"/>
-    <line x1="300" y1="596" x2="300" y2="610"/>
-    <line x1="400" y1="596" x2="400" y2="610"/>
-    <line x1="500" y1="596" x2="500" y2="610"/>
-    <line x1="600" y1="596" x2="600" y2="610"/>
-    <line x1="700" y1="596" x2="700" y2="610"/>
-    <line x1="800" y1="596" x2="800" y2="610"/>
-    <line x1="900" y1="596" x2="900" y2="610"/>
-    <line x1="1000" y1="596" x2="1000" y2="610"/>
-    <line x1="1100" y1="596" x2="1100" y2="610"/>
-  </g>
-  <g class="tick" text-anchor="middle">
-    <text x="100" y="628">1800</text>
-    <text x="300" y="628">1840</text>
-    <text x="500" y="628">1880</text>
-    <text x="700" y="628">1920</text>
-    <text x="900" y="628">1960</text>
-    <text x="1100" y="628">2000</text>
+  <rect width="1200" height="700" fill="#F5F2EA"/>
+
+  <!-- header -->
+  <text x="60" y="50" font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="700" fill="#141C2B" letter-spacing="0.5">SEVEN FOUNDERS OF COMPUTING</text>
+  <text x="60" y="76" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13.5" fill="#6B7484">Birth years pinned to scale, 1800&#8211;2000 &#183; bars show lifespan (clipped at the 2000 edge)</text>
+
+  <!-- category legend -->
+  <rect x="890" y="36" width="12" height="12" rx="2.5" fill="#2A5CAA"/>
+  <text x="908" y="46" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#141C2B">machines &amp; computability</text>
+  <rect x="890" y="58" width="12" height="12" rx="2.5" fill="#D98A2B"/>
+  <text x="908" y="68" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#141C2B">languages &amp; programming</text>
+  <rect x="890" y="80" width="12" height="12" rx="2.5" fill="#2E7D6F"/>
+  <text x="908" y="90" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#141C2B">information &amp; analysis</text>
+
+  <!-- to-scale decade gridlines: year y -> x = 60 + (y-1800)*5.4 -->
+  <g stroke="#D8D2C4" stroke-width="1">
+    <line x1="60" y1="110" x2="60" y2="612"/>
+    <line x1="168" y1="110" x2="168" y2="612"/>
+    <line x1="276" y1="110" x2="276" y2="612"/>
+    <line x1="384" y1="110" x2="384" y2="612"/>
+    <line x1="492" y1="110" x2="492" y2="612"/>
+    <line x1="600" y1="110" x2="600" y2="612"/>
+    <line x1="708" y1="110" x2="708" y2="612"/>
+    <line x1="816" y1="110" x2="816" y2="612"/>
+    <line x1="924" y1="110" x2="924" y2="612"/>
+    <line x1="1032" y1="110" x2="1032" y2="612"/>
+    <line x1="1140" y1="110" x2="1140" y2="612"/>
   </g>
 
-  <!-- birth-year markers, x = 100 + (year-1800)*5 -->
-  <g>
-    <circle cx="175" cy="600" r="6" fill="#e8eef4"/>
-    <circle cx="615" cy="600" r="6" fill="#e8eef4"/>
-    <circle cx="630" cy="600" r="6" fill="#e8eef4"/>
-    <circle cx="660" cy="600" r="6" fill="#e8eef4"/>
-    <circle cx="680" cy="600" r="6" fill="#e8eef4"/>
-    <circle cx="750" cy="600" r="6" fill="#e8eef4"/>
-    <circle cx="790" cy="600" r="6" fill="#e8eef4"/>
+  <!-- lane 1: Ada Lovelace 1815-1852 (x 141 -> 341) -->
+  <text x="141" y="152" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#141C2B">Ada Lovelace &#183; 1815&#8211;1852</text>
+  <rect x="141" y="160" width="200" height="22" rx="4" fill="#D98A2B"/>
+  <text x="141" y="200" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" fill="#6B7484">Note G: the first published algorithm (Analytical Engine)</text>
+
+  <!-- lane 2: John von Neumann 1903-1957 (x 616 -> 908) -->
+  <text x="616" y="214" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#141C2B">John von Neumann &#183; 1903&#8211;1957</text>
+  <rect x="616" y="222" width="292" height="22" rx="4" fill="#2A5CAA"/>
+  <text x="616" y="262" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" fill="#6B7484">Stored-program architecture (EDVAC report, 1945)</text>
+
+  <!-- lane 3: Grace Hopper 1906-1992 (x 632 -> 1097) -->
+  <text x="632" y="276" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#141C2B">Grace Hopper &#183; 1906&#8211;1992</text>
+  <rect x="632" y="284" width="465" height="22" rx="4" fill="#D98A2B"/>
+  <text x="632" y="324" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" fill="#6B7484">Compilers &amp; COBOL</text>
+
+  <!-- lane 4: Alan Turing 1912-1954 (x 665 -> 892) -->
+  <text x="665" y="338" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#141C2B">Alan Turing &#183; 1912&#8211;1954</text>
+  <rect x="665" y="346" width="227" height="22" rx="4" fill="#2A5CAA"/>
+  <text x="665" y="386" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" fill="#6B7484">Universal machine (1936)</text>
+
+  <!-- lane 5: Claude Shannon 1916-2001 (x 686 -> clipped 1140) -->
+  <text x="686" y="400" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#141C2B">Claude Shannon &#183; 1916&#8211;2001</text>
+  <rect x="686" y="408" width="454" height="22" rx="4" fill="#2E7D6F"/>
+  <rect x="1132" y="412" width="8" height="14" fill="#F5F2EA" opacity="0.85"/>
+  <path d="M1130 411 L1146 419 L1130 427 Z" fill="#2E7D6F" opacity="0.55"/>
+  <text x="686" y="448" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" fill="#6B7484">Information theory (1948)</text>
+
+  <!-- lane 6: Edsger Dijkstra 1930-2002 (x 762 -> clipped 1140) -->
+  <text x="762" y="462" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#141C2B">Edsger Dijkstra &#183; 1930&#8211;2002</text>
+  <rect x="762" y="470" width="378" height="22" rx="4" fill="#D98A2B"/>
+  <rect x="1132" y="474" width="8" height="14" fill="#F5F2EA" opacity="0.85"/>
+  <path d="M1130 473 L1146 481 L1130 489 Z" fill="#D98A2B" opacity="0.55"/>
+  <text x="762" y="510" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" fill="#6B7484">Shortest path; structured programming</text>
+
+  <!-- lane 7: Donald Knuth b. 1938 (x 805 -> clipped 1140) -->
+  <text x="805" y="524" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#141C2B">Donald Knuth &#183; b. 1938</text>
+  <rect x="805" y="532" width="335" height="22" rx="4" fill="#2E7D6F"/>
+  <text x="805" y="572" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" fill="#6B7484">The Art of Computer Programming; analysis of algorithms</text>
+
+  <!-- influence arrows -->
+  <path d="M341 171 C 460 200 560 320 660 353" fill="none" stroke="#6B7484" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#ah)"/>
+  <circle cx="470" cy="245" r="10" fill="#141C2B"/>
+  <text x="470" y="249" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="700" fill="#F5F2EA" text-anchor="middle">1</text>
+
+  <path d="M668 348 C 580 330 560 250 620 242" fill="none" stroke="#6B7484" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#ah)"/>
+  <circle cx="560" cy="300" r="10" fill="#141C2B"/>
+  <text x="560" y="304" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="700" fill="#F5F2EA" text-anchor="middle">2</text>
+
+  <path d="M1050 492 L1050 528" fill="none" stroke="#6B7484" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#ah)"/>
+  <circle cx="1074" cy="510" r="10" fill="#141C2B"/>
+  <text x="1074" y="514" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="700" fill="#F5F2EA" text-anchor="middle">3</text>
+
+  <!-- influence key -->
+  <text x="60" y="392" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#141C2B" letter-spacing="1.2">INFLUENCE</text>
+  <text x="60" y="418" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" fill="#141C2B">1  Lovelace &#8594; Turing &#8212; Note G (1843) is the first published algorithm;</text>
+  <text x="60" y="435" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" fill="#6B7484">Turing&#8217;s 1950 paper takes up &#8220;Lady Lovelace&#8217;s objection&#8221; by name.</text>
+  <text x="60" y="464" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" fill="#141C2B">2  Turing &#8594; von Neumann &#8212; the universal machine (1936) underlies the</text>
+  <text x="60" y="481" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" fill="#6B7484">stored-program architecture of the EDVAC report (1945).</text>
+  <text x="60" y="510" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" fill="#141C2B">3  Dijkstra &#8594; Knuth &#8212; graph algorithms and structured programming</text>
+  <text x="60" y="527" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" fill="#6B7484">informed the analysis of algorithms (TAOCP, from 1968).</text>
+
+  <!-- timeline axis and truthful birth pins -->
+  <line x1="60" y1="612" x2="1140" y2="612" stroke="#141C2B" stroke-width="2"/>
+  <g stroke="#141C2B" stroke-width="1.5">
+    <line x1="60" y1="612" x2="60" y2="620"/>
+    <line x1="168" y1="612" x2="168" y2="620"/>
+    <line x1="276" y1="612" x2="276" y2="620"/>
+    <line x1="384" y1="612" x2="384" y2="620"/>
+    <line x1="492" y1="612" x2="492" y2="620"/>
+    <line x1="600" y1="612" x2="600" y2="620"/>
+    <line x1="708" y1="612" x2="708" y2="620"/>
+    <line x1="816" y1="612" x2="816" y2="620"/>
+    <line x1="924" y1="612" x2="924" y2="620"/>
+    <line x1="1032" y1="612" x2="1032" y2="620"/>
+    <line x1="1140" y1="612" x2="1140" y2="620"/>
   </g>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#6B7484" text-anchor="middle">
+    <text x="60" y="636">1800</text>
+    <text x="168" y="636">1820</text>
+    <text x="276" y="636">1840</text>
+    <text x="384" y="636">1860</text>
+    <text x="492" y="636">1880</text>
+    <text x="600" y="636">1900</text>
+    <text x="708" y="636">1920</text>
+    <text x="816" y="636">1940</text>
+    <text x="924" y="636">1960</text>
+    <text x="1032" y="636">1980</text>
+    <text x="1140" y="636">2000</text>
+  </g>
+  <g fill="#141C2B">
+    <circle cx="141" cy="612" r="4"/>
+    <circle cx="616" cy="612" r="4"/>
+    <circle cx="632" cy="612" r="4"/>
+    <circle cx="665" cy="612" r="4"/>
+    <circle cx="686" cy="612" r="4"/>
+    <circle cx="762" cy="612" r="4"/>
+    <circle cx="805" cy="612" r="4"/>
+  </g>
+
+  <text x="60" y="664" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" fill="#6B7484">Scale: 1800 &#8594; x = 60 px, 2000 &#8594; x = 1140 px (5.4 px per year). Pins on the axis mark true birth years; lifespan bars ending at the 2000 edge (Shannon 2001, Dijkstra 2002, Knuth ongoing) are clipped there and shown with an open tip.</text>
 </svg>

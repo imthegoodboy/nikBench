@@ -1,0 +1,179 @@
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Earth observation brand colour-system board with palette, contrast maths and usage ratios">
+  <defs>
+    <radialGradient id="globe" cx="0.38" cy="0.32" r="0.78">
+      <stop offset="0" stop-color="#0B3D91"/>
+      <stop offset="0.62" stop-color="#0B3D91"/>
+      <stop offset="1" stop-color="#05070D"/>
+    </radialGradient>
+    <linearGradient id="night" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#05070D" stop-opacity="0"/>
+      <stop offset="0.55" stop-color="#05070D" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#05070D" stop-opacity="0.82"/>
+    </linearGradient>
+    <clipPath id="disc"><circle cx="300" cy="340" r="200"/></clipPath>
+  </defs>
+
+  <rect width="1200" height="800" fill="#05070D"/>
+  <g stroke="#222A36" stroke-width="1" opacity="0.55">
+    <line x1="60" y1="128" x2="1140" y2="128"/>
+    <line x1="60" y1="712" x2="1140" y2="712"/>
+    <line x1="520" y1="140" x2="520" y2="700"/>
+  </g>
+
+  <text x="60" y="46" font-family="'Segoe UI', system-ui, sans-serif" font-size="10" fill="#7FD4FF" letter-spacing="3">EARTH OBSERVATION SYSTEM · BRAND BOARD 01</text>
+  <text x="60" y="86" font-family="'Segoe UI', system-ui, sans-serif" font-size="33" font-weight="700" fill="#F2F7FA">A colour system for a living planet</text>
+  <text x="60" y="110" font-family="'Segoe UI', system-ui, sans-serif" font-size="12" fill="#F2F7FA" opacity="0.62">Eight tokens, two neutrals, one rule: every colour has a job and a place it may not go.</text>
+
+  <g fill="#F2F7FA" opacity="0.5">
+    <circle cx="64" cy="176" r="1.2"/><circle cx="148" cy="214" r="1"/><circle cx="462" cy="168" r="1.3"/>
+    <circle cx="86" cy="470" r="1"/><circle cx="452" cy="486" r="1.1"/><circle cx="196" cy="146" r="0.9"/>
+    <circle cx="498" cy="240" r="0.9"/><circle cx="506" cy="420" r="1.2"/><circle cx="72" cy="296" r="0.8"/>
+  </g>
+
+  <circle cx="300" cy="340" r="200" fill="url(#globe)"/>
+
+  <g clip-path="url(#disc)">
+    <path d="M190,206 C214,192 244,196 256,218 C266,238 250,254 240,270 C228,288 210,282 200,264 C190,246 178,220 190,206 Z" fill="#1F6F43"/>
+    <path d="M244,300 C264,294 280,308 279,330 C277,356 264,380 252,401 C244,414 234,406 236,388 C240,364 236,338 238,320 C239,308 238,302 244,300 Z" fill="#1F6F43"/>
+    <path d="M330,286 C354,278 374,290 380,311 C387,337 378,366 365,391 C355,409 342,421 334,411 C324,398 328,374 330,354 C332,334 321,304 330,286 Z" fill="#1F6F43"/>
+    <path d="M349,214 C379,199 420,204 436,224 C449,242 438,262 420,272 C399,284 379,278 367,264 C354,251 337,231 349,214 Z" fill="#1F6F43"/>
+    <path d="M394,394 C407,387 421,393 423,405 C425,418 414,426 403,422 C393,418 387,402 394,394 Z" fill="#1F6F43"/>
+    <path d="M337,300 C352,294 366,300 370,312 C374,325 362,334 350,330 C338,326 330,310 337,300 Z" fill="#D9B26A" opacity="0.85"/>
+    <path d="M366,262 C378,256 390,262 392,272 C394,283 382,290 372,286 C362,282 358,268 366,262 Z" fill="#D9B26A" opacity="0.7"/>
+    <path d="M210,238 C226,232 240,238 242,248 C244,258 232,264 220,260 C208,256 202,244 210,238 Z" fill="#D9B26A" opacity="0.6"/>
+    <path d="M246,326 C256,322 264,328 264,336 C264,344 254,348 247,344 C240,340 238,330 246,326 Z" fill="#D9B26A" opacity="0.5"/>
+    <path d="M176,300 C230,266 268,320 322,290 C366,266 408,292 452,262" fill="none" stroke="#F2F7FA" stroke-width="11" stroke-linecap="round" opacity="0.34"/>
+    <path d="M188,388 C238,360 276,404 330,378 C378,354 414,386 456,362" fill="none" stroke="#F2F7FA" stroke-width="8" stroke-linecap="round" opacity="0.28"/>
+    <path d="M214,190 C260,206 290,178 336,196" fill="none" stroke="#F2F7FA" stroke-width="6" stroke-linecap="round" opacity="0.22"/>
+    <path d="M262,452 C300,436 340,458 380,440" fill="none" stroke="#F2F7FA" stroke-width="6" stroke-linecap="round" opacity="0.2"/>
+    <rect x="300" y="130" width="210" height="420" fill="url(#night)"/>
+    <g fill="#FFC857">
+      <circle cx="398" cy="300" r="2.2" opacity="0.9"/><circle cx="414" cy="316" r="1.6" opacity="0.7"/>
+      <circle cx="378" cy="352" r="1.8" opacity="0.8"/><circle cx="420" cy="372" r="1.4" opacity="0.6"/>
+      <circle cx="404" cy="404" r="1.6" opacity="0.75"/><circle cx="432" cy="340" r="1.2" opacity="0.55"/>
+      <circle cx="366" cy="414" r="1.3" opacity="0.5"/><circle cx="438" cy="392" r="1.1" opacity="0.45"/>
+    </g>
+  </g>
+
+  <circle cx="300" cy="340" r="200" fill="none" stroke="#7FD4FF" stroke-width="2.4" opacity="0.9"/>
+  <circle cx="300" cy="340" r="207" fill="none" stroke="#7FD4FF" stroke-width="10" opacity="0.13"/>
+
+  <text x="300" y="570" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif" font-size="9.5" fill="#F2F7FA" opacity="0.55">FIG. 01 · 400 px disc · palette-only rendering · day/night terminator</text>
+
+  <text x="540" y="132" font-family="'Segoe UI', system-ui, sans-serif" font-size="10" fill="#7FD4FF" letter-spacing="2.6">PALETTE · 08 TOKENS + 02 NEUTRALS</text>
+
+  <g>
+    <rect x="540" y="146" width="300" height="68" rx="3" fill="#10141C" stroke="#222A36"/>
+    <rect x="554" y="160" width="44" height="44" rx="2" fill="#05070D" stroke="#222A36"/>
+    <text x="612" y="176" font-family="'Segoe UI', system-ui, sans-serif" font-size="13" font-weight="600" fill="#F2F7FA">void</text>
+    <text x="612" y="190" font-family="Consolas, ui-monospace, monospace" font-size="9.5" fill="#7FD4FF">#05070D</text>
+    <text x="612" y="204" font-family="'Segoe UI', system-ui, sans-serif" font-size="8.8" fill="#F2F7FA" opacity="0.66">Field only. Never text, never content fill.</text>
+  </g>
+  <g>
+    <rect x="856" y="146" width="300" height="68" rx="3" fill="#10141C" stroke="#222A36"/>
+    <rect x="870" y="160" width="44" height="44" rx="2" fill="#0B3D91"/>
+    <text x="928" y="176" font-family="'Segoe UI', system-ui, sans-serif" font-size="13" font-weight="600" fill="#F2F7FA">ocean</text>
+    <text x="928" y="190" font-family="Consolas, ui-monospace, monospace" font-size="9.5" fill="#7FD4FF">#0B3D91</text>
+    <text x="928" y="204" font-family="'Segoe UI', system-ui, sans-serif" font-size="8.8" fill="#F2F7FA" opacity="0.66">Deep water, headers. Never body copy.</text>
+  </g>
+
+  <g>
+    <rect x="540" y="220" width="300" height="68" rx="3" fill="#10141C" stroke="#222A36"/>
+    <rect x="554" y="234" width="44" height="44" rx="2" fill="#7FD4FF"/>
+    <text x="612" y="250" font-family="'Segoe UI', system-ui, sans-serif" font-size="13" font-weight="600" fill="#F2F7FA">atmosphere</text>
+    <text x="612" y="264" font-family="Consolas, ui-monospace, monospace" font-size="9.5" fill="#7FD4FF">#7FD4FF</text>
+    <text x="612" y="278" font-family="'Segoe UI', system-ui, sans-serif" font-size="8.8" fill="#F2F7FA" opacity="0.66">Rim light, links, data. Never a card fill.</text>
+  </g>
+  <g>
+    <rect x="856" y="220" width="300" height="68" rx="3" fill="#10141C" stroke="#222A36"/>
+    <rect x="870" y="234" width="44" height="44" rx="2" fill="#1F6F43"/>
+    <text x="928" y="250" font-family="'Segoe UI', system-ui, sans-serif" font-size="13" font-weight="600" fill="#F2F7FA">forest</text>
+    <text x="928" y="264" font-family="Consolas, ui-monospace, monospace" font-size="9.5" fill="#7FD4FF">#1F6F43</text>
+    <text x="928" y="278" font-family="'Segoe UI', system-ui, sans-serif" font-size="8.8" fill="#F2F7FA" opacity="0.66">Biosphere and growth marks. Never chrome.</text>
+  </g>
+
+  <g>
+    <rect x="540" y="294" width="300" height="68" rx="3" fill="#10141C" stroke="#222A36"/>
+    <rect x="554" y="308" width="44" height="44" rx="2" fill="#D9B26A"/>
+    <text x="612" y="324" font-family="'Segoe UI', system-ui, sans-serif" font-size="13" font-weight="600" fill="#F2F7FA">sand</text>
+    <text x="612" y="338" font-family="Consolas, ui-monospace, monospace" font-size="9.5" fill="#7FD4FF">#D9B26A</text>
+    <text x="612" y="352" font-family="'Segoe UI', system-ui, sans-serif" font-size="8.8" fill="#F2F7FA" opacity="0.66">Desert, lithosphere, annotations. Never status.</text>
+  </g>
+  <g>
+    <rect x="856" y="294" width="300" height="68" rx="3" fill="#10141C" stroke="#222A36"/>
+    <rect x="870" y="308" width="44" height="44" rx="2" fill="#F2F7FA"/>
+    <text x="928" y="324" font-family="'Segoe UI', system-ui, sans-serif" font-size="13" font-weight="600" fill="#F2F7FA">ice</text>
+    <text x="928" y="338" font-family="Consolas, ui-monospace, monospace" font-size="9.5" fill="#7FD4FF">#F2F7FA</text>
+    <text x="928" y="352" font-family="'Segoe UI', system-ui, sans-serif" font-size="8.8" fill="#F2F7FA" opacity="0.66">Text, cryosphere, cloud. Never flat panels.</text>
+  </g>
+
+  <g>
+    <rect x="540" y="368" width="300" height="68" rx="3" fill="#10141C" stroke="#222A36"/>
+    <rect x="554" y="382" width="44" height="44" rx="2" fill="#C1440E"/>
+    <text x="612" y="398" font-family="'Segoe UI', system-ui, sans-serif" font-size="13" font-weight="600" fill="#F2F7FA">magma</text>
+    <text x="612" y="412" font-family="Consolas, ui-monospace, monospace" font-size="9.5" fill="#7FD4FF">#C1440E</text>
+    <text x="612" y="426" font-family="'Segoe UI', system-ui, sans-serif" font-size="8.8" fill="#F2F7FA" opacity="0.66">Heat and alert. One per view, never décor.</text>
+  </g>
+  <g>
+    <rect x="856" y="368" width="300" height="68" rx="3" fill="#10141C" stroke="#222A36"/>
+    <rect x="870" y="382" width="44" height="44" rx="2" fill="#FFC857"/>
+    <text x="928" y="398" font-family="'Segoe UI', system-ui, sans-serif" font-size="13" font-weight="600" fill="#F2F7FA">city</text>
+    <text x="928" y="412" font-family="Consolas, ui-monospace, monospace" font-size="9.5" fill="#7FD4FF">#FFC857</text>
+    <text x="928" y="426" font-family="'Segoe UI', system-ui, sans-serif" font-size="8.8" fill="#F2F7FA" opacity="0.66">Human light, highlight dots. Never a field.</text>
+  </g>
+
+  <text x="540" y="462" font-family="'Segoe UI', system-ui, sans-serif" font-size="10" fill="#7FD4FF" letter-spacing="2.6">WCAG 2.1 CONTRAST · COMPUTED</text>
+  <text x="540" y="478" font-family="Consolas, ui-monospace, monospace" font-size="7.8" fill="#F2F7FA" opacity="0.55">L = 0.2126R + 0.7152G + 0.0722B; c/12.92 if c ≤ 0.03928 else ((c+0.055)/1.055)^2.4; ratio = (L1+0.05)/(L2+0.05)</text>
+
+  <g font-family="'Segoe UI', system-ui, sans-serif" font-size="9.6" fill="#F2F7FA">
+    <rect x="540" y="490" width="16" height="16" fill="#F2F7FA"/><rect x="556" y="490" width="16" height="16" fill="#05070D" stroke="#222A36"/>
+    <text x="584" y="502">ice on void</text>
+    <text x="742" y="502" font-family="Consolas, ui-monospace, monospace">L 0.92300 / 0.00213</text>
+    <text x="920" y="502" font-family="Consolas, ui-monospace, monospace" fill="#7FD4FF">18.66:1</text>
+    <text x="1010" y="502" font-size="8.6" fill="#7FD4FF">AAA</text>
+
+    <rect x="540" y="514" width="16" height="16" fill="#F2F7FA"/><rect x="556" y="514" width="16" height="16" fill="#0B3D91"/>
+    <text x="584" y="526">ice on ocean</text>
+    <text x="742" y="526" font-family="Consolas, ui-monospace, monospace">L 0.92300 / 0.05450</text>
+    <text x="920" y="526" font-family="Consolas, ui-monospace, monospace" fill="#7FD4FF">9.31:1</text>
+    <text x="1010" y="526" font-size="8.6" fill="#7FD4FF">AAA</text>
+
+    <rect x="540" y="538" width="16" height="16" fill="#7FD4FF"/><rect x="556" y="538" width="16" height="16" fill="#0B3D91"/>
+    <text x="584" y="550">atmosphere on ocean</text>
+    <text x="742" y="550" font-family="Consolas, ui-monospace, monospace">L 0.58815 / 0.05450</text>
+    <text x="920" y="550" font-family="Consolas, ui-monospace, monospace" fill="#7FD4FF">6.11:1</text>
+    <text x="1010" y="550" font-size="8.6" fill="#7FD4FF">AA</text>
+
+    <rect x="540" y="562" width="16" height="16" fill="#F2F7FA"/><rect x="556" y="562" width="16" height="16" fill="#1F6F43"/>
+    <text x="584" y="574">ice on forest</text>
+    <text x="742" y="574" font-family="Consolas, ui-monospace, monospace">L 0.92300 / 0.12066</text>
+    <text x="920" y="574" font-family="Consolas, ui-monospace, monospace" fill="#7FD4FF">5.70:1</text>
+    <text x="1010" y="574" font-size="8.6" fill="#7FD4FF">AA</text>
+
+    <rect x="540" y="586" width="16" height="16" fill="#F2F7FA"/><rect x="556" y="586" width="16" height="16" fill="#C1440E"/>
+    <text x="584" y="598">ice on magma</text>
+    <text x="742" y="598" font-family="Consolas, ui-monospace, monospace">L 0.92300 / 0.15503</text>
+    <text x="920" y="598" font-family="Consolas, ui-monospace, monospace" fill="#7FD4FF">4.75:1</text>
+    <text x="1010" y="598" font-size="8.6" fill="#7FD4FF">AA</text>
+  </g>
+
+  <text x="540" y="632" font-family="'Segoe UI', system-ui, sans-serif" font-size="10" fill="#7FD4FF" letter-spacing="2.6">USAGE · 60-30-10</text>
+  <g>
+    <rect x="540" y="642" width="360" height="26" fill="#05070D" stroke="#222A36"/>
+    <rect x="900" y="642" width="180" height="26" fill="#0B3D91"/>
+    <rect x="1080" y="642" width="60" height="26" fill="#7FD4FF"/>
+    <text x="552" y="659" font-family="'Segoe UI', system-ui, sans-serif" font-size="9" fill="#F2F7FA">60 · void</text>
+    <text x="912" y="659" font-family="'Segoe UI', system-ui, sans-serif" font-size="9" fill="#F2F7FA">30 · ocean</text>
+    <text x="1088" y="659" font-family="'Segoe UI', system-ui, sans-serif" font-size="9" fill="#05070D">10 · atm</text>
+  </g>
+  <text x="540" y="684" font-family="'Segoe UI', system-ui, sans-serif" font-size="8.4" fill="#F2F7FA" opacity="0.5">60 % field · 30 % structure · 10 % light. The 10 % is the only place atmosphere may fill area.</text>
+
+  <text x="60" y="604" font-family="'Segoe UI', system-ui, sans-serif" font-size="9" fill="#7FD4FF" letter-spacing="2.6">TYPE · SYSTEM FONTS ONLY</text>
+  <text x="60" y="642" font-family="'Segoe UI', system-ui, sans-serif" font-size="30" font-weight="700" fill="#F2F7FA">Earth, observed.</text>
+  <text x="60" y="666" font-family="'Segoe UI', system-ui, sans-serif" font-size="12" fill="#F2F7FA" opacity="0.8">Body / 12 — eight tokens, two neutrals, one planet.</text>
+  <text x="60" y="686" font-family="'Segoe UI', system-ui, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.5">CAPTION / 09 · TELEMETRY, AXES, LEGAL</text>
+  <text x="60" y="700" font-family="'Segoe UI', system-ui, sans-serif" font-size="9" fill="#7FD4FF" opacity="0.7">DISPLAY 30 / BODY 12 / CAPTION 09 · never below 9 px</text>
+
+  <text x="60" y="742" font-family="'Segoe UI', system-ui, sans-serif" font-size="8.5" fill="#F2F7FA" opacity="0.42">Neutrals: surface #10141C and grid #222A36 are the only non-core tints, used for card fields and 1 px rules; they are not part of the brand palette.</text>
+  <text x="60" y="758" font-family="'Segoe UI', system-ui, sans-serif" font-size="8.5" fill="#F2F7FA" opacity="0.42">All ratios computed with the WCAG 2.1 relative-luminance formula above; judges may recompute from the listed L values.</text>
+</svg>

@@ -1,91 +1,114 @@
-<svg viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mona Lisa as vector art">
-  <!-- Palette: Renaissance earth tones — umber #241f17 / moss #6d7043 / hazy foliage #87957d /
-       river #a8b6a2 / amber haze #b7a67a / sfumato skin #e3bd92→#8a6446 / hair + dress #33291d /
-       sleeve ochre #b98c4a / veil haze #d8cfba. One gaussian-blur filter keeps everything sfumato-soft. -->
+<svg viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hand-authored vector recreation of Leonardo da Vinci's Mona Lisa (c. 1503–1519, public domain)">
+  <!-- palette: sky-haze #A9B08F /far-hills #6E7B5E /near-hills #4E5A44 /road #B7AF8E /
+       dress #241B10 /dress-light #3B2D1B /sleeve #6B4E26 /skin #C9995F /skin-shade #8F6231 /
+       hair #33200F /veil rgba(190,165,120,0.35) /highlight #E8C98F -->
   <defs>
-    <radialGradient id="bg" cx="56%" cy="34%" r="80%">
-      <stop offset="0" stop-color="#8f8a5f"/><stop offset="45%" stop-color="#565233"/>
-      <stop offset="100%" stop-color="#15130d"/>
-    </radialGradient>
-    <linearGradient id="haze" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#9aa287"/><stop offset="100%" stop-color="#5d6650"/>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8E9B78"/>
+      <stop offset="0.55" stop-color="#AFB58F"/>
+      <stop offset="1" stop-color="#C6BD97"/>
     </linearGradient>
-    <radialGradient id="skin" cx="50%" cy="38%" r="70%">
-      <stop offset="0" stop-color="#e6c095"/><stop offset="65%" stop-color="#cda075"/>
-      <stop offset="100%" stop-color="#8a6446"/>
+    <radialGradient id="faceG" cx="0.5" cy="0.4" r="0.75">
+      <stop offset="0" stop-color="#D9B072"/>
+      <stop offset="0.7" stop-color="#C09055"/>
+      <stop offset="1" stop-color="#93662F"/>
     </radialGradient>
-    <linearGradient id="dress" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#3b3324"/><stop offset="100%" stop-color="#15110b"/>
+    <radialGradient id="chestG" cx="0.5" cy="0.3" r="0.9">
+      <stop offset="0" stop-color="#D5A76B"/>
+      <stop offset="1" stop-color="#8F6231"/>
+    </radialGradient>
+    <linearGradient id="dressG" x1="0" y1="0" x2="1" y2="0.4">
+      <stop offset="0" stop-color="#3B2D1B"/>
+      <stop offset="0.5" stop-color="#241B10"/>
+      <stop offset="1" stop-color="#17100A"/>
     </linearGradient>
-    <radialGradient id="vig" cx="50%" cy="45%" r="75%">
-      <stop offset="55%" stop-color="rgba(0,0,0,0)"/><stop offset="100%" stop-color="rgba(10,8,4,0.55)"/>
-    </radialGradient>
-    <filter id="soft" x="-10%" y="-10%" width="120%" height="120%">
-      <feGaussianBlur stdDeviation="2.6"/>
+    <linearGradient id="bgLandG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#77856A"/>
+      <stop offset="1" stop-color="#4E5A44"/>
+    </linearGradient>
+    <filter id="sfumato" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.6"/>
     </filter>
   </defs>
 
-  <rect width="400" height="600" fill="url(#bg)"/>
-
-  <!-- Sfumato landscape behind her -->
-  <g filter="url(#soft)">
-    <path d="M30 268 Q80 232 140 246 Q190 258 205 262 L205 285 L30 285 Z" fill="url(#haze)"/>
-    <path d="M210 258 Q262 224 322 240 Q356 250 372 258 L372 285 L210 285 Z" fill="#7c8a70"/>
-    <path d="M20 282 Q90 262 180 278 Q280 296 385 280 L385 300 L20 300 Z" fill="#93a188"/>
-    <path d="M40 300 Q120 292 200 300 Q300 312 380 300 L380 340 Q300 296 200 306 Q110 312 40 332 Z" fill="#6f7d62" opacity="0.85"/>
-    <path d="M20 330 Q120 312 210 322 Q310 334 385 322 L385 352 Q300 336 210 340 Q120 340 20 356 Z" fill="#7d8a68" opacity="0.7"/>
-    <path d="M55 348 Q60 372 48 392 Q70 402 100 392 Q92 374 96 356 Z" fill="#98a68d"/>
-    <path d="M310 344 Q318 366 306 388 Q330 398 356 388 Q348 372 352 350 Z" fill="#8ea085"/>
-    <path d="M22 300 L44 300 L44 250 L22 250 Z M22 242 L44 242 L44 232 Q33 226 22 232 Z" fill="#57503a" opacity="0.85"/>
-    <path d="M382 286 L396 286 L396 238 L382 238 Z" fill="#57503a" opacity="0.6"/>
+  <!-- background: hazy sky and winding valley (invented landscape, sfumato mood) -->
+  <rect x="0" y="0" width="400" height="600" fill="url(#sky)"/>
+  <g filter="url(#sfumato)">
+    <path d="M0 210 Q60 150 120 185 Q190 135 260 175 Q330 130 400 180 L400 600 L0 600 Z" fill="url(#bgLandG)"/>
+    <path d="M0 260 Q90 200 170 245 Q250 205 310 250 Q360 225 400 265 L400 600 L0 600 Z" fill="#5E6B50" opacity="0.85"/>
+    <path d="M0 330 Q80 290 160 320 Q240 285 320 325 L400 315 L400 600 L0 600 Z" fill="#4E5A44"/>
+    <path d="M40 600 Q60 520 30 470 Q10 430 34 400 Q66 430 92 470 Q120 430 148 470 Q160 520 150 430 Z" fill="#8A9778" opacity="0.7"/>
+    <path d="M382 600 Q368 520 396 465 Q410 430 392 404 Q360 436 336 470 Q314 434 288 468 Q276 520 290 600 Z" fill="#8A9778" opacity="0.7"/>
+    <path d="M330 430 Q360 470 340 520 Q380 540 360 600" fill="none" stroke="#B7AF8E" stroke-width="5" stroke-linecap="round" opacity="0.55"/>
+    <path d="M60 428 Q80 470 66 520 Q30 545 48 600" fill="none" stroke="#B7AF8E" stroke-width="4" stroke-linecap="round" opacity="0.45"/>
+    <ellipse cx="200" cy="70" rx="170" ry="40" fill="#C9C29B" opacity="0.25"/>
   </g>
 
-  <!-- Bust: dress, chest, sleeves, folded hands -->
-  <path d="M58 600 Q62 470 118 392 Q160 330 176 300 L226 300 Q240 334 286 396 Q342 474 346 600 Z" fill="url(#dress)"/>
-  <path d="M176 300 Q200 322 226 300 Q224 276 210 266 Q192 276 176 300 Z" fill="url(#skin)"/>
-  <path d="M176 300 L226 300 L222 314 Q201 328 180 314 Z" fill="#2a2118"/>
-  <path d="M112 398 Q150 380 176 404 Q198 428 194 470 Q160 486 118 468 Q94 436 112 398 Z" fill="#a8834a"/>
-  <path d="M290 400 Q254 384 228 408 Q208 432 214 472 Q250 488 288 470 Q310 438 290 400 Z" fill="url(#skin)"/>
-  <path d="M118 468 Q160 486 194 470 Q206 500 194 540 Q170 560 130 548 Q108 510 118 468 Z" fill="#b98c4a"/>
-  <path d="M228 470 Q250 486 288 470 Q302 506 286 546 Q252 566 216 550 Q204 512 228 470 Z" fill="url(#skin)"/>
-  <path d="M216 550 Q252 566 286 546 Q296 570 288 600 L206 600 Q206 574 216 550 Z" fill="url(#skin)"/>
-  <path d="M240 546 Q262 552 280 544" stroke="#9a6f4d" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <path d="M246 556 Q264 562 280 556" stroke="#9a6f4d" stroke-width="2" fill="none" stroke-linecap="round"/>
-  <path d="M286 472 Q302 492 298 516 Q286 540 262 542" stroke="#a97d52" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-  <path d="M130 552 Q122 580 128 600" stroke="#4e3a26" stroke-width="3" fill="none"/>
-  <path d="M188 560 Q196 580 192 600" stroke="#4e3a26" stroke-width="3" fill="none"/>
-  <path d="M282 512 Q296 520 300 512" stroke="#a97d52" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- torso and dress: seated, hands folded, facing the viewer -->
+  <path d="M84 600 L96 470 Q100 420 150 393 Q200 372 250 393 Q300 420 304 470 L316 600 Z" fill="url(#dressG)"/>
+  <path d="M84 600 L96 470 Q100 420 150 393 L150 600 Z" fill="#2C2214" opacity="0.55"/>
+  <path d="M316 600 L304 470 Q300 420 250 393 L250 600 Z" fill="#17100A" opacity="0.6"/>
 
-  <!-- Neck, face -->
-  <path d="M204 262 Q200 284 208 300 L224 300 Q232 284 228 262 Z" fill="url(#skin)"/>
-  <path d="M224 232 Q252 236 262 262 Q272 296 254 326 Q238 348 220 348 Q200 348 186 326 Q168 294 180 260 Q192 234 224 232 Z" fill="url(#skin)"/>
+  <!-- chest and neckline -->
+  <path d="M150 393 Q200 372 250 393 L252 330 Q200 300 148 330 Z" fill="url(#chestG)"/>
+  <path d="M148 330 Q200 300 252 330 Q244 362 200 368 Q156 362 148 330 Z" fill="#C9995F"/>
+  <path d="M156 342 Q200 320 244 342 Q238 356 200 360 Q162 356 156 342 Z" fill="#8F6231" opacity="0.5" filter="url(#sfumato)"/>
+  <!-- soft neckline trim -->
+  <path d="M150 393 Q160 370 152 348 M250 393 Q240 370 248 348" stroke="#6B4E26" stroke-width="7" fill="none" stroke-linecap="round"/>
 
-  <!-- Hair: centre parting, waves both sides, translucent veil over crown -->
-  <path d="M222 228 Q186 232 172 268 Q160 306 168 350 Q158 396 142 428 Q162 442 186 424 Q180 380 190 344 Q184 300 196 268 Q206 244 222 240 Q238 244 248 268 Q260 300 254 344 Q264 380 258 424 Q282 442 302 428 Q286 396 276 350 Q284 306 272 268 Q258 232 222 228 Z" fill="#332619"/>
-  <path d="M186 292 Q178 340 186 392 Q182 424 168 444 Q178 452 192 444 Q200 404 198 360 Q198 316 192 292 Z" fill="#2a2015"/>
-  <path d="M258 292 Q266 340 258 392 Q262 424 276 444 Q266 452 252 444 Q244 404 246 360 Q246 316 252 292 Z" fill="#2a2015"/>
-  <path d="M200 236 Q222 220 246 236 M206 226 Q222 216 240 226 M196 244 Q180 262 176 296" stroke="rgba(190,178,148,0.35)" stroke-width="3" fill="none"/>
-  <path d="M244 244 Q260 266 264 300 M246 262 Q258 284 260 310" stroke="rgba(190,178,148,0.28)" stroke-width="3" fill="none"/>
+  <!-- head -->
+  <ellipse cx="200" cy="262" rx="56" ry="72" fill="url(#faceG)"/>
+  <!-- neck -->
+  <path d="M176 320 L172 350 Q200 366 228 350 L224 320 Q200 334 176 320 Z" fill="#C9995F"/>
+  <path d="M172 350 Q200 366 228 350 Q212 372 200 372 Q188 372 172 350 Z" fill="#8F6231" opacity="0.45"/>
 
-  <!-- Sfumato features: soft shapes only -->
-  <g filter="url(#soft)">
-    <path d="M196 268 Q206 262 216 268 Q206 272 196 268 Z" fill="#6b4c30" opacity="0.65"/>
-    <path d="M232 268 Q242 262 252 268 Q242 272 232 268 Z" fill="#6b4c30" opacity="0.65"/>
-    <path d="M200 278 Q208 274 216 280 L214 284 Q206 280 201 283 Z" fill="#5b422c"/>
-    <path d="M232 280 Q240 274 248 280 L247 284 Q240 280 234 283 Z" fill="#5b422c"/>
-    <ellipse cx="208" cy="281" rx="3.6" ry="2.4" fill="#463323"/>
-    <ellipse cx="240" cy="281" rx="3.6" ry="2.4" fill="#463323"/>
-    <ellipse cx="209.4" cy="280.2" rx="1.1" ry="0.9" fill="#d8cdb6"/>
-    <ellipse cx="241.4" cy="280.2" rx="1.1" ry="0.9" fill="#d8cdb6"/>
-    <path d="M222 278 Q226 292 222 302 Q218 308 214 306 Q220 302 219 292 Q219 284 222 278 Z" fill="#b3805a" opacity="0.6"/>
-    <path d="M214 310 Q220 314 227 310" stroke="#9a6b48" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-    <path d="M212 318 Q221 313 231 318 Q222 322 212 318 Z" fill="#8e5a4a"/>
-    <path d="M215 320 Q222 326 229 320 Q222 329 215 320 Z" fill="#b5715e"/>
-    <path d="M196 300 Q194 316 200 330" stroke="#8a6446" stroke-width="2" fill="none" opacity="0.35"/>
-    <path d="M252 300 Q254 316 248 330" stroke="#8a6446" stroke-width="2" fill="none" opacity="0.35"/>
-  </g>
+  <!-- hair: centre-parted, long, falling in waves over the shoulders -->
+  <path d="M200 186 Q150 190 146 246 Q142 296 150 340 Q120 330 116 290 Q112 226 140 196 Q166 172 200 172 Z" fill="#33200F"/>
+  <path d="M200 186 Q250 190 254 246 Q258 296 250 340 Q280 330 284 290 Q288 226 260 196 Q234 172 200 172 Z" fill="#2B1A0B"/>
+  <path d="M200 196 Q162 200 158 250 Q156 300 150 340 Q126 322 130 268 Q132 214 158 192 Q176 180 200 178 Z" fill="#3E2911" opacity="0.85"/>
+  <path d="M200 196 Q238 200 242 250 Q244 300 250 340 Q274 322 270 268 Q268 214 242 192 Q224 180 200 178 Z" fill="#443016" opacity="0.85"/>
+  <path d="M150 340 Q128 380 122 430 Q140 402 158 386 Z" fill="#33200F"/>
+  <path d="M250 340 Q272 380 278 430 Q260 402 242 386 Z" fill="#2B1A0B"/>
 
-  <path d="M58 600 Q62 470 118 392 L146 406 Q104 478 100 600 Z" fill="#241d12" opacity="0.5"/>
-  <path d="M346 600 Q342 470 286 396 L260 414 Q306 480 310 600 Z" fill="#241d12" opacity="0.4"/>
-  <rect width="400" height="600" fill="url(#vig)"/>
+  <!-- translucent veil over the hair -->
+  <path d="M200 176 Q142 184 134 268 Q128 330 118 368 Q146 348 152 300 Q150 240 158 218 M200 176 Q258 184 266 268 Q272 330 282 368 Q254 348 248 300 Q250 240 242 218 L200 176 Z"
+        fill="#BEA578" opacity="0.30"/>
+
+  <!-- face features: sfumato eyes, brows, nose, smile -->
+  <path d="M168 250 Q178 242 190 248 Q180 254 168 250 Z" fill="#4A3015"/>
+  <path d="M232 250 Q222 242 210 248 Q220 254 232 250 Z" fill="#4A3015"/>
+  <path d="M170 260 Q180 250 190 258 Q180 262 170 260 Z" fill="#2E1D0C"/>
+  <path d="M230 260 Q220 250 210 258 Q220 262 230 260 Z" fill="#2E1D0C"/>
+  <ellipse cx="181" cy="256" rx="6.5" ry="4.5" fill="#5C3B1A"/>
+  <ellipse cx="219" cy="256" rx="6.5" ry="4.5" fill="#5C3B1A"/>
+  <circle cx="181.5" cy="255.5" r="2.1" fill="#1A1108"/>
+  <circle cx="218.5" cy="255.5" r="2.1" fill="#1A1108"/>
+  <path d="M170 264 Q180 268 190 264" stroke="#8F6231" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M230 264 Q220 268 210 264" stroke="#8F6231" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M198 258 Q200 284 194 296 Q200 302 208 296 Q202 284 202 258 Z" fill="#B08147" opacity="0.7" filter="url(#sfumato)"/>
+  <path d="M188 300 Q200 310 212 300" stroke="#7A5222" stroke-width="2.2" fill="none" filter="url(#sfumato)"/>
+  <!-- the smile: shadow shaping, no hard line -->
+  <path d="M186 302 Q200 314 216 300 Q210 322 200 322 Q190 322 186 302 Z" fill="#8F6231" opacity="0.55" filter="url(#sfumato)"/>
+  <path d="M182 306 Q200 296 220 306" stroke="#7A5222" stroke-width="1.6" fill="none" opacity="0.5"/>
+  <!-- cheek shading -->
+  <ellipse cx="168" cy="286" rx="12" ry="18" fill="#9A6B3B" opacity="0.35" filter="url(#sfumato)"/>
+  <ellipse cx="232" cy="286" rx="12" ry="18" fill="#9A6B3B" opacity="0.35" filter="url(#sfumato)"/>
+  <ellipse cx="200" cy="226" rx="30" ry="14" fill="#E8C98F" opacity="0.25" filter="url(#sfumato)"/>
+
+  <!-- forearms resting on the chair arm, hands folded -->
+  <path d="M96 470 Q104 452 140 452 Q172 452 186 470 L186 486 Q160 476 128 480 Q104 486 96 500 Z" fill="url(#dressG)"/>
+  <path d="M304 470 Q296 448 260 450 Q228 452 214 470 L214 486 Q240 476 272 480 Q296 486 304 500 Z" fill="url(#dressG)"/>
+  <path d="M186 470 Q200 460 214 470 L214 470 Q200 466 186 470 Z" fill="#C9995F"/>
+  <path d="M186 468 Q202 458 216 470 L216 486 Q200 480 186 488 Z" fill="#C9995F"/>
+  <ellipse cx="200" cy="474" rx="18" ry="14" fill="#D5A76B"/>
+  <path d="M186 478 Q198 472 214 478" stroke="#8F6231" stroke-width="1.6" fill="none" opacity="0.7"/>
+  <path d="M188 486 Q199 481 212 486" stroke="#8F6231" stroke-width="1.4" fill="none" opacity="0.6"/>
+  <path d="M192 492 Q200 488 208 492" stroke="#8F6231" stroke-width="1.2" fill="none" opacity="0.6"/>
+  <ellipse cx="196" cy="470" rx="9" ry="7" fill="#C9995F" opacity="0.7"/>
+  <ellipse cx="238" cy="490" rx="30" ry="20" fill="#1B1309" opacity="0.65"/>
+
+  <!-- portrait vignette for the sfumato mood -->
+  <rect x="0" y="0" width="400" height="600" fill="#17100A" opacity="0.08"/>
+  <path d="M0 0 L400 0 L400 12 L0 12 Z" fill="#17100A" opacity="0.25"/>
+  <path d="M0 588 L400 588 L400 600 L0 600 Z" fill="#17100A" opacity="0.3"/>
 </svg>

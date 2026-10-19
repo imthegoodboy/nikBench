@@ -1,387 +1,971 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NIKBENCH-1 Mission Control</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mission Control · NIKBENCH-1</title>
 <style>
-  :root{
-    --bg:#0b1220; --panel:#121b2c; --panel2:#0f1727; --fg:#e8eef7; --muted:#8ea3bd;
-    --accent:#4fd1c5; --accent2:#7aa2ff; --border:#22304a;
-    --danger:#ff7a7a; --warn:#ffcf5c; --ok:#5ee08a;
-    --shadow:0 6px 18px rgba(0,0,0,.35); --radius:12px;
-  }
-  html[data-theme="light"]{
-    --bg:#f2f5fa; --panel:#ffffff; --panel2:#eef2f8; --fg:#0d1522; --muted:#4d5f76;
-    --accent:#0b8f83; --accent2:#2b5fd9; --border:#cfd9e6;
-    --danger:#b02525; --warn:#8a6300; --ok:#1c7a45;
-    --shadow:0 6px 18px rgba(20,40,80,.12);
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.45 "Segoe UI",system-ui,Arial,sans-serif}
-  :focus-visible{outline:3px solid var(--accent2);outline-offset:2px;border-radius:6px}
-  header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
-         padding:14px 18px;background:var(--panel);border-bottom:1px solid var(--border);box-shadow:var(--shadow)}
-  h1{font-size:18px;margin:0;letter-spacing:1px}
-  h1 span{color:var(--accent)}
-  .clock{font-variant-numeric:tabular-nums;font-size:16px;color:var(--accent)}
-  button{background:var(--panel2);color:var(--fg);border:1px solid var(--border);border-radius:8px;
-         padding:8px 12px;cursor:pointer;font:inherit}
-  button:hover{border-color:var(--accent)}
-  main{padding:16px;display:grid;gap:16px;max-width:1100px;margin:0 auto}
-  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-  .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow)}
-  .card h3{margin:0 0 6px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
-  .card .val{font-size:24px;font-variant-numeric:tabular-nums}
-  .panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
-  .panel h2{margin:0 0 10px;font-size:14px;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
-  .countdown{display:flex;flex-wrap:wrap;gap:14px;align-items:baseline}
-  .countdown .big{font-size:28px;font-variant-numeric:tabular-nums;color:var(--accent2)}
-  .status{font-size:12px;padding:3px 9px;border-radius:999px;background:var(--panel2);color:var(--muted);border:1px solid var(--border)}
-  table{width:100%;border-collapse:collapse}
-  th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
-  th{background:var(--panel2);cursor:pointer;user-select:none}
-  th .arrow{color:var(--accent);margin-left:4px}
-  tbody tr:hover{background:var(--panel2)}
-  .tblwrap{overflow-x:auto}
-  canvas{width:100%;height:200px;display:block;border-radius:8px}
-  .row2{display:grid;grid-template-columns:1fr;gap:16px}
-  ul.feed{list-style:none;margin:0;padding:0;display:grid;gap:8px;max-height:260px;overflow:auto}
-  ul.feed li{display:flex;justify-content:space-between;gap:10px;align-items:center;
-             background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:8px 10px}
-  .sev{font-size:11px;font-weight:700;padding:2px 6px;border-radius:6px;margin-right:8px}
-  .sev.INFO{background:color-mix(in srgb, var(--ok) 25%, transparent);color:var(--ok)}
-  .sev.WARN{background:color-mix(in srgb, var(--warn) 25%, transparent);color:var(--warn)}
-  .sev.CRIT{background:color-mix(in srgb, var(--danger) 25%, transparent);color:var(--danger)}
-  .msg{flex:1 1 auto}
-  .time{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
-  .dismiss{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:15px;padding:2px 6px}
-  .dismiss:hover{color:var(--danger)}
-  @media (max-width:768px){ .cards{grid-template-columns:repeat(2,1fr)} }
-  @media (max-width:480px){ .cards{grid-template-columns:1fr} }
-  @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important} }
+/* ---------- theme tokens (dark default, light override) ---------- */
+:root{
+  --bg:#0a1120; --panel:#111c30; --panel2:#16223a; --text:#e9effb; --muted:#a6b6d2;
+  --border:#26344f; --accent:#5cc8ff; --ok:#4ade80; --warn:#fbbf24; --bad:#f87171;
+  --okbg:#10301f; --warnbg:#33290e; --badbg:#3a1717;
+  --signal:#5cc8ff; --fuel:#fbbf24; --focus:#8be0ff; --shadow:0 8px 24px rgba(0,0,0,.38);
+  --grid-cols:112px minmax(150px,1fr) 86px 116px 134px;
+}
+html[data-theme="light"]{
+  --bg:#f4f7fb; --panel:#ffffff; --panel2:#eaf0f9; --text:#0d1526; --muted:#4c5b78;
+  --border:#d3dcea; --accent:#0b5fd0; --ok:#0f6b34; --warn:#8a5a00; --bad:#b3261e;
+  --okbg:#e6f6ec; --warnbg:#fdf3dc; --badbg:#fdeaea;
+  --signal:#0b5fd0; --fuel:#a35a00; --focus:#0b5fd0; --shadow:0 8px 20px rgba(15,30,60,.12);
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+body.pal-open{overflow:hidden}
+.mono{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
+
+/* ---------- shell ---------- */
+.app{max-width:1400px;margin:0 auto;padding:14px 16px 44px;display:grid;gap:14px}
+.topbar{
+  display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+  background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px 14px;
+  box-shadow:var(--shadow);
+}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand h1{margin:0;font-size:17px;letter-spacing:.16em}
+.badge{font-size:10px;letter-spacing:.16em;color:var(--accent);border:1px solid var(--border);background:var(--panel2);padding:3px 8px;border-radius:999px}
+.clocks{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.clock{display:flex;flex-direction:column;line-height:1.15}
+.k{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.clock .v{font-size:17px;font-weight:650;font-variant-numeric:tabular-nums}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{background:var(--panel2);border:1px solid var(--border);border-radius:9px;padding:7px 11px;cursor:pointer}
+.btn:hover:not(:disabled){border-color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.primary{background:var(--accent);border-color:transparent;color:#04121f;font-weight:650}
+html[data-theme="light"] .btn.primary{color:#ffffff}
+select,input[type="search"]{background:var(--panel2);border:1px solid var(--border);border-radius:9px;padding:7px 9px}
+.hint{font-size:11px;color:var(--muted)}
+kbd{border:1px solid var(--border);border-bottom-width:2px;border-radius:5px;padding:1px 5px;font-size:11px;background:var(--panel2);font-family:inherit}
+
+/* ---------- panels ---------- */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow);min-width:0}
+.panel-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.panel-head h2{margin:0;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.cols{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:14px;align-items:start}
+.side{display:grid;gap:14px;min-width:0}
+@media (max-width:980px){.cols{grid-template-columns:1fr}}
+
+/* ---------- countdown + metrics ---------- */
+.strip{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+#countdown{font-size:26px;font-weight:700;letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.status{font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:var(--panel2);color:var(--muted)}
+.status[data-state="ok"]{color:var(--ok)}
+.status[data-state="bad"]{color:var(--bad);background:var(--badbg)}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow)}
+.card h2{margin:0 0 4px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.card .big{margin:0;font-size:24px;font-weight:650;font-variant-numeric:tabular-nums}
+@media (max-width:900px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.metrics{grid-template-columns:1fr}}
+
+/* ---------- grid ---------- */
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.count{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.grid-scroll{
+  position:relative;overflow:auto;height:clamp(280px,54vh,560px);
+  border:1px solid var(--border);border-radius:10px;background:var(--panel2);
+}
+.grid-head{
+  position:sticky;top:0;z-index:2;display:grid;grid-template-columns:var(--grid-cols);
+  background:var(--panel);border-bottom:1px solid var(--border);
+}
+.grid-head [role="columnheader"]{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);min-width:0}
+.grid-head button{
+  width:100%;text-align:left;background:transparent;border:0;padding:9px 10px;cursor:pointer;
+  color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;
+}
+.grid-head button:hover{color:var(--text)}
+.grid-head .ind{color:var(--accent)}
+.grid-rows{position:relative;width:100%}
+.row{
+  position:absolute;left:0;right:0;display:grid;grid-template-columns:var(--grid-cols);
+  align-items:center;border-bottom:1px solid var(--border);overflow:hidden;
+}
+.row[aria-selected="true"]{background:var(--panel2)}
+.cell{padding:0 10px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip{display:inline-block;font-size:10px;letter-spacing:.08em;padding:1px 7px;border-radius:999px;border:1px solid var(--border);background:var(--panel2)}
+.orbit-LEO{color:var(--accent)}
+.orbit-MEO{color:var(--warn)}
+.orbit-GEO{color:var(--ok)}
+.st-ACTIVE{color:var(--ok);background:var(--okbg)}
+.st-DEGRADED{color:var(--warn);background:var(--warnbg)}
+.st-OFFLINE{color:var(--bad);background:var(--badbg)}
+@media (max-width:640px){
+  .grid-head{display:none}
+  .row{grid-template-columns:1fr;align-content:center;padding:6px 8px;gap:1px}
+  .cell{white-space:normal;padding:0;font-size:12px;line-height:1.35}
+  .cell::before{content:attr(data-label) " ";color:var(--muted);font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+}
+
+/* ---------- chart ---------- */
+.chart-wrap{position:relative}
+#chart{width:100%;height:236px;display:block;touch-action:none}
+.legend{display:flex;flex-wrap:wrap;gap:8px}
+.legend-item{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--border);border-radius:999px;padding:4px 10px;cursor:pointer;font-size:12px}
+.legend-item.off{opacity:.45;text-decoration:line-through}
+.swatch{width:10px;height:10px;border-radius:3px;display:inline-block}
+.sw-signal{background:var(--signal)}
+.sw-fuel{background:var(--fuel)}
+.tip{
+  position:absolute;pointer-events:none;transform:translate(-50%,-120%);z-index:3;
+  background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:6px 9px;
+  font-size:12px;box-shadow:var(--shadow);white-space:nowrap;
+}
+
+/* ---------- anomaly feed ---------- */
+.feed{list-style:none;margin:0;padding:0;display:grid;gap:8px;max-height:360px;overflow:auto}
+.anom{
+  display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;gap:8px;align-items:center;
+  border:1px solid var(--border);border-left-width:3px;border-radius:9px;padding:7px 9px;background:var(--panel2);
+}
+.anom.sev-critical{border-left-color:var(--bad)}
+.anom.sev-warning{border-left-color:var(--warn)}
+.anom.sev-info{border-left-color:var(--accent)}
+.anom .sev{font-size:10px;letter-spacing:.12em}
+.anom .ts{font-size:11px;color:var(--muted)}
+.anom .x{background:transparent;border:1px solid var(--border);border-radius:7px;cursor:pointer;padding:2px 7px}
+.anom .x:hover{border-color:var(--bad);color:var(--bad)}
+.empty{color:var(--muted);padding:8px 2px}
+
+/* ---------- command palette ---------- */
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(3,8,16,.62);display:flex;align-items:flex-start;justify-content:center;padding:9vh 12px}
+.palette{width:min(680px,100%);background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+#palInput{width:100%;border:0;border-bottom:1px solid var(--border);border-radius:0;background:transparent;padding:14px 16px;font-size:16px}
+.pal-list{list-style:none;margin:0;padding:6px;max-height:52vh;overflow:auto}
+.pal-item{display:flex;gap:10px;align-items:baseline;justify-content:space-between;padding:9px 11px;border-radius:9px;cursor:pointer}
+.pal-item .pal-sub{color:var(--muted);font-size:12px}
+.pal-item.active{background:var(--panel2);box-shadow:inset 0 0 0 2px var(--accent)}
+.pal-empty{padding:12px;color:var(--muted)}
+.pal-foot{border-top:1px solid var(--border);padding:8px 12px;color:var(--muted);font-size:11px}
+@media (max-width:640px){
+  .overlay{padding:0}
+  .palette{width:100%;height:100%;border-radius:0;border:0}
+  .pal-list{max-height:none;flex:1}
+}
+
+/* ---------- motion ---------- */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
+}
 </style>
 </head>
 <body>
-<header>
-  <h1>NIKBENCH-1 <span>· Mission Control</span></h1>
-  <div style="display:flex;gap:12px;align-items:center">
-    <div class="clock" id="utc" aria-live="off">--:--:-- UTC</div>
-    <button id="themeBtn" aria-label="Switch to light theme">☀ Light</button>
+<a class="sr-only" href="#gridSection">Skip to satellite grid</a>
+
+<header class="topbar">
+  <div class="brand">
+    <h1>NIKBENCH-1</h1>
+    <span class="badge">MISSION CONTROL</span>
+  </div>
+  <div class="clocks">
+    <div class="clock">
+      <span class="k">UTC</span>
+      <span class="v mono" id="utcClock">--:--:--</span>
+    </div>
+    <div class="clock">
+      <span class="k" id="zoneLabel">UTC+0 zone</span>
+      <span class="v mono" id="zoneClock">--:--:--</span>
+    </div>
+  </div>
+  <div class="controls">
+    <label class="sr-only" for="tzSelect">Mission time zone</label>
+    <select id="tzSelect" aria-label="Mission time zone"></select>
+    <button class="btn" id="themeBtn" type="button" aria-pressed="false">Theme: dark</button>
+    <button class="btn primary" id="diagBtn" type="button">Run diagnostic</button>
+    <button class="btn" id="undoBtn" type="button" aria-label="Undo last anomaly action">↶ Undo</button>
+    <button class="btn" id="redoBtn" type="button" aria-label="Redo last anomaly action">↷ Redo</button>
+    <span class="hint"><kbd>Ctrl</kbd>+<kbd>K</kbd> palette · <kbd>d</kbd> theme</span>
   </div>
 </header>
 
-<main>
-  <section class="cards" aria-label="Live mission metrics">
-    <div class="card"><h3>Fuel</h3><div class="val" id="mFuel">--</div></div>
-    <div class="card"><h3>Battery</h3><div class="val" id="mBatt">--</div></div>
-    <div class="card"><h3>Signal</h3><div class="val" id="mSig">--</div></div>
-    <div class="card"><h3>Crew</h3><div class="val" id="mCrew">--</div></div>
-  </section>
-
-  <section class="panel" aria-label="Countdown to launch">
-    <h2>Countdown · T-minus to 2026-12-01T09:00:00Z</h2>
-    <div class="countdown">
-      <div class="big" id="cd">T-00:00:00:00</div>
-      <div class="status" id="cdStatus">—</div>
+<main class="app">
+  <section class="panel strip" aria-label="Landing countdown">
+    <div>
+      <span class="k">Countdown to 2026-12-01T09:00:00Z</span>
+      <div class="mono" id="countdown">--:--:--:--</div>
     </div>
+    <span class="status" id="countStatus" data-state="ok">T-minus</span>
   </section>
 
-  <section class="panel" aria-label="Signal telemetry chart">
-    <h2>Telemetry · Signal (dB)</h2>
-    <canvas id="chart" role="img" aria-label="Line chart of signal strength over the last 60 seconds"></canvas>
+  <section class="metrics" aria-label="Mission metrics">
+    <article class="card"><h2>Fuel</h2><p class="big mono" id="mFuel">--</p></article>
+    <article class="card"><h2>Battery</h2><p class="big mono" id="mBattery">--</p></article>
+    <article class="card"><h2>Signal</h2><p class="big mono" id="mSignal">--</p></article>
+    <article class="card"><h2>Crew</h2><p class="big mono" id="mCrew">--</p></article>
   </section>
 
-  <section class="panel" aria-label="Satellite status table">
-    <h2>Satellites</h2>
-    <div class="tblwrap">
-      <table id="satTable">
-        <thead>
-          <tr>
-            <th data-col="id" tabindex="0" aria-sort="ascending">ID<span class="arrow"></span></th>
-            <th data-col="name" tabindex="0">Name<span class="arrow"></span></th>
-            <th data-col="orbit" tabindex="0">Orbit<span class="arrow"></span></th>
-            <th data-col="status" tabindex="0">Status<span class="arrow"></span></th>
-            <th data-col="contact" tabindex="0">Last contact<span class="arrow"></span></th>
-          </tr>
-        </thead>
-        <tbody id="satBody"></tbody>
-      </table>
+  <div class="cols">
+    <section class="panel" id="gridSection" aria-labelledby="gridH">
+      <div class="panel-head">
+        <h2 id="gridH">Satellites</h2>
+        <div class="toolbar">
+          <label class="sr-only" for="search">Filter satellites by ID or name</label>
+          <input id="search" type="search" autocomplete="off" placeholder="Filter by ID or name…" aria-label="Filter satellites by ID or name" />
+          <label class="sr-only" for="sortSelect">Sort column and direction</label>
+          <select id="sortSelect" aria-label="Sort column and direction">
+            <option value="id:asc">ID · ascending</option>
+            <option value="id:desc">ID · descending</option>
+            <option value="name:asc">Name · ascending</option>
+            <option value="name:desc">Name · descending</option>
+            <option value="orbit:asc">Orbit · ascending</option>
+            <option value="orbit:desc">Orbit · descending</option>
+            <option value="status:asc">Status · ascending</option>
+            <option value="status:desc">Status · descending</option>
+            <option value="contact:asc">Last contact · newest first</option>
+            <option value="contact:desc">Last contact · oldest first</option>
+          </select>
+          <span class="count" id="rowCount" aria-live="polite">—</span>
+        </div>
+      </div>
+      <div class="grid-scroll" id="gridScroll" role="grid" aria-label="Satellite table, 10000 rows, virtualised" aria-rowcount="10000" tabindex="0">
+        <div class="grid-head" role="row">
+          <div role="columnheader" aria-sort="ascending"><button type="button" data-sort="id">ID <span class="ind">▲</span></button></div>
+          <div role="columnheader" aria-sort="none"><button type="button" data-sort="name">Name <span class="ind"></span></button></div>
+          <div role="columnheader" aria-sort="none"><button type="button" data-sort="orbit">Orbit <span class="ind"></span></button></div>
+          <div role="columnheader" aria-sort="none"><button type="button" data-sort="status">Status <span class="ind"></span></button></div>
+          <div role="columnheader" aria-sort="none"><button type="button" data-sort="contact">Last contact <span class="ind"></span></button></div>
+        </div>
+        <div class="grid-rows" id="gridRows"></div>
+      </div>
+    </section>
+
+    <div class="side">
+      <section class="panel" aria-labelledby="chartH">
+        <div class="panel-head">
+          <h2 id="chartH">Telemetry · last 60 s</h2>
+          <div class="legend" id="legend" role="group" aria-label="Chart series visibility"></div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="chart" role="img" aria-label="Line chart of signal strength and fuel percentage over the last 60 seconds"></canvas>
+          <div class="tip" id="chartTip" hidden></div>
+        </div>
+      </section>
+
+      <aside class="panel" aria-labelledby="feedH">
+        <div class="panel-head">
+          <h2 id="feedH">Anomaly feed</h2>
+          <span class="hint" id="hist">history 0 · redo 0</span>
+        </div>
+        <ul class="feed" id="feed" aria-live="polite" aria-relevant="additions removals"></ul>
+      </aside>
     </div>
-  </section>
-
-  <section class="panel" aria-label="Anomaly feed">
-    <h2>Anomaly feed</h2>
-    <p><button id="diagBtn" aria-label="Run a diagnostic and add a simulated event">RUN DIAGNOSTIC</button>
-       <button id="clearBtn" aria-label="Dismiss all anomaly items">Clear all</button></p>
-    <ul class="feed" id="feed" aria-live="polite"></ul>
-  </section>
+  </div>
 </main>
+
+<div class="overlay" id="palette" hidden>
+  <div class="palette" role="dialog" aria-modal="true" aria-label="Command palette">
+    <input id="palInput" type="text" role="combobox" aria-expanded="true" aria-controls="palList" aria-autocomplete="list" placeholder="Search satellites or run a command…" />
+    <ul class="pal-list" id="palList" role="listbox" aria-label="Command palette results"></ul>
+    <div class="pal-foot">↑ ↓ move · Enter run · Esc close · focus is trapped while open</div>
+  </div>
+</div>
 
 <script>
 (function () {
-  "use strict";
-  var LS = "nikbench.f1.";
-  function $(s) { return document.querySelector(s); }
-  function pad(n, w) { n = String(Math.floor(n)); while (n.length < (w || 2)) n = "0" + n; return n; }
+'use strict';
 
-  /* deterministic PRNG: mulberry32, seed 42 */
-  function mulberry32(a) {
-    return function () {
-      a |= 0; a = (a + 0x6D2B79F5) | 0;
-      var t = Math.imul(a ^ (a >>> 15), 1 | a);
-      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
-  }
-  var rand = mulberry32(42);
-
-  /* ---------- theme (persisted) ---------- */
-  var theme = localStorage.getItem(LS + "theme") || "dark";
-  function applyTheme(t) {
-    theme = t;
-    document.documentElement.setAttribute("data-theme", t);
-    localStorage.setItem(LS + "theme", t);
-    var b = $("#themeBtn");
-    b.textContent = (t === "dark") ? "☀ Light" : "🌙 Dark";
-    b.setAttribute("aria-label", "Switch to " + (t === "dark" ? "light" : "dark") + " theme");
-    drawChart();
-  }
-  $("#themeBtn").addEventListener("click", function () { applyTheme(theme === "dark" ? "light" : "dark"); });
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "d" || e.key === "D") {
-      var el = document.activeElement;
-      if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) return;
-      applyTheme(theme === "dark" ? "light" : "dark");
-    }
+/* ============================================================
+   1 · Deterministic PRNG (mulberry32, seed 42).
+   One stream: 10,000 rows are generated first, then the initial
+   metrics. Identical seed => identical rows and metrics.
+   ============================================================ */
+function mulberry32(a) {
+  return function () {
+    a = a + 0x6D2B79F5 | 0;
+    var t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+var rand = mulberry32(42);
+function ri(n) { return Math.floor(rand() * n); }
+function pick(arr) { return arr[ri(arr.length)]; }
+function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+function r2(v) { return Math.round(v * 100) / 100; }
+function $(id) { return document.getElementById(id); }
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
   });
+}
 
-  /* ---------- metrics (seeded, persisted, 5 s bounded random walk) ---------- */
-  var metrics;
-  try { metrics = JSON.parse(localStorage.getItem(LS + "metrics")); } catch (e) { metrics = null; }
-  if (!metrics || typeof metrics.fuel !== "number") {
-    metrics = {
-      fuel: 100 * rand(),
-      battery: 100 * rand(),
-      signal: Math.floor(rand() * 100),
-      crew: Math.max(1, Math.round(rand() * 6))
-    };
+/* ============================================================
+   2 · Persistence. Every key is prefixed nikbench.f1.
+   ============================================================ */
+var NS = 'nikbench.f1.';
+var store = {
+  get: function (k, d) {
+    try { var v = localStorage.getItem(NS + k); return v === null ? d : JSON.parse(v); }
+    catch (e) { return d; }
+  },
+  set: function (k, v) {
+    try { localStorage.setItem(NS + k, JSON.stringify(v)); } catch (e) { /* storage disabled */ }
   }
-  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
-  function renderMetrics() {
-    $("#mFuel").textContent = metrics.fuel.toFixed(2) + " %";
-    $("#mBatt").textContent = metrics.battery.toFixed(2) + " %";
-    $("#mSig").textContent = Math.round(metrics.signal) + " dB";
-    $("#mCrew").textContent = String(metrics.crew);
-  }
-  function walk() {
-    var r = mulberry32((Date.now() / 5000) | 0); // deterministic-ish per 5 s tick
-    metrics.fuel = clamp(metrics.fuel + (r() - 0.5) * 4, 0, 100);
-    metrics.battery = clamp(metrics.battery + (r() - 0.5) * 4, 0, 100);
-    metrics.signal = clamp(Math.round(metrics.signal + (r() - 0.5) * 6), 0, 99);
-    if (r() < 0.25) metrics.crew = clamp(metrics.crew + (r() < 0.5 ? -1 : 1), 0, 6);
-    localStorage.setItem(LS + "metrics", JSON.stringify(metrics));
-    renderMetrics();
-  }
+};
 
-  /* ---------- UTC clock ---------- */
-  function tickClock() {
-    $("#utc").textContent = new Date().toISOString().slice(11, 19) + " UTC";
-  }
-
-  /* ---------- countdown ---------- */
-  var TARGET = Date.UTC(2026, 11, 1, 9, 0, 0); // 2026-12-01T09:00:00Z, UTC everywhere
-  function tickCountdown() {
-    var diff = TARGET - Date.now();
-    var el = $("#cd"), st = $("#cdStatus");
-    if (diff <= 0) { el.textContent = "T-00:00:00:00"; st.textContent = "LANDED"; return; }
-    var s = Math.floor(diff / 1000);
-    var d = Math.floor(s / 86400); s -= d * 86400;
-    var h = Math.floor(s / 3600); s -= h * 3600;
-    var m = Math.floor(s / 60); s -= m * 60;
-    el.textContent = "T-" + pad(d) + ":" + pad(h) + ":" + pad(m) + ":" + pad(s);
-    st.textContent = "COUNTDOWN";
-  }
-
-  /* ---------- telemetry history + chart ---------- */
-  var history = [];
-  function pushSample() {
-    history.push(metrics.signal);
-    if (history.length > 60) history.shift();
-  }
-  function drawChart() {
-    var c = $("#chart");
-    if (!c) return;
-    var ctx = c.getContext("2d");
-    var dpr = window.devicePixelRatio || 1;
-    var w = c.clientWidth || 300, h = c.clientHeight || 200;
-    c.width = w * dpr; c.height = h * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    var cs = getComputedStyle(document.documentElement);
-    var accent = cs.getPropertyValue("--accent").trim();
-    var border = cs.getPropertyValue("--border").trim();
-    var muted = cs.getPropertyValue("--muted").trim();
-    var panel = cs.getPropertyValue("--panel").trim();
-    ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = panel; ctx.fillRect(0, 0, w, h);
-    var padL = 34, padR = 12, padT = 20, padB = 22;
-    var pw = w - padL - padR, ph = h - padT - padB;
-    var min = 0, max = 99;
-    ctx.strokeStyle = border; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + ph); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(padL, padT + ph); ctx.lineTo(padL + pw, padT + ph); ctx.stroke();
-    ctx.fillStyle = muted; ctx.font = "11px Segoe UI, Arial, sans-serif"; ctx.textAlign = "right";
-    ctx.fillText(String(max), padL - 5, padT + 4);
-    ctx.fillText(String(min), padL - 5, padT + ph);
-    ctx.textAlign = "left";
-    ctx.fillText("Signal dB · 60 s", padL, padT - 6);
-    if (history.length > 1) {
-      ctx.strokeStyle = accent; ctx.lineWidth = 2; ctx.beginPath();
-      for (var i = 0; i < history.length; i++) {
-        var x = padL + pw * (i / Math.max(1, history.length - 1));
-        var y = padT + ph - ph * ((history[i] - min) / (max - min));
-        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-      }
-      ctx.stroke();
-    }
-  }
-
-  /* ---------- satellites ---------- */
-  var satellites = [
-    { id: "SAT-01", name: "Aurora",   orbit: "LEO", status: "ACTIVE",   off: 4 * 60 * 1000 },
-    { id: "SAT-02", name: "Borealis", orbit: "MEO", status: "DEGRADED", off: 12 * 60 * 1000 },
-    { id: "SAT-03", name: "Comet",    orbit: "LEO", status: "ACTIVE",   off: 1 * 60 * 1000 },
-    { id: "SAT-04", name: "Draco",    orbit: "GEO", status: "OFFLINE",  off: 3 * 3600 * 1000 },
-    { id: "SAT-05", name: "Equinox",  orbit: "MEO", status: "ACTIVE",   off: 25 * 60 * 1000 },
-    { id: "SAT-06", name: "Fenrir",   orbit: "LEO", status: "DEGRADED", off: 47 * 60 * 1000 },
-    { id: "SAT-07", name: "Gemini",   orbit: "GEO", status: "ACTIVE",   off: 6 * 3600 * 1000 },
-    { id: "SAT-08", name: "Helios",   orbit: "MEO", status: "OFFLINE",  off: 2 * 3600 * 1000 }
-  ];
-  var baseTime = Date.now();
-  function relTime(off) {
-    var s = Math.floor((Date.now() - baseTime + off) / 1000);
-    if (s < 60) return s + "s ago";
-    if (s < 3600) return Math.floor(s / 60) + "m ago";
-    return Math.floor(s / 3600) + "h ago";
-  }
-  var sortCol = localStorage.getItem(LS + "sort") || "id";
-  var sortDir = localStorage.getItem(LS + "sortDir") || "asc";
-  function setHeaderArrows() {
-    var ths = document.querySelectorAll("#satTable th");
-    for (var i = 0; i < ths.length; i++) {
-      var col = ths[i].getAttribute("data-col");
-      var arr = ths[i].querySelector(".arrow");
-      arr.textContent = (col === sortCol) ? (sortDir === "asc" ? "▲" : "▼") : "";
-      ths[i].setAttribute("aria-sort", col === sortCol ? (sortDir === "asc" ? "ascending" : "descending") : "none");
-    }
-  }
-  function renderTable() {
-    var rows = satellites.slice();
-    rows.sort(function (a, b) {
-      var k = sortCol;
-      var va = (k === "contact") ? (baseTime - a.off) : a[k];
-      var vb = (k === "contact") ? (baseTime - b.off) : b[k];
-      if (typeof va === "number") { return sortDir === "asc" ? va - vb : vb - va; }
-      va = String(va).toLowerCase(); vb = String(vb).toLowerCase();
-      if (va < vb) return sortDir === "asc" ? -1 : 1;
-      if (va > vb) return sortDir === "asc" ? 1 : -1;
-      return 0;
-    });
-    var body = $("#satBody");
-    body.innerHTML = "";
-    rows.forEach(function (r) {
-      var tr = document.createElement("tr");
-      function td(txt) { var c = document.createElement("td"); c.textContent = txt; return c; }
-      tr.appendChild(td(r.id));
-      tr.appendChild(td(r.name));
-      tr.appendChild(td(r.orbit));
-      tr.appendChild(td(r.status));
-      tr.appendChild(td(relTime(r.off)));
-      body.appendChild(tr);
-    });
-  }
-  function sortBy(col) {
-    if (col === sortCol) sortDir = (sortDir === "asc" ? "desc" : "asc");
-    else { sortCol = col; sortDir = "asc"; }
-    localStorage.setItem(LS + "sort", sortCol);
-    localStorage.setItem(LS + "sortDir", sortDir);
-    setHeaderArrows(); renderTable();
-  }
-  (function wireHeaders() {
-    var ths = document.querySelectorAll("#satTable th");
-    for (var i = 0; i < ths.length; i++) {
-      (function (th) {
-        var col = th.getAttribute("data-col");
-        th.addEventListener("click", function () { sortBy(col); });
-        th.addEventListener("keydown", function (e) {
-          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); sortBy(col); }
-        });
-      })(ths[i]);
-    }
-  })();
-
-  /* ---------- anomaly feed (persisted) ---------- */
-  var POOL = [
-    { sev: "INFO", msg: "Telemetry sync nominal" },
-    { sev: "WARN", msg: "Signal fading on LEO-2 downlink" },
-    { sev: "CRIT", msg: "Battery cell imbalance detected" },
-    { sev: "INFO", msg: "Attitude correction complete" },
-    { sev: "WARN", msg: "Thermal drift in radiator loop" },
-    { sev: "CRIT", msg: "Gyro spike — recalculating attitude" }
-  ];
-  var feed;
-  try { feed = JSON.parse(localStorage.getItem(LS + "feed")); } catch (e) { feed = null; }
-  if (!Array.isArray(feed)) feed = [];
-  function persistFeed() { localStorage.setItem(LS + "feed", JSON.stringify(feed)); }
-  function renderFeed() {
-    var ul = $("#feed");
-    ul.innerHTML = "";
-    feed.forEach(function (a, idx) {
-      var li = document.createElement("li");
-      var left = document.createElement("div");
-      left.className = "msg";
-      var sev = document.createElement("span");
-      sev.className = "sev " + a.sev; sev.textContent = a.sev;
-      var txt = document.createElement("span"); txt.textContent = a.msg;
-      left.appendChild(sev); left.appendChild(txt);
-      var right = document.createElement("div");
-      right.style.display = "flex"; right.style.alignItems = "center"; right.style.gap = "8px";
-      var t = document.createElement("span"); t.className = "time"; t.textContent = a.time;
-      var b = document.createElement("button");
-      b.className = "dismiss"; b.textContent = "✕";
-      b.setAttribute("aria-label", "Dismiss anomaly: " + a.msg);
-      b.addEventListener("click", function () {
-        feed.splice(idx, 1); persistFeed(); renderFeed();
-      });
-      right.appendChild(t); right.appendChild(b);
-      li.appendChild(left); li.appendChild(right);
-      ul.appendChild(li);
-    });
-  }
-  $("#diagBtn").addEventListener("click", function () {
-    var pick = POOL[Math.floor(rand() * POOL.length)];
-    feed.unshift({ sev: pick.sev, msg: pick.msg, time: new Date().toISOString().slice(11, 19) + "Z" });
-    if (feed.length > 50) feed.length = 50;
-    persistFeed(); renderFeed();
+/* ============================================================
+   3 · 10,000 deterministic satellites.
+   ============================================================ */
+var NAMES_A = ['Astra','Boreas','Cygnet','Draco','Eos','Fenrir','Gaia','Helios','Iris','Juno',
+               'Kestrel','Lyra','Mira','Nyx','Orion','Pallas','Quasar','Rhea','Sirius','Titan',
+               'Umbriel','Vega','Wolf','Xenon','Ymir','Zephyr'];
+var NAMES_B = ['Prime','Minor','Major','Nova','Vela','Apex','Lumen','Vertex','Cinder','Halo'];
+var ORBITS = ['LEO','MEO','GEO'];
+var STATUSES = ['ACTIVE','ACTIVE','ACTIVE','ACTIVE','DEGRADED','OFFLINE'];
+var STATUS_ORDER = { ACTIVE: 0, DEGRADED: 1, OFFLINE: 2 };
+var ROWS = [];
+for (var i = 0; i < 10000; i++) {
+  ROWS.push({
+    idx: i,
+    id: 'SAT-' + String(i + 1).padStart(4, '0'),
+    name: pick(NAMES_A) + ' ' + pick(NAMES_B) + '-' + (ri(9) + 1),
+    orbit: ORBITS[ri(3)],
+    status: pick(STATUSES),
+    age0: ri(7 * 24 * 60) * 60000 + ri(60) * 1000   /* 0 .. 7 days old at load */
   });
-  $("#clearBtn").addEventListener("click", function () { feed = []; persistFeed(); renderFeed(); });
+}
+var T0 = Date.now();
+function rowAge(r) { return r.age0 + (Date.now() - T0); }
+function ago(ms) {
+  var s = Math.floor(ms / 1000);
+  if (s < 60) return s + 's ago';
+  var m = Math.floor(s / 60);
+  if (m < 60) return m + 'm ago';
+  var h = Math.floor(m / 60);
+  if (h < 24) return h + 'h ago';
+  return Math.floor(h / 24) + 'd ago';
+}
 
-  /* ---------- boot + timers ---------- */
+/* ============================================================
+   4 · Metrics — restored from storage, else seeded from rand().
+   ============================================================ */
+var metrics = store.get('metrics', null) || {
+  fuel: r2(60 + rand() * 40),
+  battery: r2(55 + rand() * 45),
+  signal: 20 + ri(66),
+  crew: 1 + ri(6)
+};
+function renderMetrics() {
+  $('mFuel').textContent = metrics.fuel.toFixed(2) + '%';
+  $('mBattery').textContent = metrics.battery.toFixed(2) + '%';
+  $('mSignal').textContent = metrics.signal + ' dB';
+  $('mCrew').textContent = String(metrics.crew);
+}
+function walkMetrics() {
+  metrics.fuel = r2(clamp(metrics.fuel + (rand() * 2 - 1) * 1.6, 0, 100));
+  metrics.battery = r2(clamp(metrics.battery + (rand() * 2 - 1) * 1.3, 0, 100));
+  metrics.signal = clamp(Math.round(metrics.signal + (rand() * 2 - 1) * 3), 0, 99);
+  metrics.crew = clamp(Math.round(metrics.crew + (rand() < 0.5 ? -1 : 1)), 0, 6);
+  store.set('metrics', metrics);
   renderMetrics();
-  renderFeed();
-  setHeaderArrows();
-  renderTable();
+}
+
+/* ============================================================
+   5 · Clocks and countdown.
+   ============================================================ */
+var TARGET = Date.parse('2026-12-01T09:00:00Z');
+var tz = store.get('tz', 0);
+function pad2(n) { return n < 10 ? '0' + n : String(n); }
+function hms(ms) {
+  var d = new Date(ms);
+  return pad2(d.getUTCHours()) + ':' + pad2(d.getUTCMinutes()) + ':' + pad2(d.getUTCSeconds());
+}
+function span(ms) {
+  var s = Math.floor(ms / 1000);
+  return pad2(Math.floor(s / 86400)) + ':' + pad2(Math.floor(s % 86400 / 3600)) + ':' +
+         pad2(Math.floor(s % 3600 / 60)) + ':' + pad2(s % 60);
+}
+function tickClock() {
+  var now = Date.now();
+  $('utcClock').textContent = hms(now);
+  $('zoneClock').textContent = hms(now + tz * 3600000);
+  $('zoneLabel').textContent = 'UTC' + (tz >= 0 ? '+' : '-') + Math.abs(tz) + ' zone';
+  var diff = TARGET - now;
+  if (diff > 0) {
+    $('countdown').textContent = span(diff);
+    $('countStatus').textContent = 'T-minus';
+    $('countStatus').dataset.state = 'ok';
+  } else {
+    $('countdown').textContent = 'T+' + span(-diff);
+    $('countStatus').textContent = 'LANDED';
+    $('countStatus').dataset.state = 'bad';
+  }
+}
+var tzSelect = $('tzSelect');
+(function buildZones() {
+  for (var z = -12; z <= 14; z++) {
+    var o = document.createElement('option');
+    o.value = String(z);
+    o.textContent = 'UTC' + (z >= 0 ? '+' : '-') + Math.abs(z);
+    tzSelect.appendChild(o);
+  }
+})();
+tzSelect.value = String(tz);
+tzSelect.addEventListener('change', function () { setTz(parseInt(tzSelect.value, 10)); });
+function setTz(z) {
+  tz = z;
+  tzSelect.value = String(z);
+  store.set('tz', z);
   tickClock();
-  tickCountdown();
-  for (var k = 0; k < 60; k++) history.push(metrics.signal);
+}
+
+/* ============================================================
+   6 · Theme (dark default, `d` shortcut, persisted).
+   ============================================================ */
+var themeBtn = $('themeBtn');
+function setTheme(t) {
+  document.documentElement.dataset.theme = t;
+  themeBtn.textContent = 'Theme: ' + t;
+  themeBtn.setAttribute('aria-pressed', String(t === 'light'));
+  store.set('theme', t);
   drawChart();
-  window.addEventListener("resize", drawChart);
-  setInterval(tickClock, 1000);
-  setInterval(tickCountdown, 1000);
-  setInterval(function () { pushSample(); drawChart(); renderTable(); }, 1000);
-  setInterval(walk, 5000);
-  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (!reduce) { applyTheme(theme); }
+}
+function toggleTheme() {
+  setTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
+}
+themeBtn.addEventListener('click', toggleTheme);
+
+/* ============================================================
+   7 · Telemetry chart — two series, CSS-variable colours,
+   high-DPI aware, pointer crosshair + tooltip.
+   ============================================================ */
+var SAMPLES = 60;
+var chartRand = mulberry32(7);
+var samples = [];
+for (var s = 0; s < SAMPLES; s++) {
+  samples.push({ signal: 20 + Math.floor(chartRand() * 66), fuel: r2(45 + chartRand() * 55) });
+}
+var series = store.get('series', { signal: true, fuel: true });
+var cv = $('chart');
+var ctx = cv.getContext('2d');
+var tip = $('chartTip');
+var hoverIdx = -1;
+var tipX = 0, tipY = 0;
+function cssVar(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+var PAD_L = 36, PAD_R = 14, PAD_T = 12, PAD_B = 24;
+function xAt(i, pw) { return PAD_L + (i / (SAMPLES - 1)) * pw; }
+function yAt(v, ph) { return PAD_T + ph * (1 - clamp(v, 0, 100) / 100); }
+function drawChart() {
+  var dpr = window.devicePixelRatio || 1;
+  var w = cv.clientWidth || 600, h = cv.clientHeight || 236;
+  var pw = Math.max(10, w - PAD_L - PAD_R), ph = Math.max(10, h - PAD_T - PAD_B);
+  if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) {
+    cv.width = Math.round(w * dpr);
+    cv.height = Math.round(h * dpr);
+  }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  var grid = cssVar('--border'), muted = cssVar('--muted');
+  ctx.font = '11px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif';
+  ctx.lineWidth = 1;
+  for (var g = 0; g <= 4; g++) {                       /* horizontal gridlines + y labels */
+    var y = PAD_T + ph * (g / 4);
+    ctx.strokeStyle = grid;
+    ctx.beginPath(); ctx.moveTo(PAD_L, y + 0.5); ctx.lineTo(PAD_L + pw, y + 0.5); ctx.stroke();
+    ctx.fillStyle = muted;
+    ctx.fillText(String(100 - g * 25), 4, y + 4);
+  }
+  ctx.strokeStyle = muted;                              /* visible baseline + value axis */
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(PAD_L, PAD_T + ph + 0.5); ctx.lineTo(PAD_L + pw, PAD_T + ph + 0.5); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(PAD_L + 0.5, PAD_T); ctx.lineTo(PAD_L + 0.5, PAD_T + ph); ctx.stroke();
+  ctx.lineWidth = 2;
+  var keys = ['signal', 'fuel'], vars = { signal: '--signal', fuel: '--fuel' };
+  for (var k = 0; k < keys.length; k++) {
+    if (!series[keys[k]]) continue;
+    ctx.strokeStyle = cssVar(vars[keys[k]]);
+    ctx.beginPath();
+    for (var j = 0; j < samples.length; j++) {
+      var px = xAt(j, pw), py = yAt(samples[j][keys[k]], ph);
+      if (j === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+  }
+  ctx.fillStyle = muted;
+  ctx.fillText('0', 4, PAD_T + ph + 4);
+  ctx.fillText('60 s ago', PAD_L, h - 7);
+  ctx.fillText('now', PAD_L + pw - 22, h - 7);
+  if (hoverIdx >= 0 && hoverIdx < samples.length) {     /* crosshair */
+    var hx = xAt(hoverIdx, pw);
+    ctx.strokeStyle = cssVar('--accent');
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath(); ctx.moveTo(hx, PAD_T); ctx.lineTo(hx, PAD_T + ph); ctx.stroke();
+    ctx.setLineDash([]);
+    for (var q = 0; q < keys.length; q++) {
+      if (!series[keys[q]]) continue;
+      ctx.fillStyle = cssVar(vars[keys[q]]);
+      ctx.beginPath();
+      ctx.arc(hx, yAt(samples[hoverIdx][keys[q]], ph), 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+}
+function updateTip() {
+  if (hoverIdx < 0) { tip.hidden = true; return; }
+  var sm = samples[hoverIdx];
+  tip.hidden = false;
+  tip.innerHTML = '<b>' + (SAMPLES - 1 - hoverIdx) + 's ago</b> · signal ' + sm.signal +
+                  ' dB · fuel ' + sm.fuel.toFixed(2) + '%';
+  tip.style.left = clamp(tipX, 60, (cv.clientWidth || 600) - 60) + 'px';
+  tip.style.top = Math.max(34, tipY) + 'px';
+}
+cv.addEventListener('pointermove', function (e) {
+  var r = cv.getBoundingClientRect();
+  tipX = e.clientX - r.left;
+  tipY = e.clientY - r.top;
+  var pw = Math.max(10, r.width - PAD_L - PAD_R);
+  hoverIdx = Math.round(clamp((tipX - PAD_L) / pw, 0, 1) * (SAMPLES - 1));
+  drawChart();
+  updateTip();
+});
+cv.addEventListener('pointerleave', function () {
+  hoverIdx = -1;
+  tip.hidden = true;
+  drawChart();
+});
+function tickChart() {
+  samples.shift();
+  samples.push({
+    signal: clamp(Math.round(metrics.signal + (rand() * 2 - 1) * 2), 0, 99),
+    fuel: r2(clamp(metrics.fuel + (rand() * 2 - 1) * 1.2, 0, 100))
+  });
+  drawChart();
+  updateTip();
+}
+var legend = $('legend');
+(function buildLegend() {
+  var defs = [['signal', 'Signal', 'sw-signal'], ['fuel', 'Fuel', 'sw-fuel']];
+  defs.forEach(function (d) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'legend-item' + (series[d[0]] ? '' : ' off');
+    b.setAttribute('aria-pressed', String(!!series[d[0]]));
+    b.innerHTML = '<span class="swatch ' + d[2] + '"></span>' + d[1];
+    b.addEventListener('click', function () {
+      series[d[0]] = !series[d[0]];
+      b.setAttribute('aria-pressed', String(series[d[0]]));
+      b.classList.toggle('off', !series[d[0]]);
+      store.set('series', series);
+      drawChart();
+    });
+    legend.appendChild(b);
+  });
+})();
+/* ============================================================
+   8 · Satellite grid — virtualised windowed rendering.
+   Only rows intersecting the viewport (+/- 6 overscan) exist in
+   the DOM; the row container is sized to total x rowHeight.
+   ============================================================ */
+var savedSort = store.get('sort', { col: 'id', dir: 'asc' });
+var gridState = { col: savedSort.col || 'id', dir: savedSort.dir || 'asc', q: store.get('filter', '') };
+var view = [];
+var activeRow = 0;
+var scrollEl = $('gridScroll');
+var rowsEl = $('gridRows');
+var countEl = $('rowCount');
+var search = $('search');
+var sortSelect = $('sortSelect');
+var ROW_DESKTOP = 40, ROW_CARD = 112;
+function rowH() { return window.matchMedia('(max-width: 640px)').matches ? ROW_CARD : ROW_DESKTOP; }
+function rowCompare(a, b) {
+  switch (gridState.col) {
+    case 'name': return a.name.localeCompare(b.name);
+    case 'orbit': return ORBITS.indexOf(a.orbit) - ORBITS.indexOf(b.orbit);
+    case 'status': return STATUS_ORDER[a.status] - STATUS_ORDER[b.status];
+    case 'contact': return a.age0 - b.age0;
+    default: return a.id.localeCompare(b.id);
+  }
+}
+function rebuildView() {
+  var q = gridState.q.trim().toLowerCase();
+  view = [];
+  for (var n = 0; n < ROWS.length; n++) {
+    var r = ROWS[n];
+    if (q && r.id.toLowerCase().indexOf(q) === -1 && r.name.toLowerCase().indexOf(q) === -1) continue;
+    view.push(r);
+  }
+  var sgn = gridState.dir === 'asc' ? 1 : -1;
+  view.sort(function (a, b) { var c = rowCompare(a, b); return c !== 0 ? c * sgn : a.idx - b.idx; });
+  if (activeRow >= view.length) activeRow = 0;
+}
+var rafPending = false;
+function scheduleRender() {
+  if (rafPending) return;
+  rafPending = true;
+  requestAnimationFrame(function () { rafPending = false; renderGrid(); });
+}
+function renderGrid() {
+  var h = rowH(), total = view.length;
+  var top = scrollEl.scrollTop, vh = scrollEl.clientHeight || 420;
+  var first = Math.max(0, Math.floor(top / h) - 6);
+  var last = Math.min(total, Math.ceil((top + vh) / h) + 6);
+  countEl.textContent = total.toLocaleString('en-US') + (total === 1 ? ' satellite' : ' satellites');
+  scrollEl.setAttribute('aria-rowcount', String(total));
+  var html = '';
+  for (var n = first; n < last; n++) {
+    var r = view[n];
+    html += '<div class="row" role="row" aria-rowindex="' + (n + 1) + '" aria-selected="' + (n === activeRow) + '"' +
+            ' data-i="' + n + '" tabindex="' + (n === activeRow ? '0' : '-1') + '"' +
+            ' style="top:' + (n * h) + 'px;height:' + (h - 1) + 'px">' +
+            '<div class="cell" role="gridcell" data-label="ID"><span class="mono">' + r.id + '</span></div>' +
+            '<div class="cell" role="gridcell" data-label="Name">' + esc(r.name) + '</div>' +
+            '<div class="cell" role="gridcell" data-label="Orbit"><span class="chip orbit-' + r.orbit + '">' + r.orbit + '</span></div>' +
+            '<div class="cell" role="gridcell" data-label="Status"><span class="chip st-' + r.status + '">' + r.status + '</span></div>' +
+            '<div class="cell" role="gridcell" data-label="Last contact">' + ago(rowAge(r)) + '</div>' +
+            '</div>';
+  }
+  rowsEl.style.height = (total * h) + 'px';
+  rowsEl.innerHTML = html;
+}
+function updateHeaders() {
+  var btns = document.querySelectorAll('[data-sort]');
+  for (var n = 0; n < btns.length; n++) {
+    var b = btns[n];
+    var on = b.dataset.sort === gridState.col;
+    b.parentNode.setAttribute('aria-sort', on ? (gridState.dir === 'asc' ? 'ascending' : 'descending') : 'none');
+    b.querySelector('.ind').textContent = on ? (gridState.dir === 'asc' ? '▲' : '▼') : '';
+  }
+  sortSelect.value = gridState.col + ':' + gridState.dir;
+}
+function setSort(col, dir) {
+  if (dir) gridState.dir = dir;
+  else if (gridState.col === col) gridState.dir = gridState.dir === 'asc' ? 'desc' : 'asc';
+  else gridState.dir = 'asc';
+  gridState.col = col;
+  store.set('sort', { col: gridState.col, dir: gridState.dir });
+  rebuildView();
+  updateHeaders();
+  scrollEl.scrollTop = 0;
+  renderGrid();
+}
+(function wireSortHeaders() {
+  var btns = document.querySelectorAll('[data-sort]');
+  for (var n = 0; n < btns.length; n++) {
+    (function (b) { b.addEventListener('click', function () { setSort(b.dataset.sort); }); })(btns[n]);
+  }
+})();
+sortSelect.addEventListener('change', function () {
+  var parts = sortSelect.value.split(':');
+  setSort(parts[0], parts[1]);
+});
+search.value = gridState.q;
+var searchTimer = 0;
+search.addEventListener('input', function () {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(function () {
+    gridState.q = search.value;
+    store.set('filter', gridState.q);
+    activeRow = 0;
+    rebuildView();
+    scrollEl.scrollTop = 0;
+    renderGrid();
+  }, 120);
+});
+scrollEl.addEventListener('scroll', scheduleRender, { passive: true });
+scrollEl.addEventListener('keydown', function (e) {
+  var total = view.length;
+  if (!total) return;
+  var page = Math.max(1, Math.floor((scrollEl.clientHeight || 420) / rowH()) - 1);
+  var n = activeRow;
+  if (e.key === 'ArrowDown') n = Math.min(total - 1, n + 1);
+  else if (e.key === 'ArrowUp') n = Math.max(0, n - 1);
+  else if (e.key === 'PageDown') n = Math.min(total - 1, n + page);
+  else if (e.key === 'PageUp') n = Math.max(0, n - page);
+  else if (e.key === 'Home') n = 0;
+  else if (e.key === 'End') n = total - 1;
+  else return;
+  e.preventDefault();
+  activeRow = n;
+  var h = rowH(), top = n * h;
+  if (top < scrollEl.scrollTop) scrollEl.scrollTop = top;
+  else if (top + h > scrollEl.scrollTop + scrollEl.clientHeight) scrollEl.scrollTop = top + h - scrollEl.clientHeight;
+  renderGrid();
+  var el = rowsEl.querySelector('[data-i="' + n + '"]');
+  if (el) el.focus();
+});
+window.addEventListener('resize', function () { drawChart(); scheduleRender(); });
+
+/* ============================================================
+   9 · Anomaly feed + undo/redo (50 levels deep, >= 20 required).
+   ============================================================ */
+var MSGS = [
+  { sev: 'critical', text: 'Bus voltage sag on {id} — 11.2 V under load' },
+  { sev: 'critical', text: 'Thermal margin exceeded on {id}; radiator load {n}%' },
+  { sev: 'critical', text: 'Watchdog reset on {id} — safe mode entered' },
+  { sev: 'warning',  text: 'Star-tracker drift {n} arcsec on {id}' },
+  { sev: 'warning',  text: 'Downlink bit-error rate {n}x10⁻⁴ on {id}' },
+  { sev: 'warning',  text: 'Solar-array current dip {n}% on {id}' },
+  { sev: 'warning',  text: 'Reaction wheel {n} overspeed on {id}' },
+  { sev: 'info',     text: 'Telemetry burst reassembled from {id} ({n} kB)' },
+  { sev: 'info',     text: 'Ground-station handover to {id} complete' },
+  { sev: 'info',     text: 'Orbit determination converged for {id} ({n} m residual)' }
+];
+var anomalies = store.get('anomalies', []);
+var evN = anomalies.length;
+var feedEl = $('feed');
+var histEl = $('hist');
+var past = [], future = [], HIST_MAX = 50;
+function saveAnoms() { store.set('anomalies', anomalies); }
+function renderHistory() {
+  histEl.textContent = 'history ' + past.length + ' · redo ' + future.length;
+  $('undoBtn').disabled = past.length === 0;
+  $('redoBtn').disabled = future.length === 0;
+}
+function renderFeed() {
+  var live = anomalies.filter(function (a) { return !a.dismissed; });
+  if (!live.length) {
+    feedEl.innerHTML = '<li class="empty">No open anomalies. Run diagnostic to simulate one.</li>';
+  } else {
+    feedEl.innerHTML = live.slice().reverse().map(function (a) {
+      return '<li class="anom sev-' + a.sev + '">' +
+        '<span class="ts mono">' + hms(a.ts) + 'Z</span>' +
+        '<span class="sev">' + a.sev.toUpperCase() + '</span>' +
+        '<span class="msg">' + esc(a.msg) + '</span>' +
+        '<button class="x" type="button" data-dismiss="' + a.id + '"' +
+        ' aria-label="Dismiss anomaly: ' + esc(a.msg) + '">✕</button>' +
+        '</li>';
+    }).join('');
+  }
+  renderHistory();
+}
+function setDismissed(id, val) {
+  anomalies.forEach(function (a) { if (a.id === id) a.dismissed = val; });
+}
+function pushHist(entry) {
+  past.push(entry);
+  if (past.length > HIST_MAX) past.shift();
+  future.length = 0;
+}
+function diagnostic() {
+  var r = ROWS[ri(ROWS.length)];
+  var m = MSGS[ri(MSGS.length)];
+  var ev = {
+    id: 'ev-' + (++evN) + '-' + Date.now().toString(36),
+    ts: Date.now(),
+    sev: m.sev,
+    msg: m.text.replace('{id}', r.id).replace('{n}', String(2 + ri(48))),
+    dismissed: false
+  };
+  anomalies.push(ev);
+  pushHist({ kind: 'add', ev: ev });
+  saveAnoms();
+  renderFeed();
+}
+function dismissAnomaly(id) {
+  var hit = null;
+  anomalies.forEach(function (a) { if (a.id === id) hit = a; });
+  if (!hit || hit.dismissed) return;
+  hit.dismissed = true;
+  pushHist({ kind: 'dismiss', id: id });
+  saveAnoms();
+  renderFeed();
+}
+function clearAnomalies() {
+  var ids = anomalies.filter(function (a) { return !a.dismissed; }).map(function (a) { return a.id; });
+  if (!ids.length) return;
+  ids.forEach(function (id) { setDismissed(id, true); });
+  pushHist({ kind: 'clear', ids: ids });
+  saveAnoms();
+  renderFeed();
+}
+function undo() {
+  var e = past.pop();
+  if (!e) return;
+  if (e.kind === 'add') anomalies = anomalies.filter(function (a) { return a.id !== e.ev.id; });
+  else if (e.kind === 'dismiss') setDismissed(e.id, false);
+  else e.ids.forEach(function (id) { setDismissed(id, false); });
+  future.push(e);
+  saveAnoms();
+  renderFeed();
+}
+function redo() {
+  var e = future.pop();
+  if (!e) return;
+  if (e.kind === 'add') {
+    var known = false;
+    anomalies.forEach(function (a) { if (a.id === e.ev.id) known = true; });
+    if (!known) anomalies.push(e.ev);
+  } else if (e.kind === 'dismiss') setDismissed(e.id, true);
+  else e.ids.forEach(function (id) { setDismissed(id, true); });
+  past.push(e);
+  saveAnoms();
+  renderFeed();
+}
+feedEl.addEventListener('click', function (e) {
+  var b = e.target.closest ? e.target.closest('[data-dismiss]') : null;
+  if (b) dismissAnomaly(b.dataset.dismiss);
+});
+$('diagBtn').addEventListener('click', diagnostic);
+$('undoBtn').addEventListener('click', undo);
+$('redoBtn').addEventListener('click', redo);
+/* ============================================================
+   10 · Command palette — Ctrl/Cmd+K, fuzzy over satellites and
+   actions, arrow/Enter/Esc, trapped focus, combobox semantics.
+   ============================================================ */
+var pal = $('palette');
+var palInput = $('palInput');
+var palList = $('palList');
+var palItems = [], palActive = 0, lastFocus = null;
+function jumpToGrid() {
+  $('gridSection').scrollIntoView({ block: 'start' });
+  scrollEl.focus();
+}
+function jumpToSatellite(r) {
+  closePalette();
+  gridState.q = r.id;
+  search.value = r.id;
+  store.set('filter', r.id);
+  activeRow = 0;
+  rebuildView();
+  scrollEl.scrollTop = 0;
+  renderGrid();
+  scrollEl.focus();
+}
+var ACTIONS = [
+  { label: 'Toggle theme',             run: toggleTheme },
+  { label: 'Run diagnostic',           run: diagnostic },
+  { label: 'Clear anomalies',          run: clearAnomalies },
+  { label: 'Jump to grid',             run: jumpToGrid },
+  { label: 'Sort by ID',               run: function () { setSort('id'); } },
+  { label: 'Sort by name',             run: function () { setSort('name'); } },
+  { label: 'Sort by orbit',            run: function () { setSort('orbit'); } },
+  { label: 'Sort by status',           run: function () { setSort('status'); } },
+  { label: 'Sort by last contact',     run: function () { setSort('contact'); } },
+  { label: 'Undo last anomaly action', run: undo },
+  { label: 'Redo last anomaly action', run: redo },
+  { label: 'Set mission zone to UTC+0', run: function () { setTz(0); } }
+];
+function fuzzy(q, s) {
+  if (!q) return 0;
+  q = q.toLowerCase();
+  s = s.toLowerCase();
+  var qi = 0, score = 0, streak = 0;
+  for (var n = 0; n < s.length && qi < q.length; n++) {
+    if (s.charAt(n) === q.charAt(qi)) { qi++; streak++; score += 1 + streak * 2 - n * 0.02; }
+    else streak = 0;
+  }
+  return qi === q.length ? score : -1;
+}
+function palSearch(q) {
+  var out = [], sats = [], n, sc;
+  for (n = 0; n < ACTIONS.length; n++) {
+    sc = q ? fuzzy(q, ACTIONS[n].label) : 10;
+    if (sc >= 0) out.push({ label: ACTIONS[n].label, sub: 'action', score: sc + 50, run: ACTIONS[n].run });
+  }
+  for (n = 0; n < ROWS.length; n++) {
+    sc = q ? Math.max(fuzzy(q, ROWS[n].id), fuzzy(q, ROWS[n].name)) : 0;
+    if (sc < 0) continue;
+    sats.push({
+      label: ROWS[n].id + ' · ' + ROWS[n].name,
+      sub: ROWS[n].orbit + ' · ' + ROWS[n].status,
+      score: sc,
+      run: (function (row) { return function () { jumpToSatellite(row); }; })(ROWS[n])
+    });
+    if (!q && sats.length >= 4) break;
+  }
+  sats.sort(function (a, b) { return b.score - a.score; });
+  return out.concat(sats.slice(0, q ? 6 : 4));
+}
+function renderPalette() {
+  palList.innerHTML = palItems.length ? palItems.map(function (it, n) {
+    return '<li id="pal-opt-' + n + '" role="option" aria-selected="' + (n === palActive) + '"' +
+           ' class="pal-item' + (n === palActive ? ' active' : '') + '" data-i="' + n + '">' +
+           '<span class="pal-label">' + esc(it.label) + '</span>' +
+           '<span class="pal-sub">' + esc(it.sub) + '</span></li>';
+  }).join('') : '<li class="pal-empty" role="presentation">No matches</li>';
+  palInput.setAttribute('aria-activedescendant', palItems.length ? 'pal-opt-' + palActive : '');
+}
+function openPalette() {
+  lastFocus = document.activeElement;
+  pal.hidden = false;
+  document.body.classList.add('pal-open');
+  palInput.value = '';
+  palItems = palSearch('');
+  palActive = 0;
+  renderPalette();
+  palInput.focus();
+}
+function closePalette() {
+  pal.hidden = true;
+  document.body.classList.remove('pal-open');
+  if (lastFocus && lastFocus.focus) lastFocus.focus();
+}
+function runPaletteItem(n) {
+  var it = palItems[n];
+  if (!it) return;
+  closePalette();
+  it.run();
+}
+palInput.addEventListener('input', function () {
+  palItems = palSearch(palInput.value);
+  palActive = 0;
+  renderPalette();
+});
+palInput.addEventListener('keydown', function (e) {
+  if (e.key === 'ArrowDown') { e.preventDefault(); palActive = Math.min(palItems.length - 1, palActive + 1); renderPalette(); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); palActive = Math.max(0, palActive - 1); renderPalette(); }
+  else if (e.key === 'Enter') { e.preventDefault(); runPaletteItem(palActive); }
+  else if (e.key === 'Escape') { e.preventDefault(); closePalette(); }
+  else if (e.key === 'Tab') { e.preventDefault(); palInput.focus(); }
+});
+palList.addEventListener('click', function (e) {
+  var li = e.target.closest ? e.target.closest('[data-i]') : null;
+  if (li) runPaletteItem(parseInt(li.dataset.i, 10));
+});
+pal.addEventListener('mousedown', function (e) { if (e.target === pal) closePalette(); });
+
+/* ============================================================
+   11 · Global shortcuts + boot.
+   ============================================================ */
+function isTyping(el) {
+  if (!el) return false;
+  var t = el.tagName;
+  return t === 'INPUT' || t === 'SELECT' || t === 'TEXTAREA' || el.isContentEditable === true;
+}
+document.addEventListener('keydown', function (e) {
+  var mod = e.ctrlKey || e.metaKey;
+  var key = (e.key || '').toLowerCase();
+  if (mod && key === 'k') { e.preventDefault(); if (pal.hidden) openPalette(); else closePalette(); return; }
+  if (mod && key === 'z' && !e.shiftKey) { e.preventDefault(); undo(); return; }
+  if ((mod && key === 'y') || (mod && e.shiftKey && key === 'z')) { e.preventDefault(); redo(); return; }
+  if (key === 'escape' && !pal.hidden) { closePalette(); return; }
+  if (!mod && key === 'd' && !isTyping(e.target)) { e.preventDefault(); toggleTheme(); return; }
+  if (!mod && key === '/' && !isTyping(e.target)) { e.preventDefault(); search.focus(); }
+});
+function tick() {
+  tickClock();
+  tickChart();
+  renderGrid();          /* keeps relative "last contact" counting up live */
+}
+setTheme(store.get('theme', 'dark'));
+renderMetrics();
+rebuildView();
+updateHeaders();
+renderFeed();
+tickClock();
+drawChart();
+renderGrid();
+setInterval(tick, 1000);
+setInterval(walkMetrics, 5000);
 })();
 </script>
 </body>

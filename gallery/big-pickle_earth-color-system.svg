@@ -1,0 +1,209 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" role="img" aria-label="TERRA — design-system board for an Earth-observation brand. A stylised Earth disc built only from the eight core tokens, eight token cards with hex and usage rules, a WCAG 2.1 contrast block with recomputed ratios, a 60-30-10 usage bar and a system-font type hierarchy.">
+  <!-- palette: void #05070D, ocean #0B3D91, atmosphere #7FD4FF, forest #1F6F43, sand #D9B26A, ice #F2F7FA, magma #C1440E, city #FFC857 -->
+  <!-- neutral tints (the only permitted extras, and never used inside the Earth disc): surface #141B29, hairline #2A3446. No other hues anywhere on the board. -->
+  <defs>
+    <clipPath id="earthClip"><circle cx="288" cy="340" r="190"/></clipPath>
+    <linearGradient id="nightG" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#05070D" stop-opacity="0"/>
+      <stop offset="0.38" stop-color="#05070D" stop-opacity="0.55"/>
+      <stop offset="0.72" stop-color="#05070D" stop-opacity="0.88"/>
+      <stop offset="1" stop-color="#05070D" stop-opacity="0.94"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="800" fill="#05070D"/>
+
+  <!-- ============ masthead ============ -->
+  <text x="48" y="54" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="30" font-weight="800" letter-spacing="6" fill="#F2F7FA">TERRA</text>
+  <text x="48" y="78" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" letter-spacing="3" fill="#7FD4FF">EARTH OBSERVATION COLOUR SYSTEM &#183; DESIGN-SYSTEM BOARD</text>
+  <text x="1152" y="46" text-anchor="end" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="11" fill="#F2F7FA" opacity="0.85">8 core tokens &#183; 2 neutral tints &#183; WCAG 2.1 recomputed</text>
+  <text x="1152" y="64" text-anchor="end" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" fill="#F2F7FA" opacity="0.6">static SVG &#183; system fonts only &#183; no external assets</text>
+  <line x1="48" y1="96" x2="1152" y2="96" stroke="#2A3446" stroke-width="1"/>
+
+  <text x="48" y="124" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="2" fill="#F2F7FA" opacity="0.7">01 &#183; EARTH DISC &#8212; CORE PALETTE ONLY</text>
+  <text x="552" y="124" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="2" fill="#F2F7FA" opacity="0.7">02 &#183; CORE TOKENS &#8212; EXACT HEX, NO SUBSTITUTES</text>
+
+  <!-- ============ 01 · the Earth disc (400 px across, core tokens only) ============ -->
+  <circle cx="288" cy="340" r="190" fill="#0B3D91"/>
+  <g clip-path="url(#earthClip)">
+    <!-- landmasses: Americas, Africa + Europe, Asia, Greenland, Antarctica, Madagascar -->
+    <path d="M118 262 C120 240 140 226 168 226 C196 226 222 238 232 258 C240 274 232 288 224 300 C214 316 202 330 196 344 C190 358 180 362 174 352 C166 338 160 322 146 312 C130 300 116 282 118 262 Z" fill="#1F6F43"/>
+    <path d="M194 356 C206 352 220 356 226 366 C232 376 228 396 224 416 C220 436 212 458 202 466 C192 474 184 466 182 450 C180 430 180 404 184 384 C187 370 186 360 194 356 Z" fill="#1F6F43"/>
+    <path d="M322 322 C348 314 380 318 398 330 C414 340 416 356 410 372 C404 388 392 398 386 414 C380 432 374 452 364 462 C356 470 348 466 346 452 C344 434 340 414 334 396 C328 378 320 358 318 344 C316 332 316 326 322 322 Z" fill="#1F6F43"/>
+    <path d="M318 288 C328 276 344 272 356 276 C368 280 370 292 364 300 C358 308 346 312 336 314 C326 316 318 312 316 304 C314 296 314 292 318 288 Z" fill="#1F6F43"/>
+    <path d="M356 292 C372 280 396 274 420 276 C444 278 462 292 466 312 C470 330 460 344 444 352 C430 359 414 360 402 354 C388 346 370 336 362 322 C354 310 350 300 356 292 Z" fill="#1F6F43"/>
+    <path d="M186 206 C200 200 224 202 232 214 C240 226 230 240 214 242 C198 244 184 236 182 224 C180 216 182 210 186 206 Z" fill="#1F6F43"/>
+    <path d="M402 418 C408 414 414 420 414 430 C414 442 410 450 405 450 C400 450 398 442 398 432 C398 424 398 420 402 418 Z" fill="#1F6F43"/>
+    <path d="M140 496 C180 476 250 470 320 476 C390 482 430 494 436 508 C432 524 380 532 288 532 C196 532 144 524 140 508 Z" fill="#F2F7FA"/>
+    <!-- lithosphere: sand for the great deserts -->
+    <path d="M340 326 C366 318 396 322 412 334 C420 348 404 356 384 356 C364 356 346 348 338 340 C334 334 336 330 340 326 Z" fill="#D9B26A"/>
+    <path d="M176 330 C186 324 198 328 198 340 C198 350 188 356 180 350 C174 344 172 336 176 330 Z" fill="#D9B26A"/>
+    <path d="M418 300 C430 296 444 300 446 310 C448 320 436 326 426 322 C416 318 412 306 418 300 Z" fill="#D9B26A"/>
+    <!-- cryosphere: arctic cap + Greenland already ice -->
+    <path d="M160 156 C210 142 300 144 372 158 C370 174 316 186 252 184 C192 182 162 172 160 156 Z" fill="#F2F7FA"/>
+    <!-- cloud swirls (ice, translucent) -->
+    <path d="M132 248 C186 230 250 244 302 226 C338 214 372 216 400 226" fill="none" stroke="#F2F7FA" stroke-width="9" stroke-linecap="round" opacity="0.5"/>
+    <path d="M120 330 C190 314 250 336 320 320 C366 310 404 322 446 314" fill="none" stroke="#F2F7FA" stroke-width="9" stroke-linecap="round" opacity="0.42"/>
+    <path d="M150 428 C220 412 280 434 350 422 C392 414 420 424 448 418" fill="none" stroke="#F2F7FA" stroke-width="10" stroke-linecap="round" opacity="0.38"/>
+    <path d="M196 480 C240 466 300 468 340 482 C318 496 246 498 196 480 Z" fill="#F2F7FA" opacity="0.3"/>
+    <!-- day/night terminator: soft dusk band, void gradient -->
+    <rect x="300" y="140" width="180" height="400" fill="url(#nightG)"/>
+    <!-- human light on the night side (city) -->
+    <circle cx="346" cy="322" r="2.1" fill="#FFC857" opacity="0.85"/>
+    <circle cx="358" cy="308" r="1.8" fill="#FFC857" opacity="0.7"/>
+    <circle cx="368" cy="332" r="2.3" fill="#FFC857" opacity="0.9"/>
+    <circle cx="388" cy="344" r="2" fill="#FFC857" opacity="0.85"/>
+    <circle cx="406" cy="324" r="1.8" fill="#FFC857" opacity="0.75"/>
+    <circle cx="426" cy="350" r="2.1" fill="#FFC857" opacity="0.8"/>
+    <circle cx="330" cy="352" r="1.6" fill="#FFC857" opacity="0.5"/>
+    <!-- heat / anomaly markers (magma) -->
+    <circle cx="386" cy="398" r="2.4" fill="#C1440E"/>
+    <circle cx="368" cy="384" r="2" fill="#C1440E"/>
+    <circle cx="410" cy="300" r="2" fill="#C1440E"/>
+    <!-- graticule (atmosphere, whisper) -->
+    <g fill="none" stroke="#7FD4FF" stroke-width="0.8" opacity="0.16">
+      <ellipse cx="288" cy="340" rx="100" ry="190"/>
+      <ellipse cx="288" cy="340" rx="190" ry="95"/>
+      <ellipse cx="288" cy="286" rx="168" ry="56"/>
+    </g>
+  </g>
+  <!-- atmosphere rim -->
+  <circle cx="288" cy="340" r="190" fill="none" stroke="#7FD4FF" stroke-width="2.5" opacity="0.9"/>
+  <circle cx="288" cy="340" r="198" fill="none" stroke="#7FD4FF" stroke-width="6" opacity="0.3"/>
+  <circle cx="288" cy="340" r="208" fill="none" stroke="#7FD4FF" stroke-width="10" opacity="0.12"/>
+  <text x="150" y="508" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.6">schematic Atlantic view</text>
+  <text x="462" y="508" text-anchor="end" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.8">terminator &#8594; night side</text>
+  <!-- disc key -->
+  <rect x="48" y="548" width="10" height="10" fill="#0B3D91"/><text x="64" y="557" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.75">ocean</text>
+  <rect x="128" y="548" width="10" height="10" fill="#1F6F43"/><text x="144" y="557" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.75">forest</text>
+  <rect x="208" y="548" width="10" height="10" fill="#D9B26A"/><text x="224" y="557" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.75">sand</text>
+  <rect x="288" y="548" width="10" height="10" fill="#F2F7FA"/><text x="304" y="557" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.75">ice</text>
+  <rect x="368" y="548" width="10" height="10" fill="#FFC857"/><text x="384" y="557" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.75">city</text>
+  <rect x="448" y="548" width="10" height="10" fill="#C1440E"/><text x="464" y="557" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.75">magma</text>
+  <text x="48" y="582" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.55">Land, cloud and terminator are drawn from the eight core tokens only.</text>
+
+  <!-- ============ 02 · eight swatch cards ============ -->
+  <rect x="552" y="140" width="292" height="72" rx="4" fill="#141B29" stroke="#2A3446"/>
+  <rect x="553" y="141" width="60" height="70" rx="3" fill="#05070D" stroke="#2A3446"/>
+  <text x="630" y="164" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#F2F7FA">void</text>
+  <text x="630" y="182" font-family="ui-monospace, Consolas, Menlo, monospace" font-size="11.5" fill="#7FD4FF">#05070D</text>
+  <text x="630" y="200" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.72">Allowed space + night side &#183; never body copy.</text>
+
+  <rect x="860" y="140" width="292" height="72" rx="4" fill="#141B29" stroke="#2A3446"/>
+  <rect x="861" y="141" width="60" height="70" rx="3" fill="#0B3D91"/>
+  <text x="938" y="164" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#F2F7FA">ocean</text>
+  <text x="938" y="182" font-family="ui-monospace, Consolas, Menlo, monospace" font-size="11.5" fill="#7FD4FF">#0B3D91</text>
+  <text x="938" y="200" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.72">Allowed ocean fill + map base &#183; never small text.</text>
+
+  <rect x="552" y="220" width="292" height="72" rx="4" fill="#141B29" stroke="#2A3446"/>
+  <rect x="553" y="221" width="60" height="70" rx="3" fill="#7FD4FF"/>
+  <text x="630" y="244" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#F2F7FA">atmosphere</text>
+  <text x="630" y="262" font-family="ui-monospace, Consolas, Menlo, monospace" font-size="11.5" fill="#7FD4FF">#7FD4FF</text>
+  <text x="630" y="280" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.72">Allowed rim, links, labels &#183; never on ice or sand.</text>
+
+  <rect x="860" y="220" width="292" height="72" rx="4" fill="#141B29" stroke="#2A3446"/>
+  <rect x="861" y="221" width="60" height="70" rx="3" fill="#F2F7FA"/>
+  <text x="938" y="244" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#F2F7FA">ice</text>
+  <text x="938" y="262" font-family="ui-monospace, Consolas, Menlo, monospace" font-size="11.5" fill="#7FD4FF">#F2F7FA</text>
+  <text x="938" y="280" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.72">Allowed clouds, poles, body text &#183; never on sand.</text>
+
+  <rect x="552" y="300" width="292" height="72" rx="4" fill="#141B29" stroke="#2A3446"/>
+  <rect x="553" y="301" width="60" height="70" rx="3" fill="#1F6F43"/>
+  <text x="630" y="324" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#F2F7FA">forest</text>
+  <text x="630" y="342" font-family="ui-monospace, Consolas, Menlo, monospace" font-size="11.5" fill="#7FD4FF">#1F6F43</text>
+  <text x="630" y="360" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.72">Allowed land + biosphere metrics &#183; never tiny text.</text>
+
+  <rect x="860" y="300" width="292" height="72" rx="4" fill="#141B29" stroke="#2A3446"/>
+  <rect x="861" y="301" width="60" height="70" rx="3" fill="#D9B26A"/>
+  <text x="938" y="324" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#F2F7FA">sand</text>
+  <text x="938" y="342" font-family="ui-monospace, Consolas, Menlo, monospace" font-size="11.5" fill="#7FD4FF">#D9B26A</text>
+  <text x="938" y="360" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.72">Allowed desert + large warnings &#183; never behind ice.</text>
+
+  <rect x="552" y="380" width="292" height="72" rx="4" fill="#141B29" stroke="#2A3446"/>
+  <rect x="553" y="381" width="60" height="70" rx="3" fill="#C1440E"/>
+  <text x="630" y="404" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#F2F7FA">magma</text>
+  <text x="630" y="422" font-family="ui-monospace, Consolas, Menlo, monospace" font-size="11.5" fill="#7FD4FF">#C1440E</text>
+  <text x="630" y="440" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.72">Allowed heat + alerts &#183; never large fills.</text>
+
+  <rect x="860" y="380" width="292" height="72" rx="4" fill="#141B29" stroke="#2A3446"/>
+  <rect x="861" y="381" width="60" height="70" rx="3" fill="#FFC857"/>
+  <text x="938" y="404" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#F2F7FA">city</text>
+  <text x="938" y="422" font-family="ui-monospace, Consolas, Menlo, monospace" font-size="11.5" fill="#7FD4FF">#FFC857</text>
+  <text x="938" y="440" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.72">Allowed city lights + key figures &#183; never status.</text>
+
+  <!-- ============ 03 · WCAG 2.1 contrast, recomputed ============ -->
+  <text x="552" y="476" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="2" fill="#F2F7FA" opacity="0.7">03 &#183; WCAG 2.1 CONTRAST &#183; AAA &#8805; 7:1 &#183; AA &#8805; 4.5:1</text>
+  <rect x="552" y="488" width="300" height="284" rx="4" fill="#141B29" stroke="#2A3446"/>
+  <text x="566" y="508" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9.5" font-weight="700" fill="#F2F7FA">Relative luminance &#8594; contrast ratio</text>
+  <text x="566" y="524" font-family="ui-monospace, Consolas, Menlo, monospace" font-size="9" fill="#7FD4FF">L = 0.2126R + 0.7152G + 0.0722B</text>
+  <text x="566" y="538" font-family="ui-monospace, Consolas, Menlo, monospace" font-size="9" fill="#7FD4FF">c = c8/255; c &#8804; 0.03928 ? c/12.92 : ((c+0.055)/1.055)^2.4</text>
+  <text x="566" y="552" font-family="ui-monospace, Consolas, Menlo, monospace" font-size="9" fill="#7FD4FF">ratio = (Llighter + 0.05) / (Ldarker + 0.05)</text>
+  <text x="566" y="568" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.62">L used: void .0021 &#183; ocean .0545 &#183; magma .1550</text>
+  <text x="566" y="580" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.62">L used: sand .4763 &#183; city .6326 &#183; ice .9230</text>
+
+  <rect x="566" y="596" width="86" height="24" fill="#05070D" stroke="#2A3446"/>
+  <text x="609" y="613" text-anchor="middle" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#F2F7FA">Aa</text>
+  <text x="664" y="613" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9.5" fill="#F2F7FA" opacity="0.85">ice on void</text>
+  <text x="838" y="613" text-anchor="end" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#F2F7FA">18.66:1 AAA</text>
+
+  <rect x="566" y="626" width="86" height="24" fill="#05070D" stroke="#2A3446"/>
+  <text x="609" y="643" text-anchor="middle" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#FFC857">Aa</text>
+  <text x="664" y="643" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9.5" fill="#F2F7FA" opacity="0.85">city on void</text>
+  <text x="838" y="643" text-anchor="end" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#FFC857">13.09:1 AAA</text>
+
+  <rect x="566" y="656" width="86" height="24" fill="#0B3D91" stroke="#2A3446"/>
+  <text x="609" y="673" text-anchor="middle" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#F2F7FA">Aa</text>
+  <text x="664" y="673" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9.5" fill="#F2F7FA" opacity="0.85">ice on ocean</text>
+  <text x="838" y="673" text-anchor="end" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#F2F7FA">9.31:1 AAA</text>
+
+  <rect x="566" y="686" width="86" height="24" fill="#0B3D91" stroke="#2A3446"/>
+  <text x="609" y="703" text-anchor="middle" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#FFC857">Aa</text>
+  <text x="664" y="703" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9.5" fill="#F2F7FA" opacity="0.85">city on ocean</text>
+  <text x="838" y="703" text-anchor="end" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#FFC857">6.53:1 AA</text>
+
+  <rect x="566" y="716" width="86" height="24" fill="#C1440E" stroke="#2A3446"/>
+  <text x="609" y="733" text-anchor="middle" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#F2F7FA">Aa</text>
+  <text x="664" y="733" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9.5" fill="#F2F7FA" opacity="0.85">ice on magma</text>
+  <text x="838" y="733" text-anchor="end" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#F2F7FA">4.75:1 AA</text>
+
+  <rect x="566" y="746" width="86" height="24" fill="#D9B26A" stroke="#2A3446"/>
+  <text x="609" y="763" text-anchor="middle" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#F2F7FA">Aa</text>
+  <text x="664" y="763" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9.5" fill="#F2F7FA" opacity="0.85">ice on sand (documented failure)</text>
+  <text x="838" y="763" text-anchor="end" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#C1440E">1.85:1 FAIL</text>
+
+  <!-- ============ 04 · 60-30-10 usage ============ -->
+  <text x="876" y="476" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="2" fill="#F2F7FA" opacity="0.7">04 &#183; USAGE 60-30-10</text>
+  <rect x="876" y="488" width="276" height="284" rx="4" fill="#141B29" stroke="#2A3446"/>
+  <rect x="876" y="508" width="165.6" height="26" fill="#05070D"/>
+  <rect x="1041.6" y="508" width="82.8" height="26" fill="#0B3D91"/>
+  <rect x="1124.4" y="508" width="11.04" height="26" fill="#7FD4FF"/>
+  <rect x="1135.44" y="508" width="5.52" height="26" fill="#1F6F43"/>
+  <rect x="1140.96" y="508" width="4.14" height="26" fill="#D9B26A"/>
+  <rect x="1145.1" y="508" width="3.31" height="26" fill="#F2F7FA"/>
+  <rect x="1148.41" y="508" width="2.21" height="26" fill="#FFC857"/>
+  <rect x="1150.62" y="508" width="1.38" height="26" fill="#C1440E"/>
+  <text x="958" y="552" text-anchor="middle" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#F2F7FA">60%</text>
+  <text x="1083" y="552" text-anchor="middle" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#F2F7FA">30%</text>
+  <text x="1138" y="552" text-anchor="middle" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#F2F7FA">10%</text>
+  <rect x="876" y="572" width="11" height="11" fill="#05070D" stroke="#2A3446" stroke-width="0.75"/><text x="896" y="581" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" fill="#F2F7FA" opacity="0.85">void</text><text x="1152" y="581" text-anchor="end" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" fill="#F2F7FA" opacity="0.85">60%</text>
+  <rect x="876" y="594" width="11" height="11" fill="#0B3D91"/><text x="896" y="603" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" fill="#F2F7FA" opacity="0.85">ocean</text><text x="1152" y="603" text-anchor="end" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" fill="#F2F7FA" opacity="0.85">30%</text>
+  <rect x="876" y="616" width="11" height="11" fill="#7FD4FF"/><text x="896" y="625" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" fill="#F2F7FA" opacity="0.85">atmosphere</text><text x="1152" y="625" text-anchor="end" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" fill="#F2F7FA" opacity="0.85">4%</text>
+  <rect x="876" y="638" width="11" height="11" fill="#1F6F43"/><text x="896" y="647" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" fill="#F2F7FA" opacity="0.85">forest</text><text x="1152" y="647" text-anchor="end" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" fill="#F2F7FA" opacity="0.85">2%</text>
+  <rect x="876" y="660" width="11" height="11" fill="#D9B26A"/><text x="896" y="669" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" fill="#F2F7FA" opacity="0.85">sand</text><text x="1152" y="669" text-anchor="end" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" fill="#F2F7FA" opacity="0.85">1.5%</text>
+  <rect x="876" y="682" width="11" height="11" fill="#F2F7FA"/><text x="896" y="691" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" fill="#F2F7FA" opacity="0.85">ice</text><text x="1152" y="691" text-anchor="end" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" fill="#F2F7FA" opacity="0.85">1.2%</text>
+  <rect x="876" y="704" width="11" height="11" fill="#FFC857"/><text x="896" y="713" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" fill="#F2F7FA" opacity="0.85">city</text><text x="1152" y="713" text-anchor="end" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" fill="#F2F7FA" opacity="0.85">0.8%</text>
+  <rect x="876" y="726" width="11" height="11" fill="#C1440E"/><text x="896" y="735" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" fill="#F2F7FA" opacity="0.85">magma</text><text x="1152" y="735" text-anchor="end" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" fill="#F2F7FA" opacity="0.85">0.5%</text>
+  <text x="876" y="758" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#F2F7FA" opacity="0.6">60 + 30 + 10 = 100 &#183; accents never carry layout</text>
+
+  <!-- ============ 05 · type hierarchy (system fonts only) ============ -->
+  <text x="48" y="606" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="2" fill="#F2F7FA" opacity="0.7">05 &#183; TYPE HIERARCHY &#8212; SYSTEM FONTS ONLY</text>
+  <text x="48" y="644" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="30" font-weight="800" fill="#F2F7FA">Terra</text>
+  <text x="48" y="660" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#7FD4FF">DISPLAY &#183; 30 / 800 &#183; ice on void &#183; 18.66:1 AAA</text>
+  <text x="48" y="694" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#F2F7FA">Land, ocean, ice and light in one readable palette.</text>
+  <text x="48" y="710" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#7FD4FF">BODY &#183; 13 / 400 &#183; ice on void &#183; 18.66:1 AAA</text>
+  <text x="48" y="742" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" letter-spacing="2" fill="#7FD4FF">SENSOR 04 &#183; TERMINATOR PASS</text>
+  <text x="48" y="758" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#7FD4FF">CAPTION &#183; 10 / 600 &#183; atmosphere on void &#183; 12.24:1 AAA</text>
+
+  <line x1="48" y1="776" x2="1152" y2="776" stroke="#2A3446" stroke-width="1"/>
+  <text x="48" y="792" font-family="system-ui, Segoe UI, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="8.5" fill="#F2F7FA" opacity="0.5">palette: void #05070D &#183; ocean #0B3D91 &#183; atmosphere #7FD4FF &#183; forest #1F6F43 &#183; sand #D9B26A &#183; ice #F2F7FA &#183; magma #C1440E &#183; city #FFC857 &#183; neutral tints: surface #141B29, hairline #2A3446 &#183; no other hues</text>
+</svg>

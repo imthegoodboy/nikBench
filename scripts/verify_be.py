@@ -31,7 +31,9 @@ SMOKE.mkdir(exist_ok=True)
 
 def extract_js(model: str) -> str | None:
     text = (ROOT / "submissions" / f"{model}.md").read_text(encoding="utf-8", errors="replace")
-    m = re.search(r"^## B1\b.*?(?=\n## |\Z)", text, re.S | re.M)
+    # Accept both the contracted `## B1` heading and the descriptive
+    # `## Section B — Backend (B1)` form some models emit.
+    m = re.search(r"^## (?:Section B\b[^\n]*|B1\b).*?(?=\n## |\Z)", text, re.S | re.M)
     if not m:
         return None
     block = re.search(r"```javascript\s*\n(.*?)```", m.group(0), re.S)
