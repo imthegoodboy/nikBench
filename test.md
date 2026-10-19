@@ -1,10 +1,12 @@
-# NikBench v2.0 — All-In-One Packet (build → review → update the board)
+# NikBench v3.0 — Hard Mode (build → review → update the board)
 
 > **How you got this:** a human pasted this file into a chat with you. This packet is **idempotent** — run it once now and, later, run it again (fresh chat) once other models finish: it will route you into the correct phase automatically.
 >
 > Your job today may be **Phase 1 only**, or Phases 2–3 — determined by ONE check in the Phase Router below.
 
-You are participating in **NikBench**, a peer-judged benchmark with six pillars: **Ratiocination 🧩**, **Thought 🧠**, **Visual craft 🎨**, **Algorithm design 🧮**, **Frontend 🪟**, **Backend ⚙️**.
+You are participating in **NikBench v3.0 — Hard Mode**, a peer-judged benchmark with six pillars: **Ratiocination 🧩**, **Thought 🧠**, **Visual craft 🎨**, **Algorithm design 🧮**, **Frontend 🪟**, **Backend ⚙️**.
+
+**v3.0 is deliberately harder than v2.0.** It adds three hard reasoning classics (R11–R13), a current open problem in theoretical physics (T7), three demanding new visual builds (V5 Eiffel Tower, V6 Taj Mahal, V7 Earth colour system), a sequence-CRDT design (A4), and materially harder frontend/backend contracts (virtualised 10k-row UI, command palette, undo/redo; idempotency keys, ETags, pagination, audit log). The output is large on purpose: finishing a complete, correct build is part of what is being measured.
 
 ---
 
@@ -38,10 +40,11 @@ Your full reply will later be reviewed by the other candidate models. Judges do 
 6. **Do not restate the tasks.** Solve them. No meta commentary, no flattery, no closing speech.
 7. **Blind-phase isolation:** read no files other than this packet; never look into `submissions/`, `peer/`, `scorecards/`, `docs/`, or `judging/`.
 8. **Anti-vibes protocol (all THO tasks):** do not invent citations, theorem names, people, or results. Claiming to *solve* an open problem is a candor failure. "Here is what is actually known, here is where I stop, and here is my reasoned position" scores **better** than confident mush.
+9. **Completion contract:** a complete build is part of the capability being measured. If you genuinely run out of budget, stop cleanly and write `<!-- incomplete: <sections> -->` at the point where you stopped — never emit `TODO`/`...` placeholders or fake content. Omitted sections score 0; an honest partial build is graded as-is.
 
-## Section R — Ratiocination (R1–R10)
+## Section R — Ratiocination (R1–R13)
 
-Each problem below is quoted from its classic public source (provenance listed in `docs/methodology.md`). All have exact answers, but **no answer key exists in this repo** — judges solve them independently. Show real derivations; verify your own work before writing it.
+Each problem below is quoted from (or anchored to) its classic public source; provenance is listed in `docs/methodology.md`. All have exact answers, but **no answer key exists in this repo** — judges solve them independently. Show real derivations; verify your own work before writing it. R11–R13 are the v3.0 hard tier: they are longer, and a memorised answer without a derivation earns little.
 
 ### R1 — The Hardest Logic Puzzle Ever (Boolos, 1996)
 
@@ -136,7 +139,30 @@ Two trains are 100 km apart on the same straight track, moving toward each other
 
 You have 12 visually identical coins; exactly one is counterfeit and differs in weight from the other eleven — it may be **heavier or lighter, you don't know which**. You have a two-pan balance (no reference weights). In at most **three** weighings, identify the counterfeit coin **and** determine whether it is heavier or lighter. Present your strategy as a complete decision tree: every possible outcome branch of all three weighings leads to a definitive (coin, heavier/lighter) answer, with no branch left unassigned.
 
-## Section T — Thought (T1–T6) — *no answers exist*
+### R11 — The 100 Prisoners and 100 Boxes (hard tier)
+
+The 100 prisoners are numbered 1 to 100. A room contains a cupboard with 100 boxes; the warden has placed one prisoner's number, chosen uniformly at random, inside each box — a uniformly random permutation of 1…100. One at a time, each prisoner enters the room and may open **at most 50** boxes, looking for their own number. A prisoner may not mark, move, or reorder boxes; after each prisoner leaves, every box is closed again exactly as found. If **every** prisoner finds their own number, all 100 are freed; if even one fails, all are executed. Before the game begins, the prisoners may agree on a strategy, but they cannot communicate once it starts.
+
+**Deliverable:** the strategy that maximises the probability that all 100 survive, a proof that it does so, and the exact survival probability as a closed-form expression plus a decimal to four places. State explicitly what the warden's permutation being uniformly random buys you, and why the naive independent-search strategy is far worse.
+
+### R12 — The Sum and Product Puzzle (Freudenthal, 1969) (hard tier)
+
+Two integers `x` and `y` are chosen with `1 < x < y` and `x + y ≤ 100`. Perfect logician **S** is told only their sum `x + y`; perfect logician **P** is told only their product `xy`. Both know all the rules above. The following conversation occurs, in order:
+
+- **P:** I don't know the two numbers.
+- **S:** I knew you didn't know.
+- **P:** Now I know.
+- **S:** Now I also know.
+
+**Deliverable:** determine `x` and `y`, and prove the answer is unique under this dialogue. Show the successive sets of possible pairs after each statement (or a table that makes the eliminations auditable) — a bare memorised pair scores near zero.
+
+### R13 — The Five Pirates (hard tier)
+
+Five perfectly logical pirates, A (oldest), B, C, D, E (youngest), have found 100 gold coins. They must divide the coins using this rule: the oldest surviving pirate proposes an allocation of all 100 coins (integer coins); every surviving pirate, **including the proposer**, votes. If **at least half** of the surviving pirates vote yes, the proposal passes and the game ends. Otherwise the proposer is thrown overboard, and the next-oldest surviving pirate proposes under the same rule. Every pirate's preferences are, in strict order: (1) survive; (2) maximise their own gold; (3) if survival and gold are equal either way, vote **no** so that the proposer is thrown overboard. All of this is common knowledge.
+
+**Deliverable:** the allocation proposed by A under subgame-perfect equilibrium, the votes, and the full backward-induction table for 1, 2, 3, 4, and 5 pirates. State why the "at least half" threshold and the bloodthirsty tie-break both matter; changing either changes the answer.
+
+## Section T — Thought (T1–T7) — *no answers exist*
 
 These are famous open or contested questions. Nobody — neither judge nor peer nor model — knows "the answer", because **there is none**. You are graded on: comprehension of what is actually being asked; accurate survey of the state of the art (no invented citations); originality within honesty; rigor of your argument; and intellectual candor (saying clearly what you don't know). Always answer **in your own reasoning, not by reciting a memorized survey**: judges check whether grasp is real.
 
@@ -169,9 +195,17 @@ Sleeping Beauty agrees to the experiment: on Sunday she is told the rules; a fai
 
 Give an operational definition of "life" — criteria with cut-offs you actually commit to. Then stress-test it honestly against: viruses; prions; a growing crystal; a glider in Conway's Game of Life; a hypothetical von Neumann universal constructor; fire; a beehive (colony-level vs individual). Where your definition draws boundaries that *feel* wrong, diagnose whether the fault is the definition or our intuitions, and say which criterion you would bend first. One nod to Schrödinger's *What Is Life?* (1944) and what he got right is welcome; beyond that, the reasoning must be your own. ≤ 400 words.
 
-## Section V — Visual Craft (V1–V4)
+### T7 — The Black Hole Information Paradox (hard tier)
 
-Read as an art director would: composition, palette discipline, typography, motion timing, and — where facts are on the canvas — **factual accuracy**. Deliverables are static code, renderable by judges with a browser.
+Hawking's 1974 semiclassical calculation says a black hole radiates a thermal spectrum and evaporates. If the radiation is exactly thermal, the information about what formed the hole appears to be destroyed — but ordinary quantum mechanics is unitary, and a pure state must evolve to a pure state. That is the paradox. Required (≤ 500 words total):
+
+1. **State it precisely.** Define unitarity, the Bekenstein–Hawking entropy `S = A/(4G)` (in appropriate units), the Page curve, and what "information recovery" would actually mean operationally. Say clearly which assumptions are semiclassical and which are quantum-gravitational.
+2. **Survey the live positions**, 2–3 sentences each: black-hole complementarity (Susskind), the firewall argument (AMPS 2012), ER=EPR, and the island formula / replica-wormhole derivations of the Page curve (2019–20). State at least one concrete result or equation correctly; do not invent citations.
+3. **Take a position.** Which line do you find most promising, what would count as a resolution, and what is the strongest objection to your view? Be explicit about what remains unknown — this problem is not experimentally settled.
+
+## Section V — Visual Craft (V1–V7)
+
+Read as an art director would: composition, palette discipline, typography, motion timing, and — where facts are on the canvas — **factual accuracy**. Deliverables are static code, renderable by judges with a browser. V5–V7 are the v3.0 hard tier: architecture, symmetry, and a real colour system (with WCAG math), not just decoration.
 
 ### V1 — Mona Lisa, in pure SVG
 
@@ -248,7 +282,56 @@ month,revenue_eur,note
 24,40100,
 ```
 
-## Section A — Algorithm Design (A1–A3)
+### V5 — The Eiffel Tower, architectural elevation (hard tier)
+
+Recreate the Eiffel Tower (1889, Gustave Eiffel's company) as a **hand-authored architectural elevation** in pure SVG. No reference image is provided; work from the specification below.
+
+- One `\`\`\`svg` fenced block; root `<svg viewBox="0 0 600 900">`.
+- No `<image>`, no external references, no external CSS; inline `<defs>` allowed (max 2 gradients, max 1 filter).
+- **Geometry is checkable.** Map height linearly onto the canvas: ground line `y = 850`, overall height 330 m at `y = 50` (so 1 m ≈ 2.424 px vertically). Draw the three platforms at the correct scaled heights: **57 m** (first), **115 m** (second), **276 m** (top). Platform deck lines must be within ±10 px of `y = 712`, `y = 571`, and `y = 181` respectively. Base width is **125 m** — make the outer legs span a plausible scaled base (roughly 300 px), and taper monotonically to the top.
+- Must read as the Eiffel Tower: four splayed legs, the two large decorative arches between the legs, three platforms, lattice/cross-bracing on the lower and middle sections, a tapering upper shaft, and an antenna. No solid silhouette-only cheat: at least 40 distinct lattice/brace elements must be visible.
+- Include a small scale/annotation block inside the SVG: `1889 · 330 m overall · 125 m base · platforms 57 / 115 / 276 m`, plus a 0–100 m scale bar. Palette ≤ 6 colours; include a `<!-- palette: ... -->` comment.
+- Max **220** shape elements. At 120 px wide it must still be recognisable as the Eiffel Tower.
+
+### V6 — The Taj Mahal, bilateral symmetry (hard tier)
+
+Recreate the Taj Mahal's garden façade as a **single hand-authored SVG** with true bilateral symmetry.
+
+- One `\`\`\`svg` fenced block; root `<svg viewBox="0 0 900 600">`.
+- **Symmetry contract:** the composition must be mirror-symmetric about `x = 450` to within 1 px (use one mirrored `<g transform="translate(900,0) scale(-1,1)">` for the repeated half; the central dome and finial may be drawn once on the axis). No asymmetric decorative elements.
+- Required silhouette: raised plinth, central onion dome with finial, four minarets (two visible in front, two behind — all four must be drawn), the large central iwan/arch, side arches, reflecting pool with a symmetric reflection, and cypress trees.
+- **Factual/proportional anchors:** annotate `1632–1653 · dome ≈ 73 m · minarets ≈ 40 m`. Make the dome clearly taller than the minarets; the minarets must read as four separate towers, not columns attached to the façade.
+- Palette ≤ 8 colours (marble/ivory, sandstone, sky, water, green, shadow); include a `<!-- palette: ... -->` comment.
+- Max **260** shape elements. Sunrise/sunset mood allowed but keep the marble legible; no `<image>` or external assets.
+
+### V7 — Earth: a colour system, not a poster (hard tier)
+
+Build a single SVG **design-system board** for a fictional Earth-observation brand. It must prove the palette works, not just display it.
+
+- One `\`\`\`svg` fenced block; root `<svg viewBox="0 0 1200 800">`; no `<image>`, external fonts, or external CSS.
+- **Fixed core palette (use these exact values):**
+
+  | Token | Hex | Meaning |
+  |---|---|---|
+  | `void` | `#05070D` | space / background |
+  | `ocean` | `#0B3D91` | deep water |
+  | `atmosphere` | `#7FD4FF` | scattered light |
+  | `forest` | `#1F6F43` | biosphere |
+  | `sand` | `#D9B26A` | desert / lithosphere |
+  | `ice` | `#F2F7FA` | cryosphere / text |
+  | `magma` | `#C1440E` | heat / alert |
+  | `city` | `#FFC857` | human light |
+
+  You may add at most **2** neutral tints (e.g. a shadow and a grid line); no other hues.
+- **Board contents (all required):**
+  1. A stylised Earth disc at least 360 px across, rendered **only** from the core palette: at least three recognisable land masses, cloud swirls, an atmosphere rim, and a day/night terminator. It must look like Earth, not a generic marble.
+  2. Eight swatch cards: token name, hex, and a one-line usage rule (where the colour is allowed / forbidden).
+  3. **WCAG 2.1 contrast block:** at least three text/background pairs from the palette, each with the computed contrast ratio to **two decimal places**. Include at least one pair ≥ 7:1 (AAA) and one pair in 4.5–7:1 (AA). Show the formula or the relative-luminance values you used. Judges will recompute these — invented ratios score 0.
+  4. A 60-30-10 usage bar with percentages that sum to 100, using the palette.
+  5. A short typographic hierarchy (display / body / caption) in system fonts only.
+- Max **200** shape elements. Include a `<!-- palette: ... -->` comment. The board must remain readable at 50% zoom.
+
+## Section A — Algorithm Design (A1–A4)
 
 No execution — design, invariants, and honest complexity claims. Pseudo-code ≤ 60 lines per task, inside the prose. Points live in: correctness of the mechanics, real amortized analysis (not hand-waving), edge-case awareness.
 
@@ -264,88 +347,122 @@ Design **two** algorithms for the number of *distinct* elements in a potentially
 
 A counter service: cluster of cache nodes, load-balanced by consistent hashing with virtual nodes; `INCR(hashtag)` is the whole API. A concert tweet creates a celebrity hashtag that receives ~50k INCR/s — consistent hashing maps it to exactly one node, which melts. Deliverables: (i) the consistent-hashing design with vnodes and what actually moves when a node dies; (ii) a **two-layer** mitigation that resolves the hot-key melt (local aggregation buffers, key-splitting, or both — justify your choice with the staleness/accuracy trade-off); (iii) invariants + failure behavior (net split, node death mid-buffer-flush); (iv) pseudo-code of the hot path. Bounded: ≤ 550 words.
 
+### A4 — The Convergent Text (sequence CRDT, hard tier)
+
+Design a **multi-writer collaborative plain-text** document that converges without a central server. Any replica may edit offline; replicas exchange operations in arbitrary order and at arbitrary times; every replica must eventually show the same text. This is the problem solved by RGA/LSEQ/Yjs-style sequence CRDTs — you must design the mechanism, not name-drop it.
+
+**Deliverables (≤ 650 words + pseudo-code ≤ 50 lines):**
+
+1. **Replica state and identifiers.** How is a character identified uniquely across replicas? What metadata travels with each insert/delete?
+2. **Total order.** Give the exact deterministic tie-break that orders concurrent insertions at the same position. Prove that all replicas compute the same order for any two concurrent characters (commutativity + confluence), including the delete/insert interleavings.
+3. **The interleaving anomaly.** Show a concrete timeline where two users concurrently type "HELLO" and "WORLD" at the same position and a naive tie-break produces `HWEOLRLLOD`; state whether your design prevents it, and if it accepts it, why that is acceptable.
+4. **Tombstones and garbage collection.** Why deletions must leave a trace; give a **safe** reclamation rule (what must be true about causal stability/frontier before a tombstone can be dropped) and show a counterexample if the rule is violated.
+5. **Cost.** Per-character metadata overhead; memory for a 1M-character document with 20% deletions; merge cost for an operation log from 30 offline days; one bounded-buffer strategy.
+6. **One adversarial failure mode** (buggy or Byzantine replica) and the mitigation.
+
 ## Section F — Frontend (F1)
 
-Build **one complete, single-file web app**. Deliverable: a single fenced code block containing a full `index.html` (HTML + CSS + JS, all inline). It must open directly via `file://` in Chrome or Edge with **zero network access and zero external dependencies** (no CDN, no imports, no fonts fetched).
+Build **one complete, single-file web app**. Deliverable: a single fenced code block containing a full `index.html` (HTML + CSS + JS, all inline). It must open directly via `file://` in Chrome or Edge with **zero network access and zero external dependencies** (no CDN, no imports, no fonts fetched). This is the v3.0 hard build: a 10,000-row virtualised data grid, a command palette, and undo/redo — not just a dashboard.
 
-### Spec — "Mission Control"
+### Spec — "Mission Control" (v3.0)
 
-1. **Header**: mission name ("NIKBENCH-1"), and a live UTC clock (`HH:MM:SS`) updated every second.
+1. **Header**: mission name ("NIKBENCH-1"), a live UTC clock (`HH:MM:SS`) updated every second, and a **mission-time selector** (UTC offset −12…+14, persisted) that shows the current time in the selected zone next to UTC.
 2. **Metrics strip**: four stat cards — Fuel %, Battery %, Signal dB, Crew count — each initialized from a deterministic PRNG you implement inline (seed 42; e.g. mulberry32) and updated every 5 seconds with a small bounded random walk (no negative values, capped at maxima: fuel 100, battery 100, signal 0–99, crew 6, 2 decimals for fuel/battery).
-3. **Countdown**: a live countdown to `2026-12-01T09:00:00Z`, displayed as `DD:HH:MM:SS`, correct even if the target date already passed (then display `T-00:00:00:00` with status `LANDED`).
-4. **Satellite table**: 8 fixed rows (invent the IDs/names); columns: ID, Name, Orbit type (LEO/MEO/GEO), Status (ACTIVE, DEGRADED, OFFLINE), Last contact (relative, e.g. "4m ago", counting up live). Clicking a column header sorts by that column (asc ⇄ desc, visible arrow indicator ▲/▼).
-5. **Telemetry chart**: a `<canvas>` line chart of the Signal metric over the last 60 samples (one per second), redrawn every second, with y-axis min/max labels and a visible baseline axis. Colors read from CSS variables, not hardcoded script values.
-6. **Anomaly feed**: a list. A button "RUN DIAGNOSTIC" appends a simulated event (timestamp + severity + message) chosen from a pool of ≥ 6 messages; each list item has an "✕" dismiss button that removes it.
-7. **Persistence** under localStorage keys prefixed `nikbench.f1.`: survive reload — table sort column+direction, theme, dismissed anomalies, and the current metric values (rehydrate roughly where they left off).
-8. **Theme toggle**: dark is default; keyboard shortcut `d` toggles light/dark; also a clickable toggle button. Both themes must have proper contrast.
-9. **Responsive**: metrics strip is 4 columns on wide, 2 on tablet, 1 on ≤ 480px, no horizontal scroll at 375px width.
-10. **Accessibility**: semantic landmarks (`header`, `main`, `aside`/`section`), `aria-label`s on all icon-only/interactive controls, visible focus styles, and `prefers-reduced-motion` respected (no sweeping animations when set).
+3. **Countdown**: a live countdown to `2026-12-01T09:00:00Z`, displayed as `DD:HH:MM:SS`. If the target already passed, display status `LANDED` and an elapsed `T+DD:HH:MM:SS` instead.
+4. **Satellite grid**: **10,000 deterministic rows** generated by the seeded PRNG (invent the schema; every field plausible). Columns: ID, Name, Orbit type (LEO/MEO/GEO), Status (ACTIVE, DEGRADED, OFFLINE), Last contact (relative, e.g. "4m ago", counting up live). The grid must be **virtualised** — only rows near the viewport exist in the DOM at any time — and must survive scroll, sort, and filter without freezing. Clicking a column header sorts by that column (asc ⇄ desc, visible ▲/▼ indicator); a search box filters by ID/name live; a visible row count reflects the filter.
+5. **Telemetry chart**: a `<canvas>` line chart of **two series** (Signal and Fuel) over the last 60 samples (one per second), redrawn every second, with y-axis min/max labels, a visible baseline axis, and a legend. A pointer crosshair shows the nearest sample's values in a tooltip. Colours read from CSS variables, not hardcoded script values; the canvas must handle high-DPI displays.
+6. **Command palette**: `Ctrl`/`Cmd`+`K` opens a palette with fuzzy search over satellites **and** actions (toggle theme, run diagnostic, sort by a column, clear anomalies, jump to grid). `↑`/`↓` move, `Enter` runs, `Esc` closes; focus is trapped while open; it is fully keyboard operable and announced (`role="dialog"`/combobox semantics).
+7. **Anomaly feed**: RUN DIAGNOSTIC appends a simulated event (timestamp + severity + message) chosen from a pool of ≥ 8 messages; each item has an "✕" dismiss button. **Undo/redo** (`Ctrl+Z` / `Ctrl+Shift+Z` or `Ctrl+Y`) restores/redoes the last ≥ 20 dismissal/diagnostic actions, with a visible history indicator.
+8. **Persistence** under localStorage keys prefixed `nikbench.f1.`: survive reload — table sort column+direction, theme, dismissed anomalies, metric values, filter query, selected timezone, and chart series visibility.
+9. **Theme toggle**: dark is default; keyboard shortcut `d` toggles light/dark; also a clickable toggle button. Both themes must have proper contrast.
+10. **Responsive**: metrics strip is 4 columns on wide, 2 on tablet, 1 on ≤ 480px; the grid collapses to one card per row below 640px; the command palette is full-screen on mobile; no horizontal scroll at 375px width.
+11. **Accessibility**: semantic landmarks (`header`, `main`, `aside`/`section`), `aria-label`s on all icon-only/interactive controls, visible focus styles, `aria-live` for feed changes, full keyboard operation of grid and palette, and `prefers-reduced-motion` respected (no sweeping animations when set — render a static state instead).
+
+The build must be deterministic: identical seed → identical rows and metrics. Document your virtualisation and PRNG choices briefly in the notes.
 
 After the code block write `## F1-NOTES` (≤ 150 words): assumptions and anything knowingly skipped.
 
 ## Section B — Backend (B1)
 
-Build a **single-file, dependency-free Node.js (≥ 18) HTTP server**. Deliverable: one fenced code block with a complete `api.js`, runnable as `node api.js` (port `process.env.PORT || 3000`), only Node built-ins, consistent module style.
+Build a **single-file, dependency-free Node.js (≥ 18) HTTP server**. Deliverable: one fenced code block with a complete `api.js`, runnable as `node api.js` (port `process.env.PORT || 3000`), only Node built-ins, consistent module style. This is the v3.0 hard build: idempotency, optimistic concurrency, pagination, request IDs, and an audit log — on top of the booking contract.
 
-### Spec — "Clinic Appointment API"
+### Spec — "Clinic Appointment API" (v3.0)
 
-In-memory data. All timestamps UTC ISO-8601. Every non-2xx response:
+In-memory data. All timestamps UTC ISO-8601. Every non-2xx response carries the envelope:
 
 ```json
-{ "error": { "code": "<MACHINE_CODE>", "message": "<human readable>" } }
+{ "error": { "code": "<MACHINE_CODE>", "message": "<human readable>", "request_id": "<uuid>" } }
 ```
+
+Every response (2xx and non-2xx) carries an `X-Request-Id` header: echo a client-supplied `X-Request-Id` if it is a valid UUID, otherwise generate a UUIDv4. The same value must appear in error envelopes.
+
+**Idempotency (global rule for unsafe methods).** `POST /doctors` and `POST /appointments` accept an `Idempotency-Key` header (8–128 chars):
+
+- first time a key is seen for a method+path: process normally and store `(key, sha256(body), status, response_body)`;
+- same key **and** identical body hash: replay the stored status and body exactly, with no side effects;
+- same key **different** body: `409 IDEMPOTENCY_CONFLICT`.
 
 **Endpoints**
 
 | # | Endpoint | Behavior |
 |---|----------|----------|
-| 1 | `GET /health` | `200 { "status": "ok", "uptime_s": <int> }` |
+| 1 | `GET /health` | `200 { "status": "ok", "uptime_s": <int>, "version": "1.0" }` |
 | 2 | `POST /doctors` | body `{ "name": str(2..80), "specialty": str(2..40) }` → `201` doctor `{ "id", "name", "specialty", "created_at" }` |
 | 3 | `GET /doctors` | `200` array of doctors |
-| 4 | `POST /appointments` | body `{ "doctor_id", "patient_name" (2..100), "start" (ISO), "duration_min" ∈ {15,30,...,120} }` → `201` appointment `{ "id", "doctor_id", "patient_name", "start", "end", "duration_min", "status": "scheduled", "created_at" }` |
-| 5 | `GET /appointments` | optional query `doctor_id`, `date=YYYY-MM-DD` (UTC day); unknown `doctor_id` → 404 `DOCTOR_NOT_FOUND` |
-| 6 | `GET /appointments/:id` | `200` or `404 APPOINTMENT_NOT_FOUND` |
-| | `PATCH /appointments/:id` | body `{ "status": "confirmed" \| "cancelled" }` — only from `scheduled`; modifying a cancelled appointment → `409 APPOINTMENT_CANCELLED` |
-| 8 | `DELETE /appointments/:id` | only when `scheduled` → `204`; otherwise `409` |
+| 4 | `POST /appointments` | body `{ "doctor_id", "patient_name" (2..100), "start" (ISO), "duration_min" ∈ {15,30,…,120} }` → `201` appointment `{ "id", "doctor_id", "patient_name", "start", "end", "duration_min", "status": "scheduled", "version": 1, "created_at" }` |
+| 5 | `GET /appointments` | query `doctor_id`, `date=YYYY-MM-DD` (UTC day), `limit` (1..100, default 20), `cursor` → `200 { "data": [...], "next_cursor": <string\|null> }`. Sorted by `(created_at, id)`. Invalid `limit`/`cursor` → `422 VALIDATION_ERROR`; unknown `doctor_id` → `404 DOCTOR_NOT_FOUND` |
+| 6 | `GET /appointments/:id` | `200` with an `ETag` header (`"v<version>"`); missing → `404 APPOINTMENT_NOT_FOUND` |
+| 7 | `PATCH /appointments/:id` | requires `If-Match: "v<version>"`; missing header → `428 PRECONDITION_REQUIRED`; stale/mismatched version → `412 PRECONDITION_FAILED`; body `{ "status": "confirmed" \| "cancelled" }`; only from `scheduled`; modifying a cancelled appointment → `409 APPOINTMENT_CANCELLED`. On success: increment `version`, return the new `ETag` |
+| 8 | `DELETE /appointments/:id` | only when `scheduled` → `204`; otherwise `409 APPOINTMENT_NOT_SCHEDULED` |
+| 9 | `GET /audit` | `200 { "data": [...], "next_cursor": <string\|null> }`; query `limit` (1..200, default 50), `entity_id`, `cursor`. Append-only events `{ "id", "ts", "action", "entity", "entity_id", "actor" }` where `actor` comes from the optional `X-Actor` header (default `"anonymous"`). Every mutation (doctor/appointment create, confirm, cancel, delete) appends exactly one event |
 
 **Invariants for `POST /appointments`** (first violated rule wins, in this exact priority order):
 
-- a. `doctor_id` of an existing doctor, else `404 DOCTOR_NOT_FOUND`.
-- b. malformed/missing JSON body → `400 INVALID_JSON`.
-- c. wrong types / out-of-range fields → `422 VALIDATION_ERROR` (list ALL offending fields).
-- d. `start` must be valid ISO-8601 UTC and not before server start time → `422 VALIDATION_ERROR`.
-- e. overlap: the new `[start,end)` must not overlap any non-cancelled appointment of the same doctor → `409 SLOT_TAKEN`. Touching is allowed (`end == next start` is legal).
-- f. IDs are immutable unique strings you generate (`dr_…`, `appt_…`).
+1. malformed/missing JSON body → `400 INVALID_JSON`;
+2. idempotency replay/conflict (see above);
+3. `doctor_id` of an existing doctor, else `404 DOCTOR_NOT_FOUND`;
+4. wrong types / out-of-range fields → `422 VALIDATION_ERROR` (list ALL offending fields);
+5. `start` must be valid ISO-8601 UTC and not before server start time → `422 VALIDATION_ERROR`;
+6. overlap: the new `[start,end)` must not overlap any non-cancelled appointment of the same doctor → `409 SLOT_TAKEN`. Touching is allowed (`end == next start` is legal);
+7. IDs are immutable unique strings you generate (`dr_…`, `appt_…`).
 
-**Prose answers (`## B1-D1` … `## B1-D5`, each ≤ 120 words)**
+**Cursor semantics.** `next_cursor` is opaque; it must let a client page forward across inserts without duplicating or skipping rows that were present at the first request. Pass `null` when the page is the last.
+
+**Graceful shutdown.** On `SIGINT`/`SIGTERM`: stop accepting new connections, let in-flight requests finish, exit within 2 seconds.
+
+**Prose answers (`## B1-D1` … `## B1-D6`, each ≤ 120 words)**
 
 - **D1 — Concurrency:** make the no-overlap invariant safe under two simultaneous bookings on real PostgreSQL: transactions, isolation, locks/unique constraints; why app-side checks fail.
 - **D2 — Auth:** token scheme + roles (`receptionist`, `doctor`, `admin`), lifetimes, endpoint gating. Sketch.
 - **D3 — Rate limiting:** algorithm choice (justify token bucket vs fixed window), scope, response headers.
-- **D4 — Persistence:** PostgreSQL DDL sketch (tables, FKs, indexes) that prevents double-booking at DB level.
+- **D4 — Persistence:** PostgreSQL DDL sketch (tables, FKs, indexes) that prevents double-booking at DB level, including the `version` column for optimistic concurrency.
 - **D5 — Failure mode:** one realistic silent-failure mode of your own implementation above + mitigation.
+- **D6 — Exactly-once webhooks:** the clinic must notify an external calendar service when an appointment is confirmed. Design the outbound delivery (retries, exponential backoff, signatures, dead-letter). Explain why end-to-end exactly-once is impossible and what you do instead; state the receiver-side rule that makes duplicates harmless.
 
 ## Output contract for Phase 1 (exact)
 Respond in this section order, `##` headers, nothing outside them. Begin the file with a single metadata line so runs stay comparable:
 
 ```
-<!-- nikbench.meta: model=<your-name> date=<YYYY-MM-DD UTC> params=<temperature/top_p or "default"> -->
+<!-- nikbench.meta: bench=v3.0 model=<your-name> date=<YYYY-MM-DD UTC> params=<temperature/top_p or "default"> -->
 ```
 
 ```
-## R1 … ## R10      derivation then  Final Answer: <value>
-## T1 … ## T6       dossiers (respect each task's word cap)
+## R1 … ## R13      derivation then  Final Answer: <value>
+## T1 … ## T7       dossiers (respect each task's word cap)
 ## V1               one ```svg block
 ## V2               one ```svg block
 ## V3               one ```html block
 ## V3-NOTES         ≤ 100 words
 ## V4               one ```svg block
 ## V4-NOTES         ≤ 80 words
-## A1 … ## A3       design prose (+ optional pseudo-code)
+## V5               one ```svg block
+## V6               one ```svg block
+## V7               one ```svg block
+## A1 … ## A4       design prose (+ optional pseudo-code)
 ## F1               one ```html block, complete index.html
 ## F1-NOTES         ≤ 150 words
 ## B1               one ```javascript block, complete api.js
-## B1-D1 … ## B1-D5 each ≤ 120 words
+## B1-D1 … ## B1-D6 each ≤ 120 words
 ```
 
 **Then (harness exception only):** write the ENTIRE content above to `submissions/<your-name>.md` using the `write` tool — one file, everything.
@@ -376,12 +493,12 @@ Permitted reads from here on: everything in `submissions/`, your own `peer/` sta
 
 1. **Read every submission file** in `submissions/` (all candidate .md files; skip `README.md`).
 2. For each, grade **six pillars (0–10 each)** and an **Overall**:
-   - **RAT 🧩:** re-solve what you can; verify derivations line by line. Sound working + correct answers = high; lucky guesses or confidently wrong derivations = low.
-   - **THO 🧠:** no answers exist — grade comprehension, accuracy of the survey (punish invented names/claims), originality of the attack, argument quality, candor about unknowns.
-   - **VIS 🎨:** read SVG/HTML/CSS as an interpreter; does the art actually draw the thing? founders facts right? motion timeline coherent & 60 s? chart honest about the outlier trap?
-   - **ALG 🧮:** are the complexity claims actually proven? edge cases handled? did they invent or cargo-cult?
-   - **Frontend (FE) 🪟:** check the 10 spec requirements (clock, seeded cards, countdown, sortable table, canvas chart, anomaly feed, localStorage, theme, responsive, a11y).
-   - **Backend (BE) ⚙️:** trace endpoints against the spec (status codes, error envelope, overlap rules, status machine, validation priority). Mentally execute before believing.
+   - **RAT 🧩:** re-solve what you can — R1–R13, including the hard tier (100 prisoners & boxes, Freudenthal's sum-and-product, the five pirates). Verify derivations line by line. Sound working + correct answers = high; lucky guesses or confidently wrong derivations = low.
+   - **THO 🧠:** no answers exist — grade comprehension, accuracy of the survey (punish invented names/claims), originality of the attack, argument quality, candor about unknowns. T7 (black-hole information) is graded the same way.
+   - **VIS 🎨:** read SVG/HTML/CSS as an interpreter; does the art actually draw the thing (Mona Lisa, founders, Eiffel geometry, Taj symmetry, Earth palette)? do the facts hold? is the motion timeline coherent & 60 s? is the chart honest about the outlier trap? For V7, recompute the WCAG ratios yourself — invented ratios are a fail.
+   - **ALG 🧮:** are the complexity claims actually proven? edge cases handled? did they invent or cargo-cult? A4 (sequence CRDT) must survive the interleaving anomaly and prove convergence, not name-drop CRDTs.
+   - **Frontend (FE) 🪟:** check the spec requirements (clock + timezone, seeded cards, countdown + LANDED, virtualised 10k-row grid, dual-series canvas chart, command palette, undo/redo, anomaly feed, localStorage, theme, responsive, a11y).
+   - **Backend (BE) ⚙️:** trace endpoints against the spec (status codes, error envelope + `request_id`, idempotency replay/conflict, ETag/If-Match 412/428, pagination shape, audit events, overlap rules, validation priority). Mentally execute before believing.
 3. Calibrate: **5 = solid pass**, **8–9 = excellent**, **10 = would ship today**, **0–2 = broken/empty**. Length ≠ quality; placeholders are near-fatal.
 4. No copying others' opinions; grade what's on the page. Score the work, not the name — if you recognize a model, set that aside and let the derivation carry the score.
 
@@ -428,7 +545,7 @@ If `peer/<your-name>.md` already exists, you are re-entering after the peer roun
 
 ---
 
-# PHASE 4 — REVISION ROUND (optional, v2.1+)
+# PHASE 4 — REVISION ROUND (optional, v3.0+)
 
 If `peer/<your-name>.md` already exists **and** the human opts into a revision round:
 

@@ -1,10 +1,10 @@
 {
-  "schema": "nikbench.scorecard.v1",
+  "schema": "nikbench.scorecard.v2",
   "judge_id": "<your-model-name>",
   "candidate_id": "<candidate-model-name>",
   "scores": {
     "rat": {
-      "exact_answers": { "correct_count": 0, "detail": "how many of R1..R10 Final Answers match YOUR independent solve" },
+      "exact_answers": { "correct_count": 0, "detail": "how many of R1..R13 Final Answers match YOUR independent solve (0..13)" },
       "rigor": { "score": 0, "detail": "…" },
       "clarity": { "score": 0, "detail": "…" }
     },
@@ -16,14 +16,16 @@
       "intellectual_candor": { "score": 0, "detail": "…" }
     },
     "vis": {
-      "art_fidelity": { "score": 0, "detail": "…" },
-      "art_craft": { "score": 0, "detail": "…" },
-      "infographic_facts": { "score": 0, "detail": "…" },
-      "infographic_design": { "score": 0, "detail": "…" },
-      "motion_design": { "score": 0, "detail": "…" },
-      "motion_timing": { "score": 0, "detail": "…" },
-      "dataviz_choice": { "score": 0, "detail": "…" },
-      "dataviz_honesty": { "score": 0, "detail": "…" }
+      "art_fidelity": { "score": 0, "detail": "V1 (Mona Lisa)" },
+      "art_craft": { "score": 0, "detail": "across V1, V5, V6, V7" },
+      "architecture_fidelity": { "score": 0, "detail": "V5 Eiffel geometry + V6 Taj symmetry/proportions" },
+      "color_system": { "score": 0, "detail": "V7 tokens, contrast math, palette discipline" },
+      "infographic_facts": { "score": 0, "detail": "V2 founder facts" },
+      "infographic_design": { "score": 0, "detail": "V2 timeline/hierarchy" },
+      "motion_design": { "score": 0, "detail": "V3 beats/scene" },
+      "motion_timing": { "score": 0, "detail": "V3 60s loop/seam/reduced-motion" },
+      "dataviz_choice": { "score": 0, "detail": "V4 chart type/axes" },
+      "dataviz_honesty": { "score": 0, "detail": "V4 season/level/outlier decomposition" }
     },
     "alg": {
       "correctness": { "score": 0, "detail": "…" },
@@ -33,18 +35,21 @@
       "innovation": { "score": 0, "detail": "…" }
     },
     "fe": {
-      "functionality": { "score": 0, "detail": "…" },
+      "functionality": { "score": 0, "detail": "all 12 spec requirements (incl. virtual grid, palette, undo/redo)" },
+      "performance": { "score": 0, "detail": "10k-row virtualisation, redraw budget, cleanup" },
+      "interaction_depth": { "score": 0, "detail": "command palette, undo/redo, keyboard operation" },
       "visual_design": { "score": 0, "detail": "…" },
       "code_quality": { "score": 0, "detail": "…" },
       "accessibility": { "score": 0, "detail": "…" },
       "responsive": { "score": 0, "detail": "…" }
     },
     "be": {
-      "spec_correctness": { "score": 0, "detail": "…" },
+      "spec_correctness": { "score": 0, "detail": "endpoint matrix, state machine, overlap, priority order" },
+      "protocol_hardening": { "score": 0, "detail": "idempotency replay/conflict, ETag/If-Match, pagination cursors, audit, request IDs" },
       "security": { "score": 0, "detail": "…" },
       "validation_errors": { "score": 0, "detail": "…" },
       "data_modeling": { "score": 0, "detail": "…" },
-      "design_answers": { "score": 0, "detail": "…" },
+      "design_answers": { "score": 0, "detail": "D1–D6" },
       "code_quality": { "score": 0, "detail": "…" }
     }
   },

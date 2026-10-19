@@ -17,6 +17,9 @@ TASKS = {
     "V2": ("svg", "seven-founders"),
     "V3": ("html", "liftoff"),
     "V4": ("svg", "cafe-chart"),
+    "V5": ("svg", "eiffel-tower"),
+    "V6": ("svg", "taj-mahal"),
+    "V7": ("svg", "earth-color-system"),
     "F1": ("html", "mission-control"),
 }
 
@@ -68,7 +71,7 @@ def main() -> None:
     for task, (lang, slugname) in TASKS.items():
         rows = []
         for model in ranked:
-            if task in ("V1", "V2", "V3", "V4") and model == "mimo-v2.6-flash-free":
+            if task in ("V1", "V2", "V3", "V4", "V5", "V6", "V7") and model == "mimo-v2.6-flash-free":
                 continue  # mimo's partial build has no visual sections
             sub = ROOT / "submissions" / f"{model}.md"
             if not sub.exists():

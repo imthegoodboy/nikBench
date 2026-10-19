@@ -1,23 +1,88 @@
-# ⚡ NikBench v2.0 — the peer-judged LLM benchmark
+# ⚡ NikBench v3.0 — Hard Mode · the peer-judged LLM benchmark
 
-![tests](https://img.shields.io/badge/tests-25-blue) ![pillars](https://img.shields.io/badge/pillars-6-purple) ![answer_key](https://img.shields.io/badge/answer_key-none-red) ![protocol](https://img.shields.io/badge/protocol-v2.0-green)
+![tests](https://img.shields.io/badge/tasks-33-blue) ![pillars](https://img.shields.io/badge/pillars-6-purple) ![answer_key](https://img.shields.io/badge/answer_key-none-red) ![protocol](https://img.shields.io/badge/protocol-v3.0-green)
 
 **NikBench measures what models can *do* and *think* — not what they can memorize.** Paste `test.md` into a fresh chat with any model, and the packet runs the whole pipeline itself: blind build → peer review (every model rates every other model, plus honest self-rating) → leaderboard refresh with `git push`.
 
-> 🔒 **No answer key exists anywhere in this repo.** Ten tasks are famously derivable classics (judges re-solve them independently); six are famous open problems that *have no answers* — the models are graded on the quality and honesty of their thought; the rest are contract specs.
+> 🔒 **No answer key exists anywhere in this repo.** Thirteen tasks are famously derivable classics (including a hard tier — judges re-solve them independently); seven are famous open problems that *have no answers* — the models are graded on the quality and honesty of their thought; the rest are contract specs, several with machine-checkable geometry and colour math.
+
+**v3.0 "Hard Mode" is a deliberate difficulty jump over v2.0.** New: R11 100 prisoners & 100 boxes, R12 Freudenthal's sum-and-product, R13 the five pirates · T7 black-hole information paradox · V5 Eiffel Tower architectural elevation (checkable platform geometry), V6 Taj Mahal (1 px bilateral symmetry), V7 Earth colour system (recomputed WCAG ratios) · A4 a sequence-CRDT design · F1 rebuilt around a virtualised 10,000-row grid, command palette and undo/redo · B1 rebuilt around idempotency keys, ETags/If-Match, cursor pagination, audit log and request IDs.
 
 ## 🧩 The six pillars
 
 | Pillar | Tasks | What it tests | Weight |
 |---|---|---|---:|
-| 🧩 **RAT** — Ratiocination | R1–R10 | 10 monster classics: Boolos's *Hardest Logic Puzzle Ever*, Blue Eyes, Cheryl's Birthday (+ its sequel!), the 1962 Zebra Puzzle, the ant on the stretching band, the prisoners & the lamp, two eggs, the fly & the trains, twelve coins | 20% |
-| 🧠 **THO** — Thought | T1–T6 | famous **open/unsolved** questions — P vs NP, Navier–Stokes (Clay), Riemann, the quantum measurement problem, Sleeping Beauty, "what is life?" — graded on comprehension, accurate survey, original attack, rigor, **candor** | 20% |
-| 🎨 **VIS** — Visual craft | V1–V4 | SVG recreation of the Mona Lisa · "Seven Founders of Computing" infographic (fact-checked) · a **60-second looping LIFTOFF motion graphic** in one HTML file · a data-visualization with a built-in **outlier honesty trap** | 15% |
-| 🧮 **ALG** — Algorithm design | A1–A3 | O(1) KV store with O(k) prefix-scan · streaming distinct-count sketches · sharding a melting hot-key hashtag counter | 15% |
-| 🪟 **FE** — Frontend | F1 | "Mission Control": live clock, seeded metrics, countdown, sortable satellite table, canvas telemetry, localStorage, themes, responsive, a11y | 15% |
-| ⚙️ **BE** — Backend | B1 | "Clinic Appointment API": bare-Node router, error envelope, booking-overlap state machine, 5 design questions | 15% |
+| 🧩 **RAT** — Ratiocination | R1–R13 | 13 monster classics: Boolos's *Hardest Logic Puzzle Ever*, Blue Eyes, Cheryl's Birthday (+ sequel), the 1962 Zebra Puzzle, ant on a stretching band, prisoners & the lamp, two eggs, fly & trains, twelve coins — plus the hard tier: 100 prisoners & boxes, sum-and-product, five pirates | 20% |
+| 🧠 **THO** — Thought | T1–T7 | famous **open/unsolved** questions — P vs NP, Navier–Stokes (Clay), Riemann, quantum measurement, Sleeping Beauty, "what is life?", black-hole information — graded on comprehension, accurate survey, original attack, rigor, **candor** | 20% |
+| 🎨 **VIS** — Visual craft | V1–V7 | Mona Lisa SVG · founders infographic · **60-second LIFTOFF loop** · honest café chart · **Eiffel Tower elevation** · **Taj Mahal symmetry** · **Earth colour system** with real contrast math | 15% |
+| 🧮 **ALG** — Algorithm design | A1–A4 | O(1) KV store with O(k) prefix-scan · streaming distinct-count sketches · hot-key sharding · **convergent sequence CRDT** (interleaving anomaly + safe tombstone GC) | 15% |
+| 🪟 **FE** — Frontend | F1 | "Mission Control": live clock + timezone, seeded metrics, countdown, **virtualised 10k satellite grid**, dual-series canvas chart, **command palette**, anomaly feed + **undo/redo**, localStorage, themes, responsive, a11y | 15% |
+| ⚙️ **BE** — Backend | B1 | "Clinic Appointment API": bare-Node router, error envelope + request IDs, booking-overlap state machine, **idempotency keys, ETag/If-Match, cursor pagination, audit log**, 6 design questions | 15% |
 
 Full rubric criteria: [`judging/judge.md`](judging/judge.md) · task provenance (all verbatim-sourced, links checked): [`docs/methodology.md`](docs/methodology.md)
+
+## 🗺️ Task atlas — all 33 tasks
+
+<details>
+<summary><b>Expand the full task list (task · tier · what is checkable)</b></summary>
+
+| # | Task | Tier | Checkable anchor |
+|---|---|---|---|
+| R1 | Boolos: The Hardest Logic Puzzle Ever | classic | three-question strategy + full case analysis |
+| R2 | Blue Eyes (xkcd) | classic | who leaves, which night, common-knowledge cascade |
+| R3 | Cheryl's Birthday | classic | July 16 via Albert/Bernard eliminations |
+| R4 | Cheryl's Age | classic | age 9 via divisor-sum + equal-brothers filter |
+| R5 | The Zebra Puzzle (1962) | classic | full 5×5 table, water + zebra |
+| R6 | Ant on the Rubber Band | classic | harmonic divergence, finite arrival time |
+| R7 | 100 Prisoners & the Light Bulb | classic | certain-declaration strategy + best/worst/expected visits |
+| R8 | Two Eggs, 100 Floors | classic | minimal worst case = 14 drops + optimality proof |
+| R9 | The Fly and the Two Trains | classic | 75 km, both the hard and easy way |
+| R10 | Twelve Coins, Three Weighings | classic | complete decision tree, no unassigned branch |
+| **R11** | **100 Prisoners & 100 Boxes** | **hard** | cycle strategy; `1 − Σ_{k=51}^{100} 1/k ≈ 0.3118` |
+| **R12** | **Sum and Product (Freudenthal)** | **hard** | `x,y = 4,13`; auditable elimination table |
+| **R13** | **The Five Pirates** | **hard** | `98,0,1,0,1`; backward-induction table + tie-break sensitivity |
+| T1 | P vs NP | open | barriers, directions, honest position |
+| T2 | Navier–Stokes (Clay) | open | partial results named correctly, programme + obstacle |
+| T3 | Riemann Hypothesis | open | reformulations, prediction error, honest limits |
+| T4 | Quantum Measurement | open | four interpretations + one testable discriminator |
+| T5 | Sleeping Beauty | contested | a side, a steelman, and what would make it well-posed |
+| T6 | What is Life? | open | operational definition stress-tested against viruses/fire/etc. |
+| **T7** | **Black-Hole Information** | **open** | Page curve, complementarity, firewalls, island formula |
+| V1 | Mona Lisa in SVG | classic | ≤ 300 shapes, recognisable at thumbnail |
+| V2 | Seven Founders infographic | classic | to-scale 1800–2000 timeline, verified facts |
+| V3 | LIFTOFF 60 s motion loop | classic | exact 60.000 s, seamless seam, reduced-motion poster |
+| V4 | Café Rebuild Chart | classic | honest season/level/outlier decomposition |
+| **V5** | **Eiffel Tower elevation** | **hard** | platforms at `y ≈ 712/571/181` (±10 px), 40+ lattice elements |
+| **V6** | **Taj Mahal symmetry** | **hard** | mirror-symmetric about x = 450 (±1 px), four minarets |
+| **V7** | **Earth colour system** | **hard** | 8 fixed tokens, Earth disc, three recomputed WCAG ratios |
+| A1 | O(k) Prefix-Scan KV Store | classic | O(1) ops + O(k) scan + amortized argument |
+| A2 | Streaming Distinct Count | classic | exact + sketch with real standard-error math |
+| A3 | The Melting Hashtag | classic | consistent hashing + hot-key mitigation with trade-offs |
+| **A4** | **Convergent Text (sequence CRDT)** | **hard** | convergence proof, `HWEOLRLLOD` anomaly, safe tombstone GC |
+| F1 | Mission Control (hard rebuild) | hard | 10k-row virtualised grid, command palette, undo/redo, dual-series chart |
+| B1 | Clinic Appointment API (hard rebuild) | hard | idempotency replay/conflict, 428/412, cursors, audit, request IDs |
+
+</details>
+
+## 📈 Difficulty: what actually changed from v2.0 → v3.0
+
+| Dimension | v2.0 | v3.0 Hard Mode |
+|---|---|---|
+| Tasks | 25 | **33** (+3 reasoning, +1 thought, +3 visual, +1 algorithm) |
+| Reasoning | R1–R10 classics | + 100 prisoners/boxes (probability proof), Freudenthal elimination, five-pirate induction |
+| Visual | portraits, infographic, motion, one chart | + **checkable architecture** (platform geometry), **symmetry contract**, **colour system with WCAG math** |
+| Frontend | 8 fixed table rows, one chart series | **10,000-row virtualised grid**, command palette, undo/redo ≥ 20, dual-series crosshair chart, timezone |
+| Backend | CRUD + overlap | **idempotency keys**, **ETag/If-Match 428/412**, **cursor pagination**, **audit log**, request IDs, D6 webhooks |
+| Judge rubric | RAT 0–10 | RAT 0–13 + `architecture_fidelity`, `color_system`, `protocol_hardening`, `performance`, `interaction_depth` criteria |
+
+## 🔬 Trust & verification
+
+- **No answer key. Verbatim provenance.** Every classic is quoted from (or anchored to) a public source; judges must re-solve R1–R13 before reading a submission. Rules are punished by the rigor/clarity criteria.
+- **Peer round is blind-ish and self-last.** Every model rates every other model first; its own row is deliberately last and lands in a separate `Self` column, so inflation is visible.
+- **Multi-judge medians, not single scores.** `NBS` is the pillar-median across judges; the board shows `Judges` count and `Spread`, and any judge >15 points from the panel median is flagged in the details block.
+- **Execution verification.** `verify_be.py` boots every submitted server and runs ~30 live contract checks; `verify_fe.py` runs 24 static spec checks; both blend 50/50 into BE/FE under `--live`. A server that doesn't boot cannot score 80 on BE.
+- **Dual-rubric scoring.** `nikbench.scorecard.v1` cards (v2.0 round) and `nikbench.scorecard.v2` cards (v3.0 Hard Mode) are each scored under their own weights — old grades are never silently re-weighted.
+- **One-command QA.** `python scripts/verify_all.py` reports structure + FE + BE per model as a single table.
 
 ## ⚡ Quickstart — one packet does everything (idempotent)
 
@@ -42,6 +107,8 @@ Two-phase runs stay perfectly comparable: Phase 1 is a **blind, single-generatio
 Full protocol & provenance: [`docs/methodology.md`](docs/methodology.md).
 
 ## 📊 Live board (auto-updated by Phase 3 runs)
+
+> **Round status:** the board below is the completed **v2.0 round** (historical, 8 models, judged under the v1 scorecard rubric). The **v3.0 Hard Mode round opens when the roster reruns `test.md`**; the scorer accepts both rubrics, so old cards are never silently re-weighted. New cache-aware flag: `python scripts/aggregate.py scorecards --peer-dir peer --live -o leaderboard.md`.
 
 <!-- NIKBENCH:LEADERBOARD:START -->
 _Last updated: 2026-10-19 17:08 UTC · scorer: `scripts/aggregate.py` · protocol: `docs/methodology.md`_
@@ -223,7 +290,7 @@ Flags:
 
 ## 🖼️ Visual showcase — what the models actually made
 
-The VIS pillar is scored on what a model *draws, animates, and charts* — not what it describes. GitHub renders SVG in color; round-1 curation is the three strongest VIS builds by peer vote (space-bunny-free **81.4**, big-pickle **80.7**, glm **78.6** /100 from the 7 non-self reviewers). Regenerate after any round: `python scripts/build_gallery.py`.
+The VIS pillar is scored on what a model *draws, animates, and charts* — not what it describes. GitHub renders SVG in color; the round-1 curation below is the three strongest v2.0 VIS builds by peer vote (space-bunny-free **81.4**, big-pickle **80.7**, glm **78.6** /100 from the 7 non-self reviewers). v3.0 adds V5 Eiffel, V6 Taj Mahal and V7 Earth colour system to this showcase automatically after the next round: `python scripts/build_gallery.py`.
 
 ### V1 — Mona Lisa in ≤300 SVG shapes
 
@@ -290,21 +357,29 @@ PARTIAL (longcat has no DELETE handler) / 1 NO-B1 (mimo, partial build)**; FE
 
 ```
 nikBench/
-├── test.md                     ← 🔫 THE one packet: routing → blind build (25 tasks) → peer+self → board refresh
+├── test.md                     ← 🔫 THE one packet: routing → blind build (33 tasks) → peer+self → board refresh
 ├── judging/
-│   ├── judge.md                ← 🧑‍⚖️ optional calibrated rubric judges (paste + submission → JSON scorecard)
+│   ├── judge.md                ← 🧑‍⚖️ optional calibrated rubric judges (paste + submission → JSON scorecard v2)
 │   └── peer-review.md          ← reference copy of the peer round (test.md embeds it)
 ├── docs/
-│   └── methodology.md          ← full protocol, verbatim task provenance (checked 2026-10-18), dispute rules
+│   ├── methodology.md          ← full protocol, verbatim task provenance (v3.0 checked 2026-10-19), dispute rules
+│   └── roadmap.md              ← living backlog: what shipped in v3.0, what's queued for v3.1+
 ├── submissions/                ← candidate raw replies, one <model-name>.md each
 ├── peer/                       ← peer-round rating tables + self rows (one <model-name>.md each)
-├── scorecards/                 ← optional rubric judge JSON outputs
-├── templates/scorecard.json    ← blank scorecard shape (6 pillars)
-├── examples/                   ← worked example: 3 judges scoring a demo candidate → example board
+├── scorecards/                 ← optional rubric judge JSON outputs (v1 and v2 rubrics both accepted)
+├── templates/scorecard.json    ← blank v3.0 scorecard shape (6 pillars, RAT 0–13)
+├── examples/                   ← worked examples: v2.0 and v3.0 cards → example board
 ├── gallery/                    ← committed color renders from the latest round (README shows the VIS showcase)
-├── scripts/aggregate.py        ← stdlib-only scorer → leaderboard.md (supports --selftest, peer-only boards)
+├── scripts/
+│   ├── aggregate.py            ← stdlib-only scorer → leaderboard.md (dual rubric, --selftest, --live)
+│   ├── verify_be.py            ← boots every B1 server; ~30 live contract checks → 0–100
+│   ├── verify_fe.py            ← F1 static spec checks (24 items) → 0–100
+│   ├── verify_all.py           ← one-command round QA: structure + FE + BE per model
+│   ├── verify_phase1.py        ← submission structure check (33 sections, 13 Final Answers)
+│   ├── build_gallery.py        ← extracts V1–V7/ F1 renders into gallery/
+│   └── _splice_board.py        ← refreshes the README board block from leaderboard.md
 ├── leaderboard.md              ← canonical generated board
-└── .github/workflows/ci.yml    ← validates the scorer on every push
+└── .github/workflows/ci.yml    ← validates both rubrics on every push
 ```
 
 ## 🧠 Why "no answer key"?
@@ -312,12 +387,14 @@ nikBench/
 Because the interesting part isn't whether a model *knows* that Boolos's gods can be disambiguated — it's whether it can:
 
 - derive the full case tree instead of reciting it,
-- write a dossier on P vs NP that names the *actual* barrier results without inventing citations (and without claiming to solve it!),
-- draw a Mona Lisa that reads at thumbnail size in ≤300 SVG elements,
+- argue the 100-prisoners cycle probability and the pirate backward induction instead of pattern-matching remembered answers,
+- write a dossier on P vs NP (or black-hole information) that names the *actual* results without inventing citations — and without claiming to solve it,
+- draw an Eiffel Tower whose platforms land where 57/115/276 m put them, a Taj Mahal symmetric to the pixel, and an Earth colour system whose WCAG ratios survive independent recomputation,
 - keep a 60-second motion loop seamless,
+- render a 10,000-row grid without melting the DOM, and
 - refuse to sell a "+25% growth" story when month 19 is a festival outlier and the renovation did nothing.
 
-Peer votes make this robust: every model rates every other **before** rating itself (self-inflation lands in its own labeled column). The rubric-judge path exists for when you want panel medians with outlier flags (σ > 15 triggers disputes; disputed items are re-solved blind by panel majority).
+Peer votes make this robust: every model rates every other **before** rating itself (self-inflation lands in its own labeled column). The rubric-judge path exists for when you want panel medians with outlier flags (Δ > 15 triggers disputes; disputed items are re-solved blind by panel majority), and execution verification keeps "it looks right" from beating "it runs right".
 
 ## 🏅 Grading scale
 

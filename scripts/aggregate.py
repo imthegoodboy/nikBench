@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""NikBench — scorecard aggregator (v2.0).
+"""NikBench — scorecard aggregator (v3.0).
 
 Turns judge scorecards (JSON) into a ranked leaderboard (markdown), optionally
 merging the peer-review round (`peer/*.md`, schema nikbench.peer.v1) and each
@@ -16,8 +16,11 @@ Scoring:
     Self   = the candidate's own Overall rating of itself                (×10) 0–100
     Final  = 0.6·NBS + 0.2·Peer + 0.2·Self (missing parts redistribute evenly)
 
-Pillars (v2.0): rat (ratiocination), tho (thought), vis (visual craft),
-alg (algorithm design), fe (frontend), be (backend).
+Rubrics:
+    nikbench.scorecard.v1 — v2.0 round: R1–R10, V1–V4, A1–A3, F1 (10 reqs), B1 (D1–D5)
+    nikbench.scorecard.v2 — v3.0 Hard Mode: R1–R13, V1–V7, A1–A4, F1 (hardened), B1 (hardened)
+Both schemas are accepted; each card is scored under its own rubric, so the old
+board can be re-rendered without silently re-weighting v2.0 grades.
 
 Pure standard library; no dependencies.
 """
@@ -31,59 +34,54 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-SCHEMA = "nikbench.scorecard.v1"
+SCHEMA_V1 = "nikbench.scorecard.v1"
+SCHEMA_V2 = "nikbench.scorecard.v2"
+SCHEMA = SCHEMA_V2  # schema new judges should write
 PEER_SCHEMA = "nikbench.peer.v1"
 
+# ---------------------------------------------------------------- rubrics
 # criterion -> weight (points awarded = clamp(score, 0, 10) * weight)
-WEIGHTS: dict[str, dict[str, float]] = {
-    "rat": {  # ratiocination: exact answers (60 pts, correct_count x 6) + weighted criteria (40 pts)
-        "rigor": 2.0,
-        "clarity": 2.0,
-    },
-    "tho": {  # thought — open problems; graded on the quality & honesty of thinking
-        "comprehension": 2.0,
-        "synthesis": 2.0,
-        "originality": 2.0,
-        "argument_rigor": 2.5,
-        "intellectual_candor": 1.5,
-    },
-    "vis": {  # visual craft: v1 art + v2 infographic + v3 motion + v4 data-viz
-        "art_fidelity": 1.0,
-        "art_craft": 1.0,
-        "infographic_facts": 1.5,
-        "infographic_design": 1.5,
-        "motion_design": 1.5,
-        "motion_timing": 1.0,
-        "dataviz_choice": 1.0,
-        "dataviz_honesty": 1.5,
-    },
-    "alg": {  # algorithm design
-        "correctness": 3.0,
-        "complexity_analysis": 2.5,
-        "edge_cases": 1.5,
-        "communication": 1.5,
-        "innovation": 1.5,
-    },
-    "fe": {  # frontend
-        "functionality": 3.0,
-        "visual_design": 2.5,
-        "code_quality": 2.0,
-        "accessibility": 1.5,
-        "responsive": 1.0,
-    },
-    "be": {  # backend
-        "spec_correctness": 3.5,
-        "security": 2.0,
-        "validation_errors": 1.5,
-        "data_modeling": 1.0,
-        "design_answers": 1.5,
-        "code_quality": 0.5,
-    },
+# rat adds 60 points from exact answers; its weighted criteria therefore top out at 40.
+
+WEIGHTS_V1: dict[str, dict[str, float]] = {
+    "rat": {"rigor": 2.0, "clarity": 2.0},
+    "tho": {"comprehension": 2.0, "synthesis": 2.0, "originality": 2.0,
+            "argument_rigor": 2.5, "intellectual_candor": 1.5},
+    "vis": {"art_fidelity": 1.0, "art_craft": 1.0, "infographic_facts": 1.5,
+            "infographic_design": 1.5, "motion_design": 1.5, "motion_timing": 1.0,
+            "dataviz_choice": 1.0, "dataviz_honesty": 1.5},
+    "alg": {"correctness": 3.0, "complexity_analysis": 2.5, "edge_cases": 1.5,
+            "communication": 1.5, "innovation": 1.5},
+    "fe": {"functionality": 3.0, "visual_design": 2.5, "code_quality": 2.0,
+           "accessibility": 1.5, "responsive": 1.0},
+    "be": {"spec_correctness": 3.5, "security": 2.0, "validation_errors": 1.5,
+           "data_modeling": 1.0, "design_answers": 1.5, "code_quality": 0.5},
 }
 
-# sanity: each pillar's weighted criteria must top out at its max of 100
-# (rat: 60 from exact_answers + 40 from weighted criteria; the rest: 100 only from weighted)
-EXACT_POINTS_PER_PROBLEM = 6.0  # 10 problems * 6 = 60, plus rigor(20)+clarity(20) = 100
+WEIGHTS_V2: dict[str, dict[str, float]] = {
+    "rat": {"rigor": 2.0, "clarity": 2.0},
+    "tho": {"comprehension": 2.0, "synthesis": 2.0, "originality": 2.0,
+            "argument_rigor": 2.5, "intellectual_candor": 1.5},
+    "vis": {"art_fidelity": 0.75, "art_craft": 1.25, "architecture_fidelity": 1.5,
+            "color_system": 1.5, "infographic_facts": 0.75, "infographic_design": 0.75,
+            "motion_design": 1.0, "motion_timing": 0.75, "dataviz_choice": 0.75,
+            "dataviz_honesty": 1.0},
+    "alg": {"correctness": 3.0, "complexity_analysis": 2.5, "edge_cases": 1.5,
+            "communication": 1.5, "innovation": 1.5},
+    "fe": {"functionality": 2.5, "performance": 1.0, "interaction_depth": 1.5,
+           "visual_design": 2.0, "code_quality": 1.5, "accessibility": 1.0,
+           "responsive": 0.5},
+    "be": {"spec_correctness": 3.0, "protocol_hardening": 1.5, "security": 1.5,
+           "validation_errors": 1.5, "data_modeling": 1.0, "design_answers": 1.0,
+           "code_quality": 0.5},
+}
+
+RUBRICS: dict[str, dict] = {
+    SCHEMA_V1: {"weights": WEIGHTS_V1, "rat_tasks": 10, "label": "v2.0"},
+    SCHEMA_V2: {"weights": WEIGHTS_V2, "rat_tasks": 13, "label": "v3.0"},
+}
+
+EXACT_TOTAL_POINTS = 60.0  # both rubrics: 60 pts for exact answers + 40 pts criteria = 100
 EXACT_PILLAR = "rat"
 PILLAR_MAX = 100.0
 
@@ -97,11 +95,15 @@ PILLAR_WEIGHTS: dict[str, float] = {
     "be": 0.15,
 }
 
-for pillar, crits in WEIGHTS.items():
-    max_points = sum(crits.values()) * 10.0
-    expected = 40.0 if pillar == EXACT_PILLAR else 100.0
-    if abs(max_points - expected) > 1e-9:
-        raise SystemExit(f"internal error: {pillar} weighted max is {max_points}, expected {expected}")
+for _schema, _rubric in RUBRICS.items():
+    for pillar, crits in _rubric["weights"].items():
+        max_points = sum(crits.values()) * 10.0
+        expected = 40.0 if pillar == EXACT_PILLAR else 100.0
+        if abs(max_points - expected) > 1e-9:
+            raise SystemExit(
+                f"internal error: {_schema} {pillar} weighted max is {max_points}, expected {expected}"
+            )
+    _rubric["exact_per_problem"] = EXACT_TOTAL_POINTS / _rubric["rat_tasks"]
 if abs(sum(PILLAR_WEIGHTS.values()) - 1.0) > 1e-9:
     raise SystemExit("internal error: pillar weights must sum to 1.0")
 
@@ -152,6 +154,11 @@ def grade(score: float) -> str:
         if score >= floor:
             return letter
     return "F"
+
+
+def rubric_for(schema: str | None) -> dict:
+    """Return the rubric for a scorecard schema (unknown -> v3.0)."""
+    return RUBRICS.get(schema or "", RUBRICS[SCHEMA_V2])
 
 
 # ---------------------------------------------------------------- scorecards
@@ -232,24 +239,25 @@ def _as_score(value) -> float:
         return 0.0
 
 
-def _as_correct_count(entry) -> float:
+def _as_correct_count(entry, max_tasks: float = 13.0) -> float:
     raw = entry.get("correct_count", 0) if isinstance(entry, dict) else entry
     try:
-        return max(0.0, min(10.0, float(raw)))
+        return max(0.0, min(float(max_tasks), float(raw)))
     except (TypeError, ValueError):
         return 0.0
 
 
-def pillar_score(pillar: str, crits: dict) -> tuple[float, list[str]]:
-    """Return (points out of 100, warnings)."""
+def pillar_score(pillar: str, crits: dict, rubric: dict) -> tuple[float, list[str]]:
+    """Return (points out of 100, warnings) under the given rubric."""
     warnings: list[str] = []
+    weights = rubric["weights"]
     if not isinstance(crits, dict):
         return 0.0, [f"{pillar}: missing/invalid"]
 
     points = 0.0
     if pillar == EXACT_PILLAR:
-        points += _as_correct_count(crits.get("exact_answers", 0)) * EXACT_POINTS_PER_PROBLEM
-    for name, weight in WEIGHTS[pillar].items():
+        points += _as_correct_count(crits.get("exact_answers", 0), rubric["rat_tasks"]) * rubric["exact_per_problem"]
+    for name, weight in weights[pillar].items():
         if name not in crits:
             warnings.append(f"{pillar}.{name}: missing -> 0")
             continue
@@ -260,15 +268,33 @@ def pillar_score(pillar: str, crits: dict) -> tuple[float, list[str]]:
     return points, warnings
 
 
+def _detect_schema(text: str, obj: dict | None = None) -> str:
+    """Best-effort schema detection for cards missing/lying about their schema."""
+    if isinstance(obj, dict):
+        schema = obj.get("schema")
+        if schema in RUBRICS:
+            return schema
+        blob = json.dumps(obj.get("scores", {})) if isinstance(obj.get("scores"), dict) else ""
+        if "architecture_fidelity" in blob or "protocol_hardening" in blob or "interaction_depth" in blob:
+            return SCHEMA_V2
+    if '"nikbench.scorecard.v2"' in text:
+        return SCHEMA_V2
+    if "architecture_fidelity" in text or "protocol_hardening" in text:
+        return SCHEMA_V2
+    return SCHEMA_V1
+
+
 def _salvage_scorecard(text: str) -> dict | None:
     """Rebuild a scorecard from a broken (e.g. unescaped inner quotes) JSON dump.
 
     Extracts judge_id/candidate_id and every verbatim score value per the rigid
-    v1 schema shape; prose details are not recoverable reliably and get a
-    salvage note instead. Never invents a score: criteria missing from the raw
-    text are recorded as 0 with a salvage note.
+    schema shape; prose details are not recoverable reliably and get a salvage
+    note instead. Never invents a score: criteria missing from the raw text are
+    recorded as 0 with a salvage note.
     """
     import re
+    schema = _detect_schema(text)
+    rubric = rubric_for(schema)
     idx = []
     for p in PILLARS:
         found = re.search(rf'"{p}"\s*:\s*\{{', text)
@@ -288,7 +314,7 @@ def _salvage_scorecard(text: str) -> dict | None:
                 "correct_count": float(m.group(1)) if m and m.group(1) else 0.0,
                 "detail": "salvaged: detail text unrecoverable, value verbatim",
             }
-        for crit in WEIGHTS[pillar]:
+        for crit in rubric["weights"][pillar]:
             m = re.search(rf'"{re.escape(crit)}"\s*:\s*\{{[^{{}}]*?"score"\s*:\s*([0-9.]+)', seg)
             pillar_scores[crit] = {
                 "score": float(m.group(1)) if m else 0.0,
@@ -302,17 +328,20 @@ def _salvage_scorecard(text: str) -> dict | None:
     if mflags:
         for f in re.findall(r'"([^"]+)"', mflags.group(1)):
             flags.append(f"judge said: {f}")
-    return {"schema": SCHEMA, "judge_id": mjudge.group(1) if mjudge else "unknown",
+    return {"schema": schema, "judge_id": mjudge.group(1) if mjudge else "unknown",
             "candidate_id": mcand.group(1) if mcand else "unknown",
             "scores": scores, "flags": flags}
 
 
 def parse_scorecard(path: Path) -> dict | None:
-    obj = _extract_json(path.read_text(encoding="utf-8", errors="replace"))
+    text = path.read_text(encoding="utf-8", errors="replace")
+    obj = _extract_json(text)
     if not obj or not isinstance(obj.get("scores"), dict):
-        obj = _salvage_scorecard(path.read_text(encoding="utf-8", errors="replace"))
+        obj = _salvage_scorecard(text)
     if not obj or not isinstance(obj.get("scores"), dict):
         return None
+    if obj.get("schema") not in RUBRICS:
+        obj["schema"] = _detect_schema(text, obj)
     return obj
 
 
@@ -320,18 +349,26 @@ def aggregate(cards: list[dict]) -> dict:
     """cards: validated scorecard dicts for ONE candidate -> NBS + judge details."""
     per_judge = []
     all_flags: set[str] = set()
+    schemas: set[str] = set()
     for card in cards:
+        schema = card.get("schema") if card.get("schema") in RUBRICS else SCHEMA_V2
+        rubric = rubric_for(schema)
+        schemas.add(schema)
         scores = card.get("scores", {})
         pillars, flags = {}, []
         for pillar in PILLARS:
-            value, warns = pillar_score(pillar, scores.get(pillar, {}))
+            value, warns = pillar_score(pillar, scores.get(pillar, {}), rubric)
             pillars[pillar] = round(value, 2)
             flags.extend(warns)
         pillars["overall"] = round(sum(PILLAR_WEIGHTS[p] * pillars[p] for p in PILLARS), 2)
         for flag in card.get("flags", []):
             flags.append(f"judge:{card.get('judge_id', '?')}: {flag}")
         all_flags.update(flags)
-        per_judge.append({"judge_id": card.get("judge_id", "unknown"), "pillars": pillars})
+        per_judge.append({"judge_id": card.get("judge_id", "unknown"),
+                          "rubric": rubric["label"], "pillars": pillars})
+    if len(schemas) > 1:
+        labels = ", ".join(RUBRICS[s]["label"] for s in sorted(schemas))
+        all_flags.add(f"mixed scorecard rubrics on this candidate ({labels}) — each card scored under its own rubric; medians mix rubrics")
 
     medians = {
         p: round(statistics.median(j["pillars"][p] for j in per_judge), 2)
@@ -491,7 +528,8 @@ def render_leaderboard(results, updated: str, peer: dict[str, dict] | None = Non
         legend = (
             "**NBS** = rubric-judge score (weighted across the 6 pillar medians) · **Peer** = mean of the other models' ratings · "
             "**Self** = the model's own rating of itself (last, by design) · **Final** = `0.6·NBS + 0.2·Peer + 0.2·Self`. "
-            "Pillars: **RAT** ratiocination · **THO** thought · **VIS** visual · **ALG** algorithms · **FE** frontend · **BE** backend. "
+            "Pillars: **RAT** ratiocination (R1–R13 in v3.0) · **THO** thought (T1–T7) · **VIS** visual (V1–V7) · "
+            "**ALG** algorithms (A1–A4) · **FE** frontend · **BE** backend. "
             "Grades follow **Final** when peer data exists. "
             "**Cost (est.)** = input (test.md) + output (submission) tokens × published per-token price; "
             "free-tier models report $0.00, unknown models report `—`. "
@@ -546,13 +584,13 @@ def render_details(results) -> str:
             continue
         out.append(f"### {name} — NBS {res['overall']:.2f} ({grade(res['overall'])})")
         out.append("")
-        out.append("| Judge | RAT | THO | VIS | ALG | FE | BE | Judge overall |")
-        out.append("|---|---:|---:|---:|---:|---:|---:|---:|")
+        out.append("| Judge | Rubric | RAT | THO | VIS | ALG | FE | BE | Judge overall |")
+        out.append("|---|---|---:|---:|---:|---:|---:|---:|---:|")
         for j in res["judges"]:
             p = j["pillars"]
             cells = " | ".join(f"{p[p_key]:.1f}" for p_key in PILLARS)
             out.append(
-                f"| {j['judge_id']} | {cells} | {p['overall']:.1f} |"
+                f"| {j['judge_id']} | {j.get('rubric', '?')} | {cells} | {p['overall']:.1f} |"
             )
         if res["flags"]:
             out.append("")
@@ -584,7 +622,7 @@ def collect(scores_dir: Path, live: dict | None = None) -> tuple[list[tuple[str,
     for path in files:
         card = parse_scorecard(path)
         if card is None:
-            problems.append(f"{path.name}: not a valid {SCHEMA} object — skipped")
+            problems.append(f"{path.name}: not a valid scorecard object — skipped")
             continue
         cand = str(card.get("candidate_id") or "unknown")
         by_candidate.setdefault(cand, []).append(card)
@@ -625,6 +663,32 @@ def selftest(scores_dir: Path, peer_dir: Path | None = None) -> int:
     fenced = _extract_json("junk```json\n" + json.dumps({"b": {"c": '"x{"'}}) + "\n```")
     assert fenced == {"b": {"c": '"x{"'}}
 
+    # schema dispatch: a v2 card is scored under the v3.0 rubric (13 R tasks, 60/13 each)
+    rubric = rubric_for(SCHEMA_V2)
+    assert rubric["rat_tasks"] == 13
+    card_v2 = {
+        "schema": SCHEMA_V2, "judge_id": "j2", "candidate_id": "c2",
+        "scores": {
+            "rat": {"exact_answers": {"correct_count": 13}, "rigor": 10, "clarity": 10},
+            "tho": {k: 10 for k in WEIGHTS_V2["tho"]},
+            "vis": {k: 10 for k in WEIGHTS_V2["vis"]},
+            "alg": {k: 10 for k in WEIGHTS_V2["alg"]},
+            "fe": {k: 10 for k in WEIGHTS_V2["fe"]},
+            "be": {k: 10 for k in WEIGHTS_V2["be"]},
+        }, "flags": [],
+    }
+    agg2 = aggregate([card_v2])
+    assert agg2["overall"] == 100.0, agg2["overall"]
+    card_v1 = {
+        "schema": SCHEMA_V1, "judge_id": "j1", "candidate_id": "c1",
+        "scores": {
+            "rat": {"exact_answers": {"correct_count": 10}, "rigor": 10, "clarity": 10},
+            **{p: {k: 10 for k in WEIGHTS_V1[p]} for p in PILLARS if p != "rat"},
+        }, "flags": [],
+    }
+    agg1 = aggregate([card_v1])
+    assert agg1["overall"] == 100.0, agg1["overall"]
+
     # peer parsing + final-score blend
     assert final_score(70, None, None) == 70
     assert final_score(70, 80, None) == 72.5
@@ -649,7 +713,7 @@ def selftest(scores_dir: Path, peer_dir: Path | None = None) -> int:
     assert "| Final |" in board2 and "| Peer |" in board2
 
     n_judges = sum(len(r["judges"]) for _n, r in results)
-    print(f"SELFTEST OK — {len(results)} candidate(s), {n_judges} judge cards parsed, peer blending verified")
+    print(f"SELFTEST OK — {len(results)} candidate(s), {n_judges} judge cards parsed, v1+v2 rubrics, peer blending verified")
     print(render_details(results))
     return 0
 

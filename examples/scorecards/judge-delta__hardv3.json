@@ -1,0 +1,57 @@
+{
+  "schema": "nikbench.scorecard.v2",
+  "judge_id": "judge-delta",
+  "candidate_id": "example-hard-v3",
+  "scores": {
+    "rat": {
+      "exact_answers": { "correct_count": 9, "detail": "R1-R9 match; R11 probability close but R13 allocation off by one coin" },
+      "rigor": { "score": 7, "detail": "hard-tier derivations mostly complete; pirates table shows the induction" },
+      "clarity": { "score": 8, "detail": "readable; Final Answer format respected" }
+    },
+    "tho": {
+      "comprehension": { "score": 8, "detail": "T7 states the paradox and the Page curve correctly" },
+      "synthesis": { "score": 7, "detail": "complementarity / firewall / islands all present; one imprecise citation" },
+      "originality": { "score": 6, "detail": "position taken; conventional but concrete" },
+      "argument_rigor": { "score": 7, "detail": "the derivation of the Page time follows" },
+      "intellectual_candor": { "score": 9, "detail": "explicit about what remains unknown" }
+    },
+    "vis": {
+      "art_fidelity": { "score": 6, "detail": "Mona Lisa readable, hands weak" },
+      "art_craft": { "score": 7, "detail": "consistent palette and economy" },
+      "architecture_fidelity": { "score": 5, "detail": "Eiffel lattice dense but platform heights off by ~20px; Taj symmetry holds" },
+      "color_system": { "score": 8, "detail": "8 tokens used consistently; two of three WCAG ratios correct" },
+      "infographic_facts": { "score": 8, "detail": "founders facts correct" },
+      "infographic_design": { "score": 7, "detail": "timeline to scale" },
+      "motion_design": { "score": 6, "detail": "four beats present, orbit weak" },
+      "motion_timing": { "score": 7, "detail": "60s loop, seam dissolves" },
+      "dataviz_choice": { "score": 7, "detail": "line + annotation justified" },
+      "dataviz_honesty": { "score": 8, "detail": "outlier decomposed, renovation effect hedged" }
+    },
+    "alg": {
+      "correctness": { "score": 6, "detail": "A4 convergent order sound; GC rule too aggressive" },
+      "complexity_analysis": { "score": 6, "detail": "metadata overhead estimated, not proven" },
+      "edge_cases": { "score": 5, "detail": "interleaving example correct; Byzantine case thin" },
+      "communication": { "score": 7, "detail": "implementable with the pseudo-code" },
+      "innovation": { "score": 5, "detail": "standard RGA-shaped design" }
+    },
+    "fe": {
+      "functionality": { "score": 6, "detail": "virtual grid works; palette fuzzy search is naive substring" },
+      "performance": { "score": 6, "detail": "windowing present; re-sorts the full 10k array on every keystroke" },
+      "interaction_depth": { "score": 7, "detail": "undo/redo 20 steps; keyboard nav works" },
+      "visual_design": { "score": 7, "detail": "cohesive control-room theme" },
+      "code_quality": { "score": 6, "detail": "single file, some dead code" },
+      "accessibility": { "score": 5, "detail": "palette lacks a real focus trap" },
+      "responsive": { "score": 7, "detail": "375px clean; card mode below 640px" }
+    },
+    "be": {
+      "spec_correctness": { "score": 6, "detail": "main endpoints correct; audit endpoint missing entity filters" },
+      "protocol_hardening": { "score": 5, "detail": "idempotency replay works; If-Match returns 400 instead of 412" },
+      "security": { "score": 5, "detail": "no auth; input size caps present" },
+      "validation_errors": { "score": 7, "detail": "all fields listed; request_id present" },
+      "data_modeling": { "score": 6, "detail": "version column and ids fine" },
+      "design_answers": { "score": 7, "detail": "D6 explains at-least-once + receiver dedupe" },
+      "code_quality": { "score": 6, "detail": "readable router" }
+    }
+  },
+  "flags": ["hard-tier candidate: v3.0 rubric exercised by CI"]
+}
