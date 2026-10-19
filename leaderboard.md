@@ -1,6 +1,6 @@
 # NikBench — Official Leaderboard
 
-_Last updated: 2026-10-18 09:45 UTC · scorer: `scripts/aggregate.py` · protocol: `docs/methodology.md`_
+_Last updated: 2026-10-19 17:08 UTC · scorer: `scripts/aggregate.py` · protocol: `docs/methodology.md`_
 
 | Rank | Model | Final | Grade | NBS | Peer | Self | RAT | THO | VIS | ALG | FE | BE | Judges | Spread | Live (BE/FE) | Cost (est.) |
 |---:|---|---:|:--:|---:|---:|---:|---:|---:|---:|---:|---:|---:|:--:|---:|---:|---:|
@@ -8,7 +8,7 @@ _Last updated: 2026-10-18 09:45 UTC · scorer: `scripts/aggregate.py` · protoco
 | 2 | **glm-5.3-flash-free** | 88.09 | A | 92.0 | 81.4 | 83.0 | 100 | 90 | 92 | 80 | 95 | 94 | 1 | ±0.0 | 100/100 | $0.0000 |
 | 3 | **nemotron-3.5-super-vl-free** | 87.38 | A | 90.8 | 79.4 | 85.0 | 86 | 86 | 94 | 90 | 94 | 98 | 2 | ±2.0 | 100/92 | $0.0000 |
 | 4 | **beam-free** | 85.43 | A | 90.3 | 71.3 | 85.0 | 96 | 88 | 91 | 82 | 93 | 91 | 3 | ±30.1 | 100/100 | $0.0000 |
-| 5 | **deepseek-v4.1-flash-free** | 81.07 | A | 78.7 | 84.1 | 85.0 | 66 | 70 | 82 | 77 | 93 | 93 | 2 | ±28.0 | 100/100 | $0.0000 |
+| 5 | **deepseek-v4.1-flash-free** | 82.04 | A | 80.4 | 84.1 | 85.0 | 90 | 68 | 76 | 68 | 91 | 89 | 3 | ±28.0 | 100/100 | $0.0000 |
 | 6 | **space-bunny-free** | 80.47 | A | 85.4 | 76.1 | 70.0 | 88 | 86 | 71 | 83 | 95 | 89 | 1 | ±0.0 | 100/100 | $0.0000 |
 | 7 | **longcat-2.5-preview-free** | 73.61 | B | 78.1 | 68.7 | 65.0 | 95 | 67 | 73 | 73 | 91 | 68 | 2 | ±11.3 | 50/100 | $0.0000 |
 | 8 | **mimo-v2.6-flash-free** | 38.24 | F | 37.5 | 33.6 | 45.0 | 98 | 90 | 0 | 0 | 0 | 0 | 3 | ±2.7 | 0/0 | $0.0000 |
@@ -72,15 +72,31 @@ Flags:
 - judge:nemotron-3-ultra-free: V1 Mona Lisa SVG is hand-authored (not traced) with single blur filter — respects element economy.
 - judge:nemotron-3-ultra-free: V4 dataviz_honesty explicitly decomposes season/level/outlier — avoids the festival-spike trap.
 
-### deepseek-v4.1-flash-free — NBS 78.73 (B)
+### deepseek-v4.1-flash-free — NBS 80.36 (A)
 
 | Judge | RAT | THO | VIS | ALG | FE | BE | Judge overall |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | cohere-north-mini | 36.0 | 49.5 | 76.0 | 68.0 | 82.0 | 77.0 | 62.5 |
+| minimax-m3.1-flash-free | 90.0 | 68.5 | 68.5 | 68.0 | 76.0 | 78.8 | 75.4 |
 | nemotron-3-ultra-free | 96.0 | 90.0 | 87.0 | 85.8 | 88.5 | 94.5 | 90.6 |
 
 Flags:
+- judge outlier >15 from median overall: nemotron-3-ultra-free
 - judge:cohere-north-mini: parser-salvaged: original card had invalid JSON (likely unescaped quotes); every score value below extracted verbatim from the raw judge output
+- judge:minimax-m3.1-flash-free: A1: the design cannot meet the DELETE O(1) contract - trie deletion prunes ancestors, O(L) amortised per delete; only the SET budget is argued.
+- judge:minimax-m3.1-flash-free: A2: the exact algorithm is a 64-bit-hash set, so it is exact only with overwhelming probability, and the HyperLogLog estimator is mis-stated as (sum 2^-M_j)^-m times Gamma(-1/m)^-1 times alpha_m.
+- judge:minimax-m3.1-flash-free: A3: the hot path shards on a hash of the incrementer id, so one upstream writer's 50k/s still lands on a single shard; the flush pseudo-code also mints a new seq per replica call, contradicting INV2's per-entry dedupe sequence.
+- judge:minimax-m3.1-flash-free: B1: a body over 1 MB and a malformed percent-escape in the appointment id both surface as 500 INTERNAL instead of 4xx, and unsupported methods on a known path return 404 rather than 405.
+- judge:minimax-m3.1-flash-free: FE: the sortable table headers are mouse-only (no button role, tabindex or keyboard handler) and the table is rebuilt every second.
+- judge:minimax-m3.1-flash-free: R1: the proof of the meta-question lemma is visibly garbled in the False/ja=no case (the text contains its own recheck note); the lemma and the resulting strategy are nonetheless correct.
+- judge:minimax-m3.1-flash-free: R2: the stated reason for the brown-eyed never leaving is wrong - after the 100 blues leave on night 100 a brown-eyed person can rule out being blue from the departure time (100 blues leave on night 100, 101 would leave on night 101). The submitted answer still matches the standard one.
+- judge:minimax-m3.1-flash-free: R7: the protocol wording is ambiguous about a non-counter whose first visit finds the bulb already ON - read strictly (acts at most once) his signal is lost and the tally can stall below 99.
+- judge:minimax-m3.1-flash-free: T1/T2: two soft citations without substance (Hirahara on MCSP; the Seregin/Neas blow-up scenarios reference does not correspond to a real cited result).
+- judge:minimax-m3.1-flash-free: T1: P != NP would imply no polysize Frege proofs reverses the known conditional, which is P = NP implies Frege has polynomially bounded proofs.
+- judge:minimax-m3.1-flash-free: V1 uses two filter elements (soft stdDeviation 3.4 and soft2 stdDeviation 6); the brief allows at most one gaussian blur filter.
+- judge:minimax-m3.1-flash-free: V2: four of the seven cards overlap (Hopper/Shannon, Shannon/Knuth, von Neumann/Turing), so the John von Neumann card and part of the Hopper text are covered, and the Ada-to-Turing arrow terminates on the Hopper card.
+- judge:minimax-m3.1-flash-free: V3: the loop is exactly 60 s but not seamless - the earth (opacity 0.9) and the satellite (opacity 0.95, left 90 percent) snap to zero at t=0, contradicting the notes claim of a seamless dissolve.
+- judge:minimax-m3.1-flash-free: V4: the y-axis tick labels contradict the plotted geometry - 55k is printed on the 50k gridline (y=229) and 65k on the 60k gridline (y=115); the 24 data points themselves are all computed correctly.
 
 ### glm-5.3-flash-free — NBS 92.01 (S)
 
